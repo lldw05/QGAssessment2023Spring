@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************************
  *	File Name				:	duLinkedList.h
  *	CopyRight				:	2020 QG Studio
@@ -34,8 +35,11 @@ typedef int ElemType;
 // define struct of linked list
 typedef struct DuLNode {
 	ElemType data;
-  	struct DuLNode *prior,  *next;
-} DuLNode, *DuLinkedList;
+	struct DuLNode* prior, * next;
+} DuLNode, * DuLinkedList;
+
+//struct DuLNode = DuLNode
+//Struct DuLNode * = DuLinkedList
 
 // define status
 typedef enum Status {
@@ -55,7 +59,7 @@ typedef enum Status {
  *	@return		 : Status
  *  @notice      : None
  */
-Status InitList_DuL(DuLinkedList *L);
+Status InitList_DuL(DuLinkedList* L);
 
 /**
  *  @name        : void DestroyList_DuL(DuLinkedList *L)
@@ -64,7 +68,7 @@ Status InitList_DuL(DuLinkedList *L);
  *	@return		 : status
  *  @notice      : None
  */
-void DestroyList_DuL(DuLinkedList *L);
+void DestroyList_DuL(DuLinkedList* L);
 
 /**
  *  @name        : Status InsertBeforeList_DuL(DuLNode *p, LNode *q)
@@ -73,7 +77,7 @@ void DestroyList_DuL(DuLinkedList *L);
  *	@return		 : status
  *  @notice      : None
  */
-Status InsertBeforeList_DuL(DuLNode *p, DuLNode *q);
+Status InsertBeforeList_DuL(DuLNode* p, DuLNode* q);
 
 /**
  *  @name        : Status InsertAfterList_DuL(DuLNode *p, DuLNode *q)
@@ -82,7 +86,7 @@ Status InsertBeforeList_DuL(DuLNode *p, DuLNode *q);
  *	@return		 : status
  *  @notice      : None
  */
-Status InsertAfterList_DuL(DuLNode *p, DuLNode *q);
+Status InsertAfterList_DuL(DuLNode* p, DuLNode* q);
 
 /**
  *  @name        : Status DeleteList_DuL(DuLNode *p, ElemType *e)
@@ -91,7 +95,7 @@ Status InsertAfterList_DuL(DuLNode *p, DuLNode *q);
  *	@return		 : status
  *  @notice      : None
  */
-Status DeleteList_DuL(DuLNode *p, ElemType *e);
+Status DeleteList_DuL(DuLNode* p, ElemType* e);
 
 /**
  *  @name        : void TraverseList_DuL(DuLinkedList L, void (*visit)(ElemType e))
@@ -102,8 +106,25 @@ Status DeleteList_DuL(DuLNode *p, ElemType *e);
  */
 void TraverseList_DuL(DuLinkedList L, void (*visit)(ElemType e));
 
+void menu();
+void function1();
+void function3(); 
+void function4(); 
+void function0(); 
+void functiona();
+char cinmenu();
 
- /**************************************************************
+int cinnnum();
+
+void functionb();
+void buffer();
+
+Status judgeIsInitList(DuLNode* L);
+void manualTraverseList_DuL(DuLinkedList L, void (*visit)(ElemType e));
+int inputChoiceTraverseWay();
+Status DeleteDuLNode(DuLinkedList* L, ElemType e);
+
+/**************************************************************
 *	End-Multi-Include-Prevent Section
 **************************************************************/
 #endif
