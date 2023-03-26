@@ -1,3 +1,5 @@
+package main.util;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -21,9 +23,18 @@ public class JdbcUtils {
     private ResultSet rs = null;
     private static JdbcUtils ju;
 
+    private JdbcUtils() {
+    }
+
+    //
+    private JdbcUtils(Connection conn, PreparedStatement ps, ResultSet rs) {
+        this.conn = conn;
+        this.ps = ps;
+        this.rs = rs;
+    }
 
     /**
-     *  懒汉单利
+     *  懒汉单例
      * @return Jdbc工具类的对象
      */
     public static JdbcUtils getInstance() {
@@ -217,6 +228,49 @@ public class JdbcUtils {
             e.getStackTrace();
         } finally {
             jdbcClose(conn,ps);
+        }
+    }
+
+
+
+
+    public void query(String sql, Object[] data){
+        //定义字段个数初始值0
+        int colCount = 0;
+
+        //定义ResultSetMetaData对象 ResultSetMetaData为 描述数据的类
+        ResultSetMetaData rsmd = null;
+        try {
+            //获取PreparedStatement对象
+            ps = getPreparedStatement(sql, data);
+            //PreparedStatement已经进行过预处理 获取ResultSet对象
+            rs = ps.executeQuery();
+            //PreparedStatement已经进行过预处理
+            rsmd = rs.getMetaData();
+            //返回所有字段的数目
+            colCount = rsmd.getColumnCount();
+        } catch (SQLException e) {
+            e.getStackTrace();
+        }
+
+        try {
+            while (rs.next()) {
+                //对于每一行的结果 new一个链表来存放
+                ArrayList<Object> list = new ArrayList<>();
+
+                for (int i = 1; i <= colCount; i++) {
+
+                    //有多少个字段数 就getObject多少次
+                    Object o = rs.getObject(i);
+                    list.add(o);
+
+                }
+                //输出每一行的结果
+                System.out.println(list);
+
+            }
+        } catch (SQLException e) {
+            e.getStackTrace();
         }
     }
 }
