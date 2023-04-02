@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<a href="https://www.bilibili.com/video/BV1ct4y1n7t9?t=10.9">点我有惊喜</a>
+<a href="https://www.bilibili.com/video/BV1UW4y1N79w?t=34.4">我的学习笔记</a>
+
+<br>
+<input type="button" value="GET请求200" onclick="get(200)">
+<input type="button" value="GET请求302" onclick="get(302)">
+<input type="button" value="GET请求403" onclick="get(403)">
+<input type="button" value="GET请求404" onclick="get(404)">
+<input type="button" value="GET请求500" onclick="get(500)"><br>
+<input type="button" value="POST请求200" onclick="post(200)">
+<input type="button" value="POST请求302" onclick="post(302)">
+<input type="button" value="POST请求403" onclick="post(403)">
+<input type="button" value="POST请求404" onclick="post(404)">
+<input type="button" value="POST请求500" onclick="post(500)"><br>
+<input type="button" value="PUT请求405" onclick="put(405)">
+<input type="button" value="DEL请求405" onclick="del(405)">
+<script src="js/axios.js"></script>
+<script>
+
+    function get(status){
+        axios({
+            method:"get",
+            url:"http://localhost:8080/Http-Demo/TestServlet?status="+status
+            // url:"http://localhost:8080/Http-Demo/TestServlet?status=200"
+        }).then(function (resp) {
+            alert("GET请求"+status+"成功\n"+resp.data);
+        })
+
+
+    }
+
+    function post(status){
+        axios({
+            method:"post",
+            url:"http://localhost:8080/Http-Demo/TestServlet",
+            data:"status="+status
+            // url:"http://localhost:8080/Http-Demo/TestServlet?status=200"
+        }).then(function (resp) {
+            alert("POST请求"+status+"成功\n"+resp.data);
+        })
+    }
+
+    function put(status){
+
+
+        axios.put("http://localhost:8080/Http-Demo/TestServlet",{
+            name : "abc",
+            num :123
+        }).then((result)=>{
+            // alert(result.data)
+        })
+
+    }
+
+    function del(status){
+
+
+        axios.delete("http://localhost:8080/Http-Demo/TestServlet",{
+            id:11,
+            name:"abc"
+        }).then((result)=>{
+            // alert(result.data)
+        })
+
+    }
+
+
+
+</script>
+
+
+
+</body>
+</html>
