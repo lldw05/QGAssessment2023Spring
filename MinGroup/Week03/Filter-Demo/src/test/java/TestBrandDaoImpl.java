@@ -12,7 +12,7 @@ public class TestBrandDaoImpl {
     BrandDaoImpl brandDao = new BrandDaoImpl();
     @Test
     public void test1(){
-        int i = brandDao.selectTotalCount();
+        int i = brandDao.getTotalCount();
         System.out.println(i);
     }
 }
