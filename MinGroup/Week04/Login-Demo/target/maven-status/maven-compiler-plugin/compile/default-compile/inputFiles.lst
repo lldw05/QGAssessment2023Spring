@@ -1,0 +1,13 @@
+E:\QGAssessment\QGAssessment2023Spring\MinGroup\Week04\Login-Demo\src\main\java\com\lldw\www\service\Impl\UserServiceImpl.java
+E:\QGAssessment\QGAssessment2023Spring\MinGroup\Week04\Login-Demo\src\main\java\com\lldw\www\utils\VerifyCodeUtil.java
+E:\QGAssessment\QGAssessment2023Spring\MinGroup\Week04\Login-Demo\src\main\java\com\lldw\www\controller\BaseServlet.java
+E:\QGAssessment\QGAssessment2023Spring\MinGroup\Week04\Login-Demo\src\main\java\com\lldw\www\po\User.java
+E:\QGAssessment\QGAssessment2023Spring\MinGroup\Week04\Login-Demo\src\main\java\com\lldw\www\dao\Impl\UserDaoImpl.java
+E:\QGAssessment\QGAssessment2023Spring\MinGroup\Week04\Login-Demo\src\main\java\com\lldw\www\web\filter\LoginFilter.java
+E:\QGAssessment\QGAssessment2023Spring\MinGroup\Week04\Login-Demo\src\main\java\com\lldw\www\utils\JdbcUtils.java
+E:\QGAssessment\QGAssessment2023Spring\MinGroup\Week04\Login-Demo\src\main\java\com\lldw\www\web\LoginServlet.java
+E:\QGAssessment\QGAssessment2023Spring\MinGroup\Week04\Login-Demo\src\main\java\com\lldw\www\controller\UserServlet.java
+E:\QGAssessment\QGAssessment2023Spring\MinGroup\Week04\Login-Demo\src\main\java\com\lldw\www\web\RegisterServlet.java
+E:\QGAssessment\QGAssessment2023Spring\MinGroup\Week04\Login-Demo\src\main\java\com\lldw\www\dao\UserDao.java
+E:\QGAssessment\QGAssessment2023Spring\MinGroup\Week04\Login-Demo\src\main\java\com\lldw\www\service\UserService.java
+E:\QGAssessment\QGAssessment2023Spring\MinGroup\Week04\Login-Demo\src\main\java\com\lldw\www\controller\VerifyCodeServlet.java

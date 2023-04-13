@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<div id ="loginDiv">
+    <form action="/Login-Demo/userServlet" method="get" id = "form">
+        <h1 id = "loginMsg">LOGIN IN</h1>
+        <p>Username:<input id ="username" name = "username" type="text"></p>
+
+        <p>Password:<input  id="password" name = "password" type="password"></p>
+
+        <p>Remember:<input  id="remember" name = "remember" value="1" type="checkbox"></p>
+
+        <input type="hidden" id = "method" name = "method" value="login">
+        <div id ="subDiv">
+            <input type="submit" class="button" value="login up">
+            <input type="reset" class="button" value="reset">
+            <a href="register.html">没有账号？点击注册</a>
+        </div>
+    </form>
+</div>
+
+
+<script>
+
+
+</script>
+
+</body>
+</html>

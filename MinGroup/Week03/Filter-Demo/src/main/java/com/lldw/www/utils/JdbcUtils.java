@@ -1,8 +1,8 @@
-package main.util;
+package com.lldw.www.utils;
+
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public class JdbcUtils {
     private JdbcUtils() {
     }
 
-    //
+
     private JdbcUtils(Connection conn, PreparedStatement ps, ResultSet rs) {
         this.conn = conn;
         this.ps = ps;
@@ -54,10 +54,7 @@ public class JdbcUtils {
             //new对象
             Properties pro = new Properties();
 
-            /**
-             * 读取配置
-             * properties文件与src同级
-             */
+            //读取配置 properties文件与src同级
             pro.load(new FileReader(new File("conn.properties")));
             url = pro.getProperty("url");
             userName = pro.getProperty("userName");
@@ -69,7 +66,7 @@ public class JdbcUtils {
             //加载驱动
             Class.forName(driver);
             System.out.println(">>>驱动加载完成");
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (Exception e) {
             //throw new RuntimeException(e);
             e.printStackTrace();
         }
@@ -118,7 +115,7 @@ public class JdbcUtils {
      *
      * @param sql sql
      * @param args 问号具体内容
-     * @return cnt 影响的行
+     * @return cnt 影响的行数
      */
     public int update(String sql, Object... args)  {
         int cnt = 0;
@@ -140,7 +137,7 @@ public class JdbcUtils {
      * @param data 问号的值
      * @return list 返回集合（集合中是map 字段与值相对应）
      */
-    public ArrayList<Object> execQueryList(String sql, Object[] data) {
+    public ArrayList<Map<String, Object>> execQueryList(String sql, Object[] data) {
 
         //定义字段个数初始值0
         int colCount = 0;
@@ -161,7 +158,7 @@ public class JdbcUtils {
         }
 
         //new链表
-        ArrayList<Object> list = new ArrayList<>();
+        ArrayList<Map<String, Object>> list = new ArrayList<>();
 
         try {
             while (rs.next()) {
@@ -183,6 +180,32 @@ public class JdbcUtils {
         return list;
     }
 
+
+    /**
+     * 查询总记录数
+     * @param sql 查询语句如 select count(*) from tableName
+     * @return
+     */
+    public int getTotalCnt(String sql){
+        //定义字段个数初始值0
+        int rowCount = 0;
+
+
+        try {
+            //获取PreparedStatement对象
+            ps = getPreparedStatement(sql);
+            //PreparedStatement已经进行过预处理 获取ResultSet对象
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                rowCount = rs.getInt(1);
+
+            }
+        }catch (SQLException e) {
+            e.getStackTrace();
+        }
+
+        return rowCount;
+    }
     /**
      *  释放资源
      * @param conn conn
@@ -231,7 +254,18 @@ public class JdbcUtils {
         }
     }
 
+    /**
+     * 总释放资源方法 自行判断释放哪些资源
+     */
+    public  void close(){
+     if(this.rs!=null){
 
+         jdbcClose(this.conn,this.ps,this.rs);
+
+     }else{
+         jdbcClose(this.conn,this.ps);
+     }
+    }
 
 
     public void query(String sql, Object[] data){

@@ -1,0 +1,11 @@
+com\lldw\www\servlet\SelectByPageServlet.class
+com\lldw\www\dao\BrandDao.class
+com\lldw\www\servlet\DeleteServlet.class
+com\lldw\www\utils\VerifyCodeUtil.class
+com\lldw\www\servlet\SelectAllServlet.class
+com\lldw\www\servlet\AddServlet.class
+com\lldw\www\utils\JdbcUtils.class
+com\lldw\www\service\BrandService.class
+com\lldw\www\po\Brand.class
+com\lldw\www\service\BrandServiceImpl.class
+com\lldw\www\dao\BrandDaoImpl.class

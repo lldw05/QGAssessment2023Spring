@@ -1,4 +1,6 @@
-package main.util;
+package com.lldw.www.utils;
+
+import com.lldw.www.po.User;
 
 import java.io.File;
 import java.io.FileReader;
@@ -26,7 +28,7 @@ public class JdbcUtils {
     private JdbcUtils() {
     }
 
-    //
+
     private JdbcUtils(Connection conn, PreparedStatement ps, ResultSet rs) {
         this.conn = conn;
         this.ps = ps;
@@ -54,10 +56,7 @@ public class JdbcUtils {
             //new对象
             Properties pro = new Properties();
 
-            /**
-             * 读取配置
-             * properties文件与src同级
-             */
+            //读取配置 properties文件与src同级
             pro.load(new FileReader(new File("conn.properties")));
             url = pro.getProperty("url");
             userName = pro.getProperty("userName");
@@ -69,7 +68,7 @@ public class JdbcUtils {
             //加载驱动
             Class.forName(driver);
             System.out.println(">>>驱动加载完成");
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (Exception e) {
             //throw new RuntimeException(e);
             e.printStackTrace();
         }
@@ -118,7 +117,7 @@ public class JdbcUtils {
      *
      * @param sql sql
      * @param args 问号具体内容
-     * @return cnt 影响的行
+     * @return cnt 影响的行数
      */
     public int update(String sql, Object... args)  {
         int cnt = 0;
@@ -161,7 +160,7 @@ public class JdbcUtils {
         }
 
         //new链表
-        ArrayList<Object> list = new ArrayList<>();
+        ArrayList<Object> list = new ArrayList<Object>();
 
         try {
             while (rs.next()) {
@@ -182,6 +181,37 @@ public class JdbcUtils {
         }
         return list;
     }
+
+    /**
+     * 查询 得到User对象
+     *
+     * @param sql sql
+     * @param data 问号的值
+     * @return user 返回User对象
+     */
+    public User getUser(String sql, Object[] data) {
+        User user = new User();
+
+        try {
+            //获取PreparedStatement对象
+            ps = getPreparedStatement(sql, data);
+            //PreparedStatement已经进行过预处理 获取ResultSet对象
+            rs = ps.executeQuery();
+
+            //最重要的一步 耗费30min 寄
+            rs.next();
+
+            //封装对象
+            user.setId(rs.getInt("id"));
+            user.setUserName(rs.getString("username"));
+            user.setPassword(rs.getString("password"));
+
+        } catch (SQLException e) {
+            e.getStackTrace();
+        }
+        return user;
+    }
+
 
     /**
      *  释放资源
@@ -231,7 +261,18 @@ public class JdbcUtils {
         }
     }
 
+    /**
+     * 总释放资源方法 自行判断释放哪些资源
+     */
+    public  void close(){
+     if(this.rs!=null){
 
+         jdbcClose(this.conn,this.ps,this.rs);
+
+     }else{
+         jdbcClose(this.conn,this.ps);
+     }
+    }
 
 
     public void query(String sql, Object[] data){
