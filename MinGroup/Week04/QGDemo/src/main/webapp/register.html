@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎注册！</title>
+
+    <style>
+        .el-header, .el-footer {
+            background-color: #409EFF;
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+            width: 350px;
+        }
+
+
+
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: center;
+            line-height: 160px;
+            width: 350px;
+            /*height : 60px;*/
+        }
+
+        body > .el-container {
+            margin-bottom: 40px;
+        }
+
+        .el-container:nth-child(5) .el-aside,
+        .el-container:nth-child(6) .el-aside {
+            line-height: 260px;
+        }
+
+        .el-container:nth-child(7) .el-aside {
+            line-height: 320px;
+        }
+    </style>
+
+</head>
+<body>
+
+<!--<div class="form-div">
+    <div class="reg-content">
+        <h1>欢迎注册</h1>
+        <span>已有账号？</span><a href="login.html">登录</a>
+    </div>
+    <form id="reg-form" action="/QGDemo/userServlet" method="post">
+        <table>
+            <tr>
+                <td>用户名</td>
+                <td class="inputs">
+                    <input name="username" type="text" id="username">
+                    <br>
+                    <span id="username_err" class="err_msg" style="display: none">用户名太受欢迎了喵...</span>
+
+                </td>
+            </tr>
+            <tr>
+                <td>密码</td>
+                <td class="inputs">
+                    <input name="password" type="password" id="password">
+                    <br>
+                    <span id="password_err" class="err_msg" style="display: none">密码格式有误</span>
+
+                </td>
+            </tr>
+
+            <tr>
+                <td>验证码</td>
+                <td class="inputs">
+                    <input name="verifyCode" type="text" id="verifyCode">
+                    <img id="verifyCodeImg" src="/QGDemo/verifyCodeServlet">
+                    <a href="#" id="changeImg">看不清?</a>
+
+                </td>
+            </tr>
+
+        </table>
+        <input type="hidden" id="method" name="method" value="register">
+        <div class="button">
+            <input value="注 册" type="submit" id="reg_btn">
+
+        </div>
+        <br class="clear">
+    </form>
+
+</div>-->
+
+
+
+<div id="registerDiv">
+
+    <el-container>
+        <el-header>注册</el-header>
+
+        <el-main>
+            <!--表单-->
+            <el-form ref="form" :model="user" label-width="80px" size = "mini">
+                <el-form-item label="username">
+                    <el-input v-model="user.username" ></el-input>
+                </el-form-item>
+
+                <el-form-item label="password">
+                    <el-input v-model="user.password" ></el-input>
+                </el-form-item>
+
+                <el-form-item label="验证码">
+                    <el-input v-model="verifyCode" ></el-input>
+                    <img id="verifyCodeImg" src="/QGDemo/verifyCodeServlet">
+                </el-form-item>
+
+                <el-form-item>
+                    <el-button type="primary" @click="forgetPassword">验证</el-button>
+                    <el-link href="login.html" target="_blank">突然想起密码？login now!</el-link><br>
+
+<!--                    <el-link href="register.html" target="_blank" type="primary">没有账号？立即注册</el-link>-->
+                    <!--<tr>
+                        <td>验证码</td>
+                        <td class="inputs">
+                            <input name="verifyCode" type="text" v-model="verifyCode">
+                            <img id="verifyCodeImg" src="/QGDemo/verifyCodeServlet">
+                            <a href="#" id="changeImg">看不清?</a>
+
+                        </td>
+                    </tr>-->
+                </el-form-item>
+
+            </el-form>
+        </el-main>
+
+    </el-container>
+
+</div>
+
+
+<!--引入js文件-->
+<script src="js/axios.js"></script>
+<script src="js/vue.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+
+
+<script>
+    // function on() {
+    //     document.getElementById("username_err").style.display = "block"
+    // }
+    //
+    // document.getElementById("changeImg").onclick = function () {
+    //
+    //     document.getElementById("verifyCodeImg").src = "/QGDemo/verifyCodeServlet?" + new Date().getMilliseconds();
+    // }
+    //
+    //
+    // //1.给用户名输入框绑定 失去焦点事件 判断用户名是否重复
+    // document.getElementById("username").onblur = function () {
+    //     //获取用户名
+    //     let name = this.value;
+    //
+    //     axios.post( "http://localhost:8080/QGDemo/userServlet","method=selectUser&username="+name).then(function (resp) {
+    //             //判断 true还是false
+    //             if (resp.data === true) {
+    //                 //用户名存在 显示信息
+    //                 document.getElementById("username_err").style.display="";
+    //             } else {
+    //                 //用户名不存在 清楚信息
+    //                 document.getElementById("username_err").style.display="";
+    //             }
+    //         }
+    //     )
+    // }
+
+    new Vue({
+        el: "#registerDiv",
+        data() {
+            return {
+                user: {
+                    username: '',
+                    phoneNumber:'',
+                    password:''
+                }
+            }
+        },
+        methods: {
+            forgetPassword() {
+                //发送ajax 添加数据
+                var _this = this;
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/QGDemo/userServlet/register",
+                    data: _this.user
+                }).then(function (resp) {
+                    if (resp.data === "succeed") {
+                        //修改成功
+
+
+                        //修改成功 提示信息
+                        _this.$message({
+                            message: '恭喜你，添加成功',
+                            type: 'success'
+                        });
+
+
+                    }
+                })
+            }
+        }
+
+    })
+</script>
+
+</body>
+</html>
