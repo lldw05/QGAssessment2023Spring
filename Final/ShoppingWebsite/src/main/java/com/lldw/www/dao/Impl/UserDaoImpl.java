@@ -30,7 +30,42 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public int updateUser(User user) {
-        return 0;
+        System.out.println("--userDao.updateUser---");
+        //根据userId 先查出修改前的user数据
+        User preUser = this.getUserById(user);
+
+        //
+        if(user.getNickname()!=null){
+            preUser.setNickname(user.getNickname());
+        }
+        if(user.getPassword()!=null){
+            preUser.setPassword(user.getPassword());
+        }
+        if(user.getAddress()!=null){
+            preUser.setAddress(user.getAddress());
+        }
+        if(user.getPhoneNumber()!=null){
+            preUser.setPhoneNumber(user.getPhoneNumber());
+        }
+        if(user.getRealName()!=null){
+            preUser.setRealName(user.getRealName());
+        }
+        if(user.getPayPassword()!=null){
+            preUser.setPayPassword(user.getPayPassword());
+        }
+        if(user.getPictureId()!=null){
+            preUser.setPictureId(user.getPictureId());
+        }
+        if(user.getRoleId()!=null){
+            preUser.setRoleId(user.getRoleId());
+        }
+        System.out.println("preUser：");
+        System.out.println(preUser);
+        //出错
+        return ju.update("update table set nickname = ?,password= ?,address= ?,phone_number= ?" +
+                        ",real_name=?,pay_password= ?,picture_id= ?,role_id= ? where user_id = ?",
+                preUser.getNickname(), preUser.getPassword(), preUser.getPhoneNumber(), preUser.getRealName()
+                , preUser.getPayPassword(), preUser.getPictureId(), preUser.getRoleId(), preUser.getUserId());
     }
 
     /**
@@ -43,34 +78,41 @@ public class UserDaoImpl implements UserDao {
         System.out.println("---UserDao.getUserByUsername---");
         // 根据用户名查询一个用户
         ArrayList<Object> list = ju.execQueryList("select * from user where username = ?", new Object[]{user.getUsername()});
-        System.out.println(list==null);
+        //System.out.println(list==null);
         if(list==null) {
             return null;
         }
 
-        System.out.println(list);
-        Map<String,Object> map = (Map<String, Object>) list.get(0);
-        System.out.println(map);
-        User user1 =new User();
-        System.out.println(map.get("real_name")==null);
+        //System.out.println(list);
+//        Map<String,Object> map = (Map<String, Object>) list.get(0);
+        //System.out.println(map);
 
+        User user1 = getUserFromMap((Map<String, Object>) list.get(0));
 
-        user1.setUserId((Integer) map.get("user_id"));
-        user1.setUsername((String) map.get("username"));
-        user1.setNickname((String) map.get("nickname"));
-        user1.setPassword((String) map.get("password"));
-        user1.setAddress((String) map.get("address"));
-        user1.setPhoneNumber((String) map.get("phone_number"));
-        user1.setRealName((String) map.get("real_name"));
-        user1.setPayPassword((String) map.get("pay_password"));
-        user1.setPictureId((Integer) map.get("picture_id"));
-        user1.setShopId((Integer) map.get("shop_id"));
-        user1.setActive("1".equals(map.get("is_active")));
-        user1.setRoleId((Integer) map.get("role_id"));
         System.out.println(user1);
-//        ju.close();
+
         return user1;
 
+    }
+
+    @Override
+    public User getUserById(User user) {
+        System.out.println("---UserDao.getUserById---");
+        //根据userId查询user
+        ArrayList<Object> list = ju.execQueryList("select * from user where user_id = ?", new Object[]{user.getUserId()});
+
+        if(list==null) {
+            return null;
+        }
+
+        //System.out.println(list);
+
+        //取出list集合里的第一个map 即索引为0的元素
+        User user1 = getUserFromMap((Map<String, Object>) list.get(0));
+
+
+        System.out.println(user1);
+        return user1;
     }
 
     @Override
@@ -82,4 +124,28 @@ public class UserDaoImpl implements UserDao {
     public int getUserCount() {
         return 0;
     }
+
+    @Override
+    public User getUserFromMap(Map<String, Object> map) {
+        User user =new User();
+        System.out.println(map.get("real_name")==null);
+
+
+        user.setUserId((Integer) map.get("user_id"));
+        user.setUsername((String) map.get("username"));
+        user.setNickname((String) map.get("nickname"));
+        user.setPassword((String) map.get("password"));
+        user.setAddress((String) map.get("address"));
+        user.setPhoneNumber((String) map.get("phone_number"));
+        user.setRealName((String) map.get("real_name"));
+        user.setPayPassword((String) map.get("pay_password"));
+        user.setPictureId((Integer) map.get("picture_id"));
+        user.setShopId((Integer) map.get("shop_id"));
+        user.setActive("1".equals(map.get("is_active")));
+        user.setRoleId((Integer) map.get("role_id"));
+
+
+        return user;
+    }
+
 }

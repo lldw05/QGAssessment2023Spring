@@ -66,10 +66,10 @@ public class UserServlet extends BaseServlet {
             //登录成功 跳转到别的页面
 //            String contextPath = request.getContextPath();
 //            response.sendRedirect(contextPath+"");
-//            response.setContentType("text/json;charset=utf-8");
+            response.setContentType("text/json;charset=utf-8");
 
-            //response.getWriter().write(user.toString());
-            response.getWriter().write("登录成功test2023-04-18 17:29:43");
+            response.getWriter().write(JSON.toJSONString(user));
+            //response.getWriter().write("登录成功test2023-04-18 17:29:43");
         }else{
             //结果为空 即用户名or密码错误
             writer.write("用户名或密码错误~");
@@ -222,4 +222,7 @@ public class UserServlet extends BaseServlet {
 
     }
 
+    public void updateUserData(HttpServletRequest request,HttpServletResponse response,String jsonStr){
+
+    }
 }

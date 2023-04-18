@@ -27,4 +27,11 @@ public interface UserService {
      * @return 查询到了 则返回User对象 查询不到则返回null
      */
     User queryUser(User user);
+
+    /**
+     * 更新user数据
+     * @param user 将需要更新的数据和userId封装打包传进来，不修改的数据统统为null
+     * @return 修改成功返回User对象 修改失败返回null
+     */
+    User updateUser(User user);
 }

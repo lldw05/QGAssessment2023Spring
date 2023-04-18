@@ -48,11 +48,10 @@ public class UserServiceImpl implements UserService {
         //查询不到 进行信息加密
         user = this.encryptUser(user);
 
-        //查询不到 注册
-        int cnt = userDao.insertUser(user);
+        //查询不到 注册 返回影响行数
+        //影响行数大于0 返回新添加的user对象 否则返回null
 
-        //影响行数大于0 返回user对象 否则返回null
-        return cnt>0?user:null;
+        return userDao.insertUser(user)>0?userDao.getUserByUsername(user):null;
     }
 
     @Override
@@ -73,5 +72,25 @@ public class UserServiceImpl implements UserService {
         /*user.setPayPassword(EncryptUtil.encrypt(user.getPayPassword()));
         user.setPayPassword(EncryptUtil.encrypt(user.getPayPassword()));*/
         return user;
+    }
+
+    public User updateUser(User user){
+        //判断密码和支付密码是否需要修改
+
+        if(user.getPassword()!=null){
+            //密码需要修改 加密一下下先
+            user = this.encryptUser(user);
+        }
+
+        if(user.getPayPassword()!=null){
+            //支付密码需要修改 加密一下下先
+            user.setPayPassword(EncryptUtil.encrypt(user.getPayPassword()));
+            user.setPayPassword(EncryptUtil.encrypt(user.getPayPassword()));
+        }
+
+        //进行更新 返回修改的行数
+        //修改行数大于0 返回修改完的user对象 否则返回null
+        return userDao.updateUser(user) >0?userDao.getUserByUsername(user):null;
+
     }
 }

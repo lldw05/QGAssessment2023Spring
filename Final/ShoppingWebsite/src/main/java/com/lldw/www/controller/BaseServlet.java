@@ -37,7 +37,6 @@ public class BaseServlet extends HttpServlet {
         System.out.println("this is baseServlet");
         request.setCharacterEncoding("utf-8");
         response.setCharacterEncoding("utf-8");
-//        response.setContentType("text/html;charset=utf-8");
         try{
 
             //获取JsonString
