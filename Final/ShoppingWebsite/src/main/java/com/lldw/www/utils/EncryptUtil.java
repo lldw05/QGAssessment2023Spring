@@ -20,10 +20,10 @@ public class EncryptUtil {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        System.out.println(Arrays.toString(digest));
+        //System.out.println(Arrays.toString(digest));
         //16是表示转换为16进制数
         String md5Str = new BigInteger(1, digest).toString(16);
-
+        System.out.println("加密成功!");
         return md5Str;
     }
 

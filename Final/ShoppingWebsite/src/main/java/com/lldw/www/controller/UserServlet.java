@@ -9,9 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 
 /**
  * @author LLDW
@@ -23,23 +21,22 @@ public class UserServlet extends BaseServlet {
 
     UserServiceImpl userService = new UserServiceImpl();
 
-    public void login(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
+    public void login(HttpServletRequest request,HttpServletResponse response,String jsonStr) throws IOException, ServletException {
 
 
         System.out.println("---UserServlet.login---");
-        String remember = request.getParameter("remember");
 
-        PrintWriter writer = response.getWriter();
+        //将JSON字符申转为Java对象
+        User loginUser = JSON.parseObject(jsonStr, User.class);
+        System.out.println("loginUser:"+loginUser);
 
 
-        //1.获取信息 封装成loginUser对象
-        User loginUser = this.packagingUser(request,response);
 
         //2.将loginUser对象传入service 返回user对象
         User user = userService.login(loginUser);
-        System.out.println(user==null);
+        /*String remember = request.getParameter("remember");*/
 
-
+        PrintWriter writer = response.getWriter();
 
         if(user!=null){
             //返回user对象不为空且用户名和密码正确
@@ -69,8 +66,10 @@ public class UserServlet extends BaseServlet {
             //登录成功 跳转到别的页面
 //            String contextPath = request.getContextPath();
 //            response.sendRedirect(contextPath+"");
+//            response.setContentType("text/json;charset=utf-8");
 
-            writer.write("succeed");
+            //response.getWriter().write(user.toString());
+            response.getWriter().write("登录成功test2023-04-18 17:29:43");
         }else{
             //结果为空 即用户名or密码错误
             writer.write("用户名或密码错误~");
@@ -91,10 +90,10 @@ public class UserServlet extends BaseServlet {
      * @throws IOException 呃呃呃
      * @throws ServletException 呃呃呃
      */
-    public void register(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
+    public void register(HttpServletRequest request,HttpServletResponse response,String jsonStr) throws IOException, ServletException {
         System.out.println("---UserServlet.register---");
 
-        //0.校对验证码
+        /*//0.校对验证码
         //获取用户输入的验证码
         String verifyCode = request.getParameter("verifyCode");
 
@@ -110,26 +109,57 @@ public class UserServlet extends BaseServlet {
             request.getRequestDispatcher("register.html").forward(request,response);
 
             return;
-        }
+        }*/
 
-        PrintWriter writer = response.getWriter();
+////2.将集合转换为JSON数据 序列化
+//        String jsonString = JSON.toJSONString(pageBean);
+//
+//        //3.响应数据
+//        response.setContentType("text/json;charset=utf-8");
+//        response.getWriter().write(jsonString);
 
-        //1.获取信息 封装成loginUser对象
-        User loginUser = this.packagingUser(request,response);
 
-        //2.调用service 注册成功返回user对象 失败则返回null
-        User user = userService.register(loginUser);
 
-        if(user==null){
-            //注册失败
-            request.setAttribute("register_msg","用户名已存在哈哈哈哈");
-            request.getRequestDispatcher("register.html").forward(request,response);
+        //将JSON字符申转为Java对象
+        User user = JSON.parseObject(jsonStr, User.class);
+        System.out.println("user:"+user);
+        User registerUser = userService.register(user);
+        System.out.println("registerUser:"+registerUser);
+
+        //响应数据
+
+        if(registerUser!=null){
+            response.setContentType("text/json;charset=utf-8");
+            response.getWriter().write(jsonStr);
         }else{
-            //注册成功 跳转到登录页面
-            writer.write("注册成功！");
-            request.setAttribute("register_msg","注册成功,请登录");
-            request.getRequestDispatcher("login.html").forward(request,response);
+            String s = "注册失败,用户名已存在！";
+            System.out.println("注册失败,用户名存在");
+            response.getWriter().write(s);
+
         }
+//
+//        String s = JSON.toJSONString(user);
+//
+//        //3.响应数据
+//        response.setContentType("text/json;charset=utf-8");
+//        writer.write(s);
+
+//        //1.获取信息 封装成loginUser对象
+//        User loginUser = this.packagingUser(request,response);
+//
+//        //2.调用service 注册成功返回user对象 失败则返回null
+//        User user = userService.register(loginUser);
+//
+//        if(user==null){
+//            //注册失败
+//            request.setAttribute("register_msg","用户名已存在哈哈哈哈");
+//            request.getRequestDispatcher("register.html").forward(request,response);
+//        }else{
+//            //注册成功 跳转到登录页面
+//            writer.write("注册成功！");
+//            request.setAttribute("register_msg","注册成功,请登录");
+//            request.getRequestDispatcher("login.html").forward(request,response);
+//        }
     }
 
     /**
@@ -138,7 +168,7 @@ public class UserServlet extends BaseServlet {
      * @param response resp
      * @return user 对象
      */
-    public User  packagingUser(HttpServletRequest request,HttpServletResponse response) throws IOException {
+    public User  packagingUser(HttpServletRequest request,HttpServletResponse response,String jsonStr) throws IOException {
 
 //        //1.获取信息
 //        String username = request.getParameter("username");
@@ -172,11 +202,11 @@ public class UserServlet extends BaseServlet {
      * @param request
      * @param response
      */
-    public void queryUsername(HttpServletRequest request,HttpServletResponse response) throws IOException {
+    public void queryUsername(HttpServletRequest request,HttpServletResponse response,String jsonStr) throws IOException {
         System.out.println("---UserServlet.selectUser---");
         PrintWriter writer = response.getWriter();
 
-        User loginUser = packagingUser(request,response);
+        User loginUser = packagingUser(request,response,jsonStr);
         User user = userService.queryUser(loginUser);
         if(user==null){
             //查询不到 说明username未使用过

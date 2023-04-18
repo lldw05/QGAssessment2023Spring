@@ -40,29 +40,35 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public User getUserByUsername(User user) {
+        System.out.println("---UserDao.getUserByUsername---");
         // 根据用户名查询一个用户
         ArrayList<Object> list = ju.execQueryList("select * from user where username = ?", new Object[]{user.getUsername()});
+        System.out.println(list==null);
         if(list==null) {
             return null;
         }
 
-        Map<String,String> map = (Map<String, String>) list.get(0);
+        System.out.println(list);
+        Map<String,Object> map = (Map<String, Object>) list.get(0);
+        System.out.println(map);
         User user1 =new User();
+        System.out.println(map.get("real_name")==null);
 
-        user1.setUserId(Integer.parseInt(map.get("user_id")));
-        user1.setUsername(map.get("username"));
-        user1.setNickname(map.get("nickname"));
-        user1.setPassword(map.get("password"));
-        user1.setAddress(map.get("password"));
-        user1.setPhoneNumber(map.get("password"));
-        user1.setRealName(map.get("password"));
-        user1.setPayPassword(map.get("password"));
-        user1.setPictureId(Integer.parseInt(map.get("user_id")));
-        user1.setShopId(Integer.parseInt(map.get("user_id")));
+
+        user1.setUserId((Integer) map.get("user_id"));
+        user1.setUsername((String) map.get("username"));
+        user1.setNickname((String) map.get("nickname"));
+        user1.setPassword((String) map.get("password"));
+        user1.setAddress((String) map.get("address"));
+        user1.setPhoneNumber((String) map.get("phone_number"));
+        user1.setRealName((String) map.get("real_name"));
+        user1.setPayPassword((String) map.get("pay_password"));
+        user1.setPictureId((Integer) map.get("picture_id"));
+        user1.setShopId((Integer) map.get("shop_id"));
         user1.setActive("1".equals(map.get("is_active")));
-        user1.setRoleId(Integer.parseInt(map.get("user_id")));
-
-        ju.close();
+        user1.setRoleId((Integer) map.get("role_id"));
+        System.out.println(user1);
+//        ju.close();
         return user1;
 
     }

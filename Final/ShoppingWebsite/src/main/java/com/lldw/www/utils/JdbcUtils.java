@@ -125,6 +125,7 @@ public class JdbcUtils {
         } catch (SQLException e) {
             e.getStackTrace();
         }
+        ju.close();
         return cnt;
 
     }
@@ -177,6 +178,7 @@ public class JdbcUtils {
         } catch (SQLException e) {
             e.getStackTrace();
         }
+        ju.close();
         return list.size()>0?list:null;
     }
 
