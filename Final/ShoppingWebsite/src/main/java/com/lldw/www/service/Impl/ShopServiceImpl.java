@@ -2,10 +2,13 @@ package com.lldw.www.service.Impl;
 
 import com.lldw.www.constants.MessageType;
 import com.lldw.www.dao.Impl.ShopDaoImpl;
+import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
 import com.lldw.www.po.Shop;
 import com.lldw.www.po.User;
 import com.lldw.www.service.ShopService;
+
+import java.util.ArrayList;
 
 /**
  * @author
@@ -49,7 +52,7 @@ public class ShopServiceImpl implements ShopService {
             Message message = new Message();
             //设置message 传入messageType shopId shopKeepId
             message.setType(MessageType.STORE_REGISTRATION);
-            message.setShopId(shop.getId());
+            message.setShopId(shop.getShopId());
             message.setUserId(shop.getShopKeeperId());
             message.setMessageContent("新店铺注册!");
 
@@ -67,7 +70,18 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public Shop showShop(Shop shop) {
+    public Shop showShopMessage(Shop shop) {
         return shopDao.getShopByShopName(shop);
+    }
+
+    @Override
+    public ArrayList<Goods> showShopGoods(Shop shop) {
+
+        GoodsServiceImpl goodsService = new GoodsServiceImpl();
+        if(shop.getShopId()==null){
+            //如果shopId没传进来 先通过shopName查询shopId
+            shop.setShopId(shopDao.getShopByShopName(shop).getShopId());
+        }
+        return goodsService.queryGoodsOfShop(shop);
     }
 }

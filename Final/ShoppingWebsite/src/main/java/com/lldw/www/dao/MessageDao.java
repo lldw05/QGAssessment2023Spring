@@ -14,21 +14,21 @@ public interface MessageDao {
      *  用于添加message
      * @param message message对象
      * @param messageType message类型
-     * @return 返回添加数据的条数
+     * @return 返回影响的行数
      */
     int insertMessage(Message message, MessageType messageType);
 
     /**
      * 用于删除message
      * @param message message对象
-     * @return 返回删除message的个数
+     * @return 返回影响的行数
      */
     int deleteMessage(Message message);
 
     /**
      * 用于更新message
      * @param message message对象
-     * @return 返回修改的行数
+     * @return 返回影响的行数
      */
     int updateMessage(Message message);
 

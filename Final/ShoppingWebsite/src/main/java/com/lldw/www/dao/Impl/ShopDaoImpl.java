@@ -6,8 +6,6 @@ import com.lldw.www.utils.JdbcUtils;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Consumer;
 
 /**
  * @author
@@ -47,7 +45,7 @@ public class ShopDaoImpl implements ShopDao {
         //从ArrayList<Map>中获取map
         Map<String,Object> map = (Map<String, Object>) list.get(0);
         Shop shop1 = new Shop();
-        shop1.setId((Integer) map.get("shop_id"));
+        shop1.setShopId((Integer) map.get("shop_id"));
         shop1.setShopKeeperId((Integer) map.get("shopkeeper_id"));
         shop1.setShopName((String) map.get("shop_name"));
         shop1.setShopIntroduction((String) map.get("shop_introduction"));

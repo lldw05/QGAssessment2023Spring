@@ -13,21 +13,21 @@ public interface UserDao {
     /**
      *  用于添加用户
      * @param user 用户对象
-     * @return 返回添加数据的条数
+     * @return 返回影响的行数
      */
     int insertUser(User user);
 
     /**
      * 用于删除用户
      * @param user 用户对象
-     * @return 返回删除用户的个数
+     * @return 返回影响的行数
      */
     int deleteUser(User user);
 
     /**
      * 用于更新用户
      * @param user 用户对象 要修改的数据以及userId传进来 不修改的数据设为null
-     * @return 返回修改的行数
+     * @return 返回影响的行数
      */
     int updateUser(User user);
 
@@ -58,8 +58,8 @@ public interface UserDao {
 
     /**
      * 将放到map中的查询结果封装成user对象返回
-     * @param map
-     * @return
+     * @param map 将jdbc查询到的每个map传入
+     * @return 返回user对象
      */
     User getUserFromMap(Map<String,Object> map);
 }

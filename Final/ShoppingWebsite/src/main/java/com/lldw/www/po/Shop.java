@@ -8,7 +8,7 @@ public class Shop {
     /**
      * 商店id
      */
-    private Integer id;
+    private Integer shopId;
     /**
      * 店主id即userId
      */
@@ -37,12 +37,12 @@ public class Shop {
     public Shop() {
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getShopId() {
+        return shopId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setShopId(Integer shopId) {
+        this.shopId = shopId;
     }
 
     public Integer getShopKeeperId() {
@@ -96,7 +96,7 @@ public class Shop {
     @Override
     public String toString() {
         return "Shop{" +
-                "id=" + id +
+                "id=" + shopId +
                 ", shopKeeperId=" + shopKeeperId +
                 ", shopName='" + shopName + '\'' +
                 ", shopIntroduction='" + shopIntroduction + '\'' +

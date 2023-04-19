@@ -13,21 +13,21 @@ public interface ShopDao {
     /**
      *  用于添加shop
      * @param shop shop对象
-     * @return 返回添加数据的条数
+     * @return 返回影响的行数
      */
     int insertShop(Shop shop);
 
     /**
      * 用于删除shop
      * @param shop shop对象
-     * @return 返回删除shop的个数
+     * @return 返回影响的行数
      */
     int deleteShop(Shop shop);
 
     /**
      * 用于更新shop
      * @param shop shop对象
-     * @return 返回修改的行数
+     * @return 返回影响的行数
      */
     int updateShop(Shop shop);
 
@@ -55,4 +55,6 @@ public interface ShopDao {
      * @return shop列表数量
      */
     int getShopCount();
+
+
 }
