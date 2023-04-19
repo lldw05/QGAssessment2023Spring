@@ -6,8 +6,8 @@ import com.lldw.www.po.Message;
 import java.util.ArrayList;
 
 /**
- * @author
- * @date
+ * @author lldw
+ * @date 2023-04-19 17:46:23
  */
 public interface MessageDao {
     /**

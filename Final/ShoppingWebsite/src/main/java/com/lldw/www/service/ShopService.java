@@ -12,5 +12,12 @@ public interface ShopService {
      * @param shop
      * @return 注册成功则返回shop对象 否则返回null
      */
-    public Shop register(Shop shop);
+    Shop register(Shop shop);
+
+    /**
+     *  展示商店信息 拥有粉丝数量，月均销量
+     * @param shop shopId
+     * @return 查询到了 则返回封装好的shop对象 否则返回null
+     */
+    Shop showShop(Shop shop);
 }

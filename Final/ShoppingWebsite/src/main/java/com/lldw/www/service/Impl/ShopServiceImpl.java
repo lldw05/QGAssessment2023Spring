@@ -65,4 +65,9 @@ public class ShopServiceImpl implements ShopService {
         //影响行数大于0 返回新添加的shop对象 否则返回null
         return cnt > 0 ? shopDao.getShopByShopName(shop) : null;
     }
+
+    @Override
+    public Shop showShop(Shop shop) {
+        return shopDao.getShopByShopName(shop);
+    }
 }
