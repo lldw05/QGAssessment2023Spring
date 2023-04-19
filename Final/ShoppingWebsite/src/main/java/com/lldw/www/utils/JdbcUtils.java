@@ -2,6 +2,8 @@ package com.lldw.www.utils;
 
 
 import com.lldw.www.utils.connectionPool.ConnectionPoolImpl;
+
+import java.io.Serializable;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,9 +100,7 @@ public class JdbcUtils {
     public PreparedStatement getPreparedStatement(String sql, Object... args) throws SQLException {
         conn = getConnection();
         //获取prepareStatement对象
-        ps = conn.prepareStatement(sql);
-
-
+        ps = conn.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
         if (args != null) {
             //sql语句中存在问号时 不存在则不用插入
             for (int i = 0; i < args.length; i++) {
@@ -125,6 +125,7 @@ public class JdbcUtils {
         } catch (SQLException e) {
             e.getStackTrace();
         }
+
         ju.close();
         return cnt;
 
@@ -132,13 +133,40 @@ public class JdbcUtils {
     //jdbcClose(conn,ps);
 
     /**
+     * insert
+     *
+     * @param sql  sql
+     * @param args 问号具体内容
+     * @return id 影响的行数大于0时 返回主键id的值   插入失败时返回0
+     */
+    public int insert(String sql, Object... args) {
+        int id = 0;
+        try {
+            ps = getPreparedStatement(sql, args);
+            if (ps.executeUpdate() > 0) {
+                //获取主键
+                ResultSet rs = ps.getGeneratedKeys();
+                rs.next();
+                id = rs.getInt(1);
+                System.out.println("id:"+id);
+            }
+        } catch (SQLException e) {
+            e.getStackTrace();
+        }
+        ju.close();
+        return id;
+
+    }
+
+
+    /**
      * 查询 并以链表形式返回结果
      *
      * @param sql  sql
      * @param data 问号的值
-     * @return list 返回集合（集合中是map 字段与值相对应）
+     * @return list 返回集合（集合中是map 字段与值相对应）查询不到(size=0)时返回null
      */
-    public ArrayList<Object> execQueryList(String sql, Object[] data) {
+    public ArrayList<Map<String, Object>> execQueryList(String sql, Object[] data) {
 
         //定义字段个数初始值0
         int colCount = 0;
@@ -159,7 +187,7 @@ public class JdbcUtils {
         }
 
         //new链表
-        ArrayList<Object> list = new ArrayList<Object>();
+        ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         try {
             while (rs.next()) {
@@ -179,10 +207,10 @@ public class JdbcUtils {
             e.getStackTrace();
         }
         ju.close();
-        return list.size()>0?list:null;
+        return list.size() > 0 ? list : null;
     }
 
-/*    *//**
+    /*    *//**
      * 查询 得到User对象
      *
      * @param sql  sql
@@ -211,7 +239,6 @@ public class JdbcUtils {
         }
         return user;
     }*/
-
 
 
     /**

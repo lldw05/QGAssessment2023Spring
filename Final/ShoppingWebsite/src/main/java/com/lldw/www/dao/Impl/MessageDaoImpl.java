@@ -5,7 +5,9 @@ import com.lldw.www.dao.MessageDao;
 import com.lldw.www.po.Message;
 import com.lldw.www.utils.JdbcUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * @author lldw
@@ -32,11 +34,17 @@ public class MessageDaoImpl implements MessageDao {
 
     @Override
     public Message getMessageByMessageId(Message message) {
-        return null;
+        ArrayList<Map<String, Object>> mapList = ju.execQueryList("select * from message where message_id = ?"
+                , new Object[]{message.getMessageId()});
+        if (mapList == null) {
+            return null;
+        }
+        Message resultMessage = this.getMessageFromMap(mapList.get(0));
+        return resultMessage;
     }
 
     @Override
-    public ArrayList<Object> getMessageList() {
+    public ArrayList<Message> getMessageList() {
         return null;
     }
 
@@ -52,13 +60,14 @@ public class MessageDaoImpl implements MessageDao {
 
     @Override
     public int insertMessage2(Message message) {
-        return ju.update("insert into message (type, user_id,shop_id,message_content) values (?,?,?,?) "
-        ,message.getType(),message.getUserId(),message.getShopId(),message.getMessageContent());
+        return ju.insert("insert into message (type, user_id,shop_id,message_content) values (?,?,?,?) "
+                , message.getType(), message.getUserId(), message.getShopId(), message.getMessageContent());
     }
 
     @Override
     public int insertMessage3(Message message) {
-        return 0;
+        return ju.insert("insert into message (type, goods_id,shop_id,message_content) values (?,?,?,?) "
+                , message.getType(), message.getGoodsId(), message.getShopId(), message.getMessageContent());
     }
 
     @Override
@@ -79,5 +88,24 @@ public class MessageDaoImpl implements MessageDao {
     @Override
     public int insertMessage7(Message message) {
         return 0;
+    }
+
+    public Message getMessageFromMap(Map<String, Object> map) {
+        System.out.println("---MessageDao.getMessageFromMap---");
+
+        //获取数据
+        Message message = new Message();
+        message.setMessageId((Integer) map.get("message_id"));
+        message.setType((Integer) map.get("type"));
+        message.setSenderType((String) map.get("sender_type"));
+        message.setUserId((Integer) map.get("user_id"));
+        message.setGoodsId((Integer) map.get("goods_id"));
+        message.setShopId((Integer) map.get("shop_id"));
+        message.setMessageContent((String) map.get("message_content"));
+        message.setCreateTime((LocalDateTime) map.get("create_time"));
+        message.setProcessed((Boolean) map.get("is_processed"));
+
+        return message;
+
     }
 }

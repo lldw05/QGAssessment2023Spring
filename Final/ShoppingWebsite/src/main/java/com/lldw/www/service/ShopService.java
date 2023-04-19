@@ -29,4 +29,11 @@ public interface ShopService {
      * @return 查询到了 则返回装有goods的集合 否则返回null
      */
     ArrayList<Goods> showShopGoods(Shop shop);
+
+    /**
+     *  添加商品 新增新品上市的审核信息
+     * @param goods 封装的商品对象
+     * @return 添加成功则返回该商品对象(包括shopId) 否则返回null
+     */
+    Goods addGoods(Goods goods);
 }

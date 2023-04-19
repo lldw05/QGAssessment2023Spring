@@ -10,37 +10,46 @@ import com.lldw.www.service.MessageService;
  * @date 2023-04-19 17:46:29
  */
 public class MessageServiceImpl implements MessageService {
+
     MessageDaoImpl messageDao = new MessageDaoImpl();
+
+
     @Override
     public Message addMessage(Message message) {
         System.out.println("---MessageService.addMessage---");
-        int cnt = 0;
+        int id = 0;
         switch (message.getType()){
             case 1:
-                cnt = messageDao.insertMessage1(message);
+                id = messageDao.insertMessage1(message);
                 break;
             case 2:
-                cnt =messageDao.insertMessage2(message);
+                id =messageDao.insertMessage2(message);
                 break;
             case 3:
-                cnt =messageDao.insertMessage3(message);
+                System.out.println("insertMessage3");
+                id =messageDao.insertMessage3(message);
                 break;
             case 4:
-                cnt =messageDao.insertMessage4(message);
+                id =messageDao.insertMessage4(message);
                 break;
             case 5:
-                cnt =messageDao.insertMessage5(message);
+                id =messageDao.insertMessage5(message);
                 break;
             case 6:
-                cnt =messageDao.insertMessage6(message);
+                id =messageDao.insertMessage6(message);
                 break;
             case 7:
-                cnt =messageDao.insertMessage7(message);
+                id =messageDao.insertMessage7(message);
                 break;
             default:
-                System.out.println("根据信息类型调用Dao失败~");
+                System.out.println("根据信息类型调用MessageDao.insert失败~");
                 break;
         }
-        return cnt>0?message:null;
+        if(id>0){
+            //返回完整的message信息 包括id
+            message.setMessageId(id);
+            message = messageDao.getMessageByMessageId(message);
+        }
+        return id>0?message:null;
     }
 }

@@ -17,7 +17,7 @@ public class ShopDaoImpl implements ShopDao {
     @Override
     public int insertShop(Shop shop) {
         System.out.println("---ShopDao.insertShop---");
-        return ju.update("insert into shop (shopkeeper_id,shop_name,shop_introduction) value(?,?,?)"
+        return ju.insert("insert into shop (shopkeeper_id,shop_name,shop_introduction) value(?,?,?)"
                 , shop.getShopKeeperId(), shop.getShopName(), shop.getShopIntroduction());
     }
 
@@ -37,13 +37,13 @@ public class ShopDaoImpl implements ShopDao {
     }
     @Override
     public Shop getShopByShopName(Shop shop) {
-        ArrayList<Object> list = ju.execQueryList("select * from shop where shop_name = ?", new Object[]{shop.getShopName()});
+        ArrayList<Map<String, Object>> list = ju.execQueryList("select * from shop where shop_name = ?", new Object[]{shop.getShopName()});
 
         if(list==null){
             return null;
         }
         //从ArrayList<Map>中获取map
-        Map<String,Object> map = (Map<String, Object>) list.get(0);
+        Map<String,Object> map =  list.get(0);
         Shop shop1 = new Shop();
         shop1.setShopId((Integer) map.get("shop_id"));
         shop1.setShopKeeperId((Integer) map.get("shopkeeper_id"));

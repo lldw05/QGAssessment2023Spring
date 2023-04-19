@@ -13,7 +13,7 @@ public interface ShopDao {
     /**
      *  用于添加shop
      * @param shop shop对象
-     * @return 返回影响的行数
+     * @return 插入成功返回主键id的值  插入失败时返回0
      */
     int insertShop(Shop shop);
 

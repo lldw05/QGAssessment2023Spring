@@ -17,7 +17,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public int insertUser(User user) {
-        int update = ju.update("insert into user (username,password,phone_number) values(?,?,?)"
+        int update = ju.insert("insert into user (username,password,phone_number) values(?,?,?)"
                 , user.getUsername(), user.getPassword(), user.getPhoneNumber());
         return update;
     }
@@ -94,7 +94,7 @@ public class UserDaoImpl implements UserDao {
     public User getUserByUsername(User user) {
         System.out.println("---UserDao.getUserByUsername---");
         // 根据用户名查询一个用户
-        ArrayList<Object> list = ju.execQueryList("select * from user where username = ?", new Object[]{user.getUsername()});
+        ArrayList<Map<String, Object>> list = ju.execQueryList("select * from user where username = ?", new Object[]{user.getUsername()});
         //System.out.println(list==null);
         if(list==null) {
             return null;
@@ -104,7 +104,7 @@ public class UserDaoImpl implements UserDao {
 //        Map<String,Object> map = (Map<String, Object>) list.get(0);
         //System.out.println(map);
 
-        User user1 = getUserFromMap((Map<String, Object>) list.get(0));
+        User user1 = getUserFromMap( list.get(0));
 
         System.out.println(user1);
 
@@ -116,7 +116,7 @@ public class UserDaoImpl implements UserDao {
     public User getUserById(User user) {
         System.out.println("---UserDao.getUserById---");
         //根据userId查询user
-        ArrayList<Object> list = ju.execQueryList("select * from user where user_id = ?", new Object[]{user.getUserId()});
+        ArrayList<Map<String, Object>> list = ju.execQueryList("select * from user where user_id = ?", new Object[]{user.getUserId()});
 
         if(list==null) {
             return null;
@@ -125,7 +125,7 @@ public class UserDaoImpl implements UserDao {
         //System.out.println(list);
 
         //取出list集合里的第一个map 即索引为0的元素
-        User user1 = getUserFromMap((Map<String, Object>) list.get(0));
+        User user1 = getUserFromMap( list.get(0));
 
 
         System.out.println(user1);

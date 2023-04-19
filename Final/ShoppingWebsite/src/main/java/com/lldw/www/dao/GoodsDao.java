@@ -14,7 +14,7 @@ public interface GoodsDao {
     /**
      *  新增goods
      * @param goods goods对象
-     * @return  返回影响的行数
+     * @return  插入成功返回主键id的值  插入失败时返回0
      */
     int insertGoods(Goods goods);
 
@@ -38,6 +38,12 @@ public interface GoodsDao {
      * @return 返回装有goods的集合 或者null
      */
     ArrayList<Goods> selectGoodsByShopId(Shop shop);
+
+    /**
+     *
+     * @param goods goodsId
+     * @return 查找成功则返回goods对象 否则返回null
+     */
     Goods selectGoodsByGoodsId(Goods goods);
     ArrayList<Goods> slectGoodsByGoodsBame(Goods goods);
 

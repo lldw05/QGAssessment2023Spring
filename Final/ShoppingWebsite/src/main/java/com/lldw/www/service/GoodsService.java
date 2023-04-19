@@ -13,7 +13,7 @@ public interface GoodsService {
     /**
      *  添加商品
      * @param goods 封装的商品对象
-     * @return 添加成功则返回该商品对象 否则返回null
+     * @return 添加成功则返回该商品对象(包括id) 否则返回null
      */
     Goods addGoods(Goods goods);
 

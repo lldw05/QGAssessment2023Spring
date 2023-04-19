@@ -13,7 +13,7 @@ public interface UserDao {
     /**
      *  用于添加用户
      * @param user 用户对象
-     * @return 返回影响的行数
+     * @return 插入成功返回主键id的值  插入失败时返回0
      */
     int insertUser(User user);
 

@@ -13,10 +13,18 @@ import java.util.ArrayList;
  */
 public class GoodsServiceImpl implements GoodsService {
     GoodsDaoImpl goodsDao = new GoodsDaoImpl();
+
+
     @Override
     public Goods addGoods(Goods goods) {
-        int cnt = goodsDao.insertGoods(goods);
-        return cnt>0?goods:null;
+        int id = goodsDao.insertGoods(goods);
+        if(id>0){
+            //返回完整的goods对象(包括id)
+            goods.setGoodsId(id);
+            goods = goodsDao.selectGoodsByGoodsId(goods);
+            System.out.println("返回完整的goods对象(包括id):"+goods);
+        }
+        return id>0?goods:null;
     }
 
     @Override

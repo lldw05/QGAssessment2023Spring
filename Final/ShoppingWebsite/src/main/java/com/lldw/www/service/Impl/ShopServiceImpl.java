@@ -32,12 +32,12 @@ public class ShopServiceImpl implements ShopService {
             return null;
         }
 
-        //shopName未被使用 进行注册
-        int cnt = shopDao.insertShop(shop);
-        System.out.println("shopRegister,cnt:" + cnt);
+        //shopName未被使用 进行注册 返回值为id 或 0
+        int resultId = shopDao.insertShop(shop);
+        System.out.println("shopRegister,resultId:" + resultId);
 
         shop = shopDao.getShopByShopName(shop);
-        if (cnt > 0) {
+        if (resultId > 0) {
             //成功注册 将店主的roleId设为2
             User user = new User();
             user.setRoleId(2);
@@ -66,7 +66,7 @@ public class ShopServiceImpl implements ShopService {
 
 
         //影响行数大于0 返回新添加的shop对象 否则返回null
-        return cnt > 0 ? shopDao.getShopByShopName(shop) : null;
+        return resultId > 0 ? shopDao.getShopByShopName(shop) : null;
     }
 
     @Override
@@ -83,5 +83,34 @@ public class ShopServiceImpl implements ShopService {
             shop.setShopId(shopDao.getShopByShopName(shop).getShopId());
         }
         return goodsService.queryGoodsOfShop(shop);
+    }
+
+
+    @Override
+    public Goods addGoods(Goods goods) {
+        System.out.println("---ShopService.addGoods---");
+
+        //从ShooService到GoodsService
+        GoodsServiceImpl goodsService = new GoodsServiceImpl();
+        Goods resultGoods = goodsService.addGoods(goods);
+        System.out.println("resultGoods:"+resultGoods);
+        if(resultGoods!=null){
+
+            //添加成功 新增一条添加商品的审核信息
+
+            //添加数据
+            Message message = new Message();
+            message.setType(MessageType.NEW_PRODUCT_LAUNCH);
+            message.setGoodsId(resultGoods.getGoodsId());
+            message.setShopId(resultGoods.getShopId());
+            message.setMessageContent("新品上市!");
+
+            //调用messageService
+            MessageServiceImpl messageService = new MessageServiceImpl();
+            if(messageService.addMessage(message)!=null){
+                System.out.println("添加商品审核信息成功");
+            }
+        }
+        return resultGoods;
     }
 }
