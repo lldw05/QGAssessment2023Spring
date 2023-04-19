@@ -31,41 +31,59 @@ public class UserDaoImpl implements UserDao {
     @Override
     public int updateUser(User user) {
         System.out.println("--userDao.updateUser---");
+        String sql = "";
         //根据userId 先查出修改前的user数据
         User preUser = this.getUserById(user);
 
         //
         if(user.getNickname()!=null){
+            System.out.println(1);
             preUser.setNickname(user.getNickname());
+//            ju.update("update user set nickname = ? where user_id = ?",preUser.getNickname(),preUser.getUserId());
         }
         if(user.getPassword()!=null){
+            System.out.println(2);
             preUser.setPassword(user.getPassword());
+//            ju.update("update user set password = ? where user_id = ?",preUser.getPassword(),preUser.getUserId());
         }
         if(user.getAddress()!=null){
+            System.out.println(3);
             preUser.setAddress(user.getAddress());
+//            ju.update("update user set address = ? where user_id = ?",preUser.getAddress(),preUser.getUserId());
         }
         if(user.getPhoneNumber()!=null){
+            System.out.println(4);
             preUser.setPhoneNumber(user.getPhoneNumber());
+//            ju.update("update user set phone_number = ? where user_id = ?",preUser.getPhoneNumber(),preUser.getUserId());
         }
         if(user.getRealName()!=null){
+            System.out.println(5);
             preUser.setRealName(user.getRealName());
+//            ju.update("update user set real_name = ? where user_id = ?",preUser.getRealName(),preUser.getUserId());
         }
         if(user.getPayPassword()!=null){
+            System.out.println(6);
             preUser.setPayPassword(user.getPayPassword());
+//            ju.update("update user set pay_password = ? where user_id = ?",preUser.getPayPassword(),preUser.getUserId());
         }
         if(user.getPictureId()!=null){
+            System.out.println(7);
             preUser.setPictureId(user.getPictureId());
+//            ju.update("update user set picture_id = ? where user_id = ?",preUser.getPictureId(),preUser.getUserId());
         }
         if(user.getRoleId()!=null){
+            System.out.println(8);
             preUser.setRoleId(user.getRoleId());
+            ju.update("update user set role_id = ? where user_id = ?",preUser.getRoleId(),preUser.getUserId());
         }
-        System.out.println("preUser：");
+        System.out.println("preUser:");
         System.out.println(preUser);
         //出错
-        return ju.update("update table set nickname = ?,password= ?,address= ?,phone_number= ?" +
+        return ju.update("update user set nickname = ?,password= ?,address= ?,phone_number= ?" +
                         ",real_name=?,pay_password= ?,picture_id= ?,role_id= ? where user_id = ?",
-                preUser.getNickname(), preUser.getPassword(), preUser.getPhoneNumber(), preUser.getRealName()
+                preUser.getNickname(), preUser.getPassword(),preUser.getAddress(), preUser.getPhoneNumber(), preUser.getRealName()
                 , preUser.getPayPassword(), preUser.getPictureId(), preUser.getRoleId(), preUser.getUserId());
+//        return 1;
     }
 
     /**
