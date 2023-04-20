@@ -1,6 +1,7 @@
 package com.lldw.www.dao;
 
 import com.lldw.www.constants.MessageConstants;
+import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
 
 import java.util.ArrayList;
@@ -111,4 +112,6 @@ public interface MessageDao {
      * @return 返回message对象
      */
     Message getMessageFromMap(Map<String, Object> map);
+
+    ArrayList<Message> getMessageByGoodsId(Goods goods);
 }

@@ -38,6 +38,9 @@ public class GoodsDaoImpl implements GoodsDao {
         System.out.println("---GoodsDaoImpl.selectGoodsByShopId---");
         ArrayList<Goods> goodsList = new ArrayList<>();
         ArrayList<Map<String, Object>> mapList = ju.execQueryList("select * from goods where shop_id = ?", new Object[]{shop.getShopId()});
+        if(mapList==null){
+            return null;
+        }
         for (Map<String, Object> map :
                 mapList) {
             goodsList.add(getGoodsFromMap(map));

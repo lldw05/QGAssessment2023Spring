@@ -23,4 +23,17 @@ public interface GoodsService {
      * @return 返回装有goods的集合 或者null
      */
     ArrayList<Goods> queryGoodsOfShop(Shop shop);
+
+    /**
+     * 根据goodId查询goods
+     * @param goods goodsId
+     * @return 查询到了 返回goods对象 否则返回null
+     */
+    Goods queryGoodsByGoodsId(Goods goods);
+
+    /**
+     *   根据goodId查询goods
+     * @param goodsId goodsId
+     * @return 查询到了 返回goods对象 否则返回null
+    Goods queryGoodsByGoodsId(Integer goodsId);*/
 }

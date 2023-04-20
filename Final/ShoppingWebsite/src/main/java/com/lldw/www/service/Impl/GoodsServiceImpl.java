@@ -32,5 +32,15 @@ public class GoodsServiceImpl implements GoodsService {
        return goodsDao.selectGoodsByShopId(shop);
     }
 
+    @Override
+    public Goods queryGoodsByGoodsId(Goods goods) {
+        return goodsDao.selectGoodsByGoodsId(goods);
+    }
 
+    /*@Override
+    public Goods queryGoodsByGoodsId(Integer goodsId) {
+        Goods goods = new Goods();
+        goods.setGoodsId(goodsId);
+        return goodsDao.selectGoodsByGoodsId(goods);
+    }*/
 }

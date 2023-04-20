@@ -1,9 +1,15 @@
 package com.lldw.www.service.Impl;
 
+import com.lldw.www.constants.MessageConstants;
 import com.lldw.www.dao.Impl.MessageDaoImpl;
 import com.lldw.www.dao.MessageDao;
+import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
 import com.lldw.www.service.MessageService;
+
+import java.util.ArrayList;
+
+import static com.lldw.www.constants.MessageConstants.*;
 
 /**
  * @author lldw
@@ -19,30 +25,41 @@ public class MessageServiceImpl implements MessageService {
         System.out.println("---MessageService.addMessage---");
         int id = 0;
         switch (message.getType()){
-            case 1:
+            case MESSAGE_TYPE_GOODS_COMPLAINT:
                 id = messageDao.insertMessage1(message);
                 break;
-            case 2:
+            case MESSAGE_TYPE_STORE_REGISTRATION:
                 id =messageDao.insertMessage2(message);
                 break;
-            case 3:
+            case MESSAGE_TYPE_NEW_PRODUCT_LAUNCH:
                 System.out.println("insertMessage3");
                 id =messageDao.insertMessage3(message);
                 break;
-            case 4:
+            case MESSAGE_TYPE_REMINDER:
                 id =messageDao.insertMessage4(message);
                 break;
-            case 5:
+            case MESSAGE_TYPE_USER_CHAT_USER:
                 id =messageDao.insertMessage5(message);
                 break;
-            case 6:
+            case MESSAGE_TYPE_USER_CHAT_SHOP:
                 id =messageDao.insertMessage6(message);
                 break;
-            case 7:
+            case MESSAGE_TYPE_COMMENT:
+                System.out.println("insertMessage7");
+
+                //通过goodId查询goods 进而得到shopId
+                GoodsServiceImpl goodsService = new GoodsServiceImpl();
+
+                Goods goods = new Goods();
+                goods.setGoodsId(message.getGoodsId());
+
+                Goods resultGoods = goodsService.queryGoodsByGoodsId(goods);
+                if (resultGoods!=null){
+                    message.setShopId(resultGoods.getShopId());
+                }
                 id =messageDao.insertMessage7(message);
                 break;
-            case 8:
-
+            case MESSAGE_TYPE_POST:
                 System.out.println("insertMessage8");
                 id =messageDao.insertMessage8(message);
                 break;
@@ -57,4 +74,11 @@ public class MessageServiceImpl implements MessageService {
         }
         return id>0?message:null;
     }
+
+    @Override
+    public ArrayList<Message> getCommentByGoodsId(Goods goods) {
+        return messageDao.getMessageByGoodsId(goods);
+    }
+
+
 }

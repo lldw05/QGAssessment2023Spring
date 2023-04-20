@@ -2,6 +2,7 @@ package com.lldw.www.dao.Impl;
 
 import com.lldw.www.constants.MessageConstants;
 import com.lldw.www.dao.MessageDao;
+import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
 import com.lldw.www.utils.JdbcUtils;
 
@@ -87,14 +88,16 @@ public class MessageDaoImpl implements MessageDao {
 
     @Override
     public int insertMessage7(Message message) {
-        return 0;
+        return ju.insert("insert into message (type,goods_id,shop_id,message_content,user_id,create_time) values (?,?,?,?,?,?) "
+                , message.getType(), message.getGoodsId(), message.getShopId()
+                , message.getMessageContent(), message.getUserId(), message.getCreateTime());
     }
 
     @Override
     public int insertMessage8(Message message) {
         return ju.insert("insert into message (type,sender_type,goods_id,shop_id,message_content,user_id,create_time) values (?,?,?,?,?,?,?) "
-                , message.getType(), message.getSenderType(),message.getGoodsId(), message.getShopId()
-                , message.getMessageContent(),message.getUserId(),message.getCreateTime());
+                , message.getType(), message.getSenderType(), message.getGoodsId(), message.getShopId()
+                , message.getMessageContent(), message.getUserId(), message.getCreateTime());
     }
 
     public Message getMessageFromMap(Map<String, Object> map) {
@@ -114,5 +117,23 @@ public class MessageDaoImpl implements MessageDao {
 
         return message;
 
+    }
+
+    @Override
+    public ArrayList<Message> getMessageByGoodsId(Goods goods) {
+        System.out.println("---MessageDao.getMessageByGoodsId---");
+        ArrayList<Message> messageArrayList = new ArrayList<>();
+        ArrayList<Map<String, Object>> mapList = ju.execQueryList("select * from message where type = ? and goods_id = ?"
+                , new Object[]{MessageConstants.MESSAGE_TYPE_COMMENT, goods.getGoodsId()});
+        //判断集合是否为空 为空则直接返回null
+        if (mapList == null) {
+            return null;
+        }
+        for (Map<String, Object> map :
+                mapList) {
+            messageArrayList.add(getMessageFromMap(map));
+        }
+        System.out.println("messageArrayList:" + messageArrayList);
+        return messageArrayList;
     }
 }
