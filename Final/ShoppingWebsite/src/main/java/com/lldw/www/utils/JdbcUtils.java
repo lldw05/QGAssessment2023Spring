@@ -143,7 +143,10 @@ public class JdbcUtils {
         int id = 0;
         try {
             ps = getPreparedStatement(sql, args);
-            if (ps.executeUpdate() > 0) {
+            System.out.println(">>>准备insert");
+            int cnt = ps.executeUpdate();
+            System.out.println("insert影响行数:"+cnt);
+            if (cnt > 0) {
                 //获取主键
                 ResultSet rs = ps.getGeneratedKeys();
                 rs.next();
