@@ -41,6 +41,11 @@ public class MessageServiceImpl implements MessageService {
             case 7:
                 id =messageDao.insertMessage7(message);
                 break;
+            case 8:
+
+                System.out.println("insertMessage8");
+                id =messageDao.insertMessage8(message);
+                break;
             default:
                 System.out.println("根据信息类型调用MessageDao.insert失败~");
                 break;

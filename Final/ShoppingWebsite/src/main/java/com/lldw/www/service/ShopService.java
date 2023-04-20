@@ -1,6 +1,7 @@
 package com.lldw.www.service;
 
 import com.lldw.www.po.Goods;
+import com.lldw.www.po.Message;
 import com.lldw.www.po.Shop;
 
 import java.util.ArrayList;
@@ -36,4 +37,11 @@ public interface ShopService {
      * @return 添加成功则返回该商品对象(包括shopId) 否则返回null
      */
     Goods addGoods(Goods goods);
+
+    /**
+     *  发布动态 吸引顾客
+     * @param message 封装的商品对象
+     * @return 添加成功则返回该message对象(包括messageId) 否则返回null
+     */
+    Message sendPost(Message message);
 }

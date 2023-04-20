@@ -1,6 +1,6 @@
 package com.lldw.www.dao;
 
-import com.lldw.www.constants.MessageType;
+import com.lldw.www.constants.MessageConstants;
 import com.lldw.www.po.Message;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public interface MessageDao {
      * @param messageType message类型
      * @return 插入成功返回主键id的值  插入失败时返回0
      */
-    int insertMessage(Message message, MessageType messageType);
+    int insertMessage(Message message, MessageConstants messageType);
 
     /**
      * 用于删除message
@@ -98,6 +98,12 @@ public interface MessageDao {
      * @return 插入成功返回主键id的值  插入失败时返回0
      */
     int insertMessage7(Message message);
+    /**
+     *  新增 发布动态
+     * @param message 封装的message对象
+     * @return 插入成功返回主键id的值  插入失败时返回0
+     */
+    int insertMessage8(Message message);
 
     /**
      *  将放到map中的查询结果封装成message对象返回

@@ -1,6 +1,6 @@
 package com.lldw.www.service.Impl;
 
-import com.lldw.www.constants.MessageType;
+import com.lldw.www.constants.MessageConstants;
 import com.lldw.www.dao.Impl.ShopDaoImpl;
 import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class ShopServiceImpl implements ShopService {
     ShopDaoImpl shopDao = new ShopDaoImpl();
-
+    MessageServiceImpl messageService = new MessageServiceImpl();
 
     @Override
     public Shop register(Shop shop) {
@@ -51,7 +51,7 @@ public class ShopServiceImpl implements ShopService {
             //新增一条 新店铺注册的信息 等网管通过
             Message message = new Message();
             //设置message 传入messageType shopId shopKeepId
-            message.setType(MessageType.STORE_REGISTRATION);
+            message.setType(MessageConstants.MESSAGE_TYPE_STORE_REGISTRATION);
             message.setShopId(shop.getShopId());
             message.setUserId(shop.getShopKeeperId());
             message.setMessageContent("新店铺注册!");
@@ -100,17 +100,27 @@ public class ShopServiceImpl implements ShopService {
 
             //添加数据
             Message message = new Message();
-            message.setType(MessageType.NEW_PRODUCT_LAUNCH);
+            message.setType(MessageConstants.MESSAGE_TYPE_NEW_PRODUCT_LAUNCH);
             message.setGoodsId(resultGoods.getGoodsId());
             message.setShopId(resultGoods.getShopId());
             message.setMessageContent("新品上市!");
 
             //调用messageService
-            MessageServiceImpl messageService = new MessageServiceImpl();
             if(messageService.addMessage(message)!=null){
                 System.out.println("添加商品审核信息成功");
             }
         }
         return resultGoods;
+    }
+
+    @Override
+    public Message sendPost(Message message) {
+        System.out.println("---ShopService.sendPost---");
+
+        Message resultMessage = messageService.addMessage(message);
+        if(resultMessage!=null){
+            System.out.println("发布动态成功");
+        }
+        return resultMessage;
     }
 }

@@ -1,6 +1,6 @@
 package com.lldw.www.dao.Impl;
 
-import com.lldw.www.constants.MessageType;
+import com.lldw.www.constants.MessageConstants;
 import com.lldw.www.dao.MessageDao;
 import com.lldw.www.po.Message;
 import com.lldw.www.utils.JdbcUtils;
@@ -18,7 +18,7 @@ public class MessageDaoImpl implements MessageDao {
     JdbcUtils ju = JdbcUtils.getInstance();
 
     @Override
-    public int insertMessage(Message message, MessageType messageType) {
+    public int insertMessage(Message message, MessageConstants messageType) {
         return 0;
     }
 
@@ -88,6 +88,13 @@ public class MessageDaoImpl implements MessageDao {
     @Override
     public int insertMessage7(Message message) {
         return 0;
+    }
+
+    @Override
+    public int insertMessage8(Message message) {
+        return ju.insert("insert into message (type,sender_type,goods_id,shop_id,message_content,user_id,create_time) values (?,?,?,?,?,?,?) "
+                , message.getType(), message.getSenderType(),message.getGoodsId(), message.getShopId()
+                , message.getMessageContent(),message.getUserId(),message.getCreateTime());
     }
 
     public Message getMessageFromMap(Map<String, Object> map) {
