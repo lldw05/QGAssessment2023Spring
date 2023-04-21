@@ -34,6 +34,9 @@ public class UserDaoImpl implements UserDao {
         //根据userId 先查出修改前的user数据
         User preUser = this.getUserById(user);
 
+        System.out.println("preUser:");
+        System.out.println(preUser);
+
         //
         if(user.getNickname()!=null){
             System.out.println(1);
@@ -73,16 +76,15 @@ public class UserDaoImpl implements UserDao {
         if(user.getRoleId()!=null){
             System.out.println(8);
             preUser.setRoleId(user.getRoleId());
-            ju.update("update user set role_id = ? where user_id = ?",preUser.getRoleId(),preUser.getUserId());
+//            ju.update("update user set role_id = ? where user_id = ?",preUser.getRoleId(),preUser.getUserId());
         }
-        System.out.println("preUser:");
+        System.out.println("afterUser:");
         System.out.println(preUser);
         //出错
         return ju.update("update user set nickname = ?,password= ?,address= ?,phone_number= ?" +
                         ",real_name=?,pay_password= ?,picture_id= ?,role_id= ? where user_id = ?",
                 preUser.getNickname(), preUser.getPassword(),preUser.getAddress(), preUser.getPhoneNumber(), preUser.getRealName()
                 , preUser.getPayPassword(), preUser.getPictureId(), preUser.getRoleId(), preUser.getUserId());
-//        return 1;
     }
 
     /**

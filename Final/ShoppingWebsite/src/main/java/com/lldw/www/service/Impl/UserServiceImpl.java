@@ -87,10 +87,9 @@ public class UserServiceImpl implements UserService {
             user.setPayPassword(EncryptUtil.encrypt(user.getPayPassword()));
             user.setPayPassword(EncryptUtil.encrypt(user.getPayPassword()));
         }
-
         //进行更新 返回修改的行数
         //修改行数大于0 返回修改完的user对象 否则返回null
-        return userDao.updateUser(user) >0?userDao.getUserByUsername(user):null;
+        return userDao.updateUser(user) >0?userDao.getUserById(user):null;
 
     }
 }

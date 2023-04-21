@@ -8,7 +8,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.*;
 
 /**
@@ -223,6 +222,33 @@ public class UserServlet extends BaseServlet {
     }
 
     public void updateUserData(HttpServletRequest request,HttpServletResponse response,String jsonStr){
+        System.out.println("---UserServlet.updateUserData---");
 
+        //将JSON字符申转为Java对象
+        User user = JSON.parseObject(jsonStr, User.class);
+        System.out.println("user:"+user);
+        User resultUser = userService.updateUser(user);
+        System.out.println("resultUser:"+resultUser);
+
+        //响应数据
+
+        if (resultUser != null) {
+            try {
+                response.setContentType("text/json;charset=utf-8");
+
+                //将resultShop对象转换为JSON数据 序列化 将shop传给前端
+                response.getWriter().write(JSON.toJSONString(resultUser));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("修改信息失败~");
+            try {
+                response.getWriter().write("修改信息失败~");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

@@ -5,7 +5,6 @@ import com.lldw.www.constants.MessageConstants;
 import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
 import com.lldw.www.po.Shop;
-import com.lldw.www.service.Impl.GoodsServiceImpl;
 import com.lldw.www.service.Impl.ShopServiceImpl;
 
 import javax.servlet.http.*;

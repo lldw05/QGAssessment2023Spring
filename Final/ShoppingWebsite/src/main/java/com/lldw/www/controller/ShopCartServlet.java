@@ -1,10 +1,8 @@
 package com.lldw.www.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.lldw.www.po.Shop;
 import com.lldw.www.po.ShopCart;
 import com.lldw.www.service.Impl.ShopCartServiceImpl;
-import com.lldw.www.service.ShopCartService;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;

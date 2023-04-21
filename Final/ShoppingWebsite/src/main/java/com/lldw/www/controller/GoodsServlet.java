@@ -1,8 +1,5 @@
 package com.lldw.www.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.lldw.www.po.Goods;
-import com.lldw.www.po.Shop;
 import com.lldw.www.service.Impl.GoodsServiceImpl;
 
 import javax.servlet.annotation.WebServlet;
