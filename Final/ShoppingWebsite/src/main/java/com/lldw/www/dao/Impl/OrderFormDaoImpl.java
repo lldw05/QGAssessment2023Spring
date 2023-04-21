@@ -15,6 +15,7 @@ import java.util.Map;
  */
 public class OrderFormDaoImpl implements OrderFormDao {
     JdbcUtils ju = JdbcUtils.getInstance();
+
     @Override
     public int insertOrderForm(OrderForm orderForm) {
         return 0;
@@ -22,11 +23,11 @@ public class OrderFormDaoImpl implements OrderFormDao {
 
     @Override
     public int insertOrderForms(OrderForm[] orderForm) {
-        int cnt =0;
+        int cnt = 0;
         for (OrderForm of :
                 orderForm) {
-            if(ju.insert("insert into order_form (user_id,goods_id,amount,status) values (?,?,?,?)"
-                    ,of.getUserId(),of.getGoodsId(),of.getAmount(),OrderFormConstants.STATUS_UNDELIVERED)>0){
+            if (ju.insert("insert into order_form (user_id,goods_id,amount,status) values (?,?,?,?)"
+                    , of.getUserId(), of.getGoodsId(), of.getAmount(), OrderFormConstants.STATUS_UNDELIVERED) > 0) {
                 cnt++;
             }
         }
@@ -46,11 +47,33 @@ public class OrderFormDaoImpl implements OrderFormDao {
 
     @Override
     public ArrayList<OrderForm> getOrderFormByUserId(User user) {
-        return null;
+        System.out.println("---OrderFormDao.getOrderFormByUserId---");
+        ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from order_form where user_id = ?", new Object[]{user.getUserId()});
+
+        //判断集合是否为空 为空则直接返回null
+        if (maps == null) {
+            return null;
+        }
+        ArrayList<OrderForm> list = new ArrayList<>();
+        for (Map<String, Object> m :
+                maps) {
+            list.add(getOrderFormFromMap(m));
+        }
+        return list;
     }
 
     @Override
     public OrderForm getOrderFormFromMap(Map<String, Object> map) {
-        return null;
+
+        //从map中获取值
+        OrderForm orderForm = new OrderForm();
+        orderForm.setId((Integer) map.get("id"));
+        orderForm.setUserId((Integer) map.get("user_id"));
+        orderForm.setGoodsId((Integer) map.get("goods_id"));
+        orderForm.setShopId((Integer) map.get("shop_id"));
+        orderForm.setAmount((Integer) map.get("amount"));
+        orderForm.setStatus((String) map.get("status"));
+
+        return orderForm;
     }
 }

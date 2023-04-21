@@ -2,7 +2,10 @@ package com.lldw.www.service.Impl;
 
 import com.lldw.www.dao.Impl.OrderFormDaoImpl;
 import com.lldw.www.po.OrderForm;
+import com.lldw.www.po.User;
 import com.lldw.www.service.OrderFormService;
+
+import java.util.ArrayList;
 
 /**
  * @author lldw
@@ -19,5 +22,9 @@ public class OrderFormServiceImpl implements OrderFormService {
 
         //判断影响的行数是否等于数组的长度
         return cnt==orderForms.length;
+    }
+    @Override
+    public ArrayList<OrderForm> queryOrderFormByUserId(User user){
+        return orderFormDao.getOrderFormByUserId(user);
     }
 }

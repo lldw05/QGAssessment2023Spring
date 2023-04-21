@@ -1,5 +1,7 @@
 package com.lldw.www.po;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * @author
  * @date
@@ -8,11 +10,17 @@ public class User {
     private Integer userId;
     private String username;
     private String nickname;
+
+    @JSONField(serialize = false)
     private String password;
+
     private String address;
     private String phoneNumber;
     private String realName;
+
+    @JSONField(serialize = false)
     private String payPassword;
+
     private Integer pictureId;
     private Integer  shopId;
     private boolean isActive;

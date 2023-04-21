@@ -1,6 +1,9 @@
 package com.lldw.www.service;
 
+import com.lldw.www.po.OrderForm;
 import com.lldw.www.po.User;
+
+import java.util.ArrayList;
 
 /**
  * @author
@@ -22,8 +25,8 @@ public interface UserService {
     User register(User user);
 
     /**
-     * 通过username查找user对象 主要用于判断username是否被使用
-     * @param user 传入用户名
+     * 通过username查找user对象
+     * @param user username
      * @return 查询到了 则返回User对象 查询不到则返回null
      */
     User queryUser(User user);
@@ -34,4 +37,11 @@ public interface UserService {
      * @return 修改成功返回User对象 修改失败返回null
      */
     User updateUser(User user);
+
+    /**
+     * 查询用户订单
+     * @param user userId
+     * @return 查询到了则返回orderForm集合 否则返回null
+     */
+    ArrayList<OrderForm> checkOrderForm(User user);
 }
