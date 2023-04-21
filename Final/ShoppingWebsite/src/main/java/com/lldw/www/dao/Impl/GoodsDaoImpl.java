@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
+ *
  * @author
  * @date
  */
@@ -66,9 +67,19 @@ public class GoodsDaoImpl implements GoodsDao {
     }
 
     @Override
-    public ArrayList<Goods> slectGoodsByGoodsBame(Goods goods) {
-        return null;
+    public ArrayList<Goods> selectGoodsByGoodsName(String s) {
+        ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from goods where goods_introduction like \'%" + s + "%\'", null);
+        if(maps==null){
+            return null;
+        }
+        ArrayList<Goods> goods = new ArrayList<>();
+        for (Map<String, Object> m:
+        maps){
+            goods.add(getGoodsFromMap(m));
+        }
+        return goods;
     }
+
 
     @Override
     public Goods getGoodsFromMap(Map<String, Object> map) {

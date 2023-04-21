@@ -1,8 +1,16 @@
 package com.lldw.www.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.lldw.www.constants.MessageConstants;
+import com.lldw.www.po.Goods;
+import com.lldw.www.po.Message;
 import com.lldw.www.service.Impl.GoodsServiceImpl;
 
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * @author lldw
@@ -13,5 +21,36 @@ public class GoodsServlet extends BaseServlet {
 
     GoodsServiceImpl goodsService = new GoodsServiceImpl();
 
+    public  void searchGoods(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+        System.out.println("---MessageServlet.addComment---");
 
+        //将JSON字符申转为String对象
+        String s = JSON.parseObject(jsonStr, String.class);
+        System.out.println("搜索关键词:" + s);
+
+
+
+        //调用service
+        ArrayList<Goods> goods = goodsService.searchGoods(s);
+
+
+        if (goods != null) {
+            try {
+                response.setContentType("text/json;charset=utf-8");
+
+                //将resultShop对象转换为JSON数据 序列化 将shop传给前端
+                response.getWriter().write(JSON.toJSONString(goods));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("没有找到您想要的商品哦~");
+            try {
+                response.getWriter().write("没有找到您想要的商品哦~");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

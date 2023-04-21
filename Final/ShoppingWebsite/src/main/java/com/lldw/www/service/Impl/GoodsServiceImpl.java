@@ -37,6 +37,11 @@ public class GoodsServiceImpl implements GoodsService {
         return goodsDao.selectGoodsByGoodsId(goods);
     }
 
+    @Override
+    public ArrayList<Goods> searchGoods(String s) {
+        return goodsDao.selectGoodsByGoodsName(s);
+    }
+
     /*@Override
     public Goods queryGoodsByGoodsId(Integer goodsId) {
         Goods goods = new Goods();

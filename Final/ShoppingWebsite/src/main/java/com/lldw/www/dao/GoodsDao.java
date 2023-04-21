@@ -45,7 +45,13 @@ public interface GoodsDao {
      * @return 查找成功则返回goods对象 否则返回null
      */
     Goods selectGoodsByGoodsId(Goods goods);
-    ArrayList<Goods> slectGoodsByGoodsBame(Goods goods);
+
+    /**
+     *  根据关键词 搜索商品
+     * @param s 关键词
+     * @return 搜索到了 返回搜索结果 否则返回null
+     */
+    ArrayList<Goods> selectGoodsByGoodsName(String s);
 
     /**
      * 将放到map中的查询结果封装成goods对象返回

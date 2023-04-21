@@ -32,8 +32,9 @@ public interface GoodsService {
     Goods queryGoodsByGoodsId(Goods goods);
 
     /**
-     *   根据goodId查询goods
-     * @param goodsId goodsId
-     * @return 查询到了 返回goods对象 否则返回null
-    Goods queryGoodsByGoodsId(Integer goodsId);*/
+     * 根据关键词搜索商品
+     * @param s 关键词
+     * @return 搜索到了 返回搜索结果 否则返回null
+     */
+    ArrayList<Goods> searchGoods(String s);
 }
