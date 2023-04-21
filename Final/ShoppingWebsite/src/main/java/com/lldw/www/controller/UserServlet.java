@@ -276,35 +276,7 @@ public class UserServlet extends BaseServlet {
         }
     }
 
-    public void checkOrderForm(HttpServletRequest request,HttpServletResponse response,String jsonStr){
-        System.out.println("---UserServlet.checkOrderForm---");
 
-        //将JSON字符申转为Java对象
-        User user = JSON.parseObject(jsonStr, User.class);
-        System.out.println("user:"+user);
-        ArrayList<OrderForm> result = userService.checkOrderForm(user);
-        System.out.println("resultUser:"+result);
 
-        //响应数据
-
-        if (result != null) {
-            try {
-                response.setContentType("text/json;charset=utf-8");
-
-                //将resultShop对象转换为JSON数据 序列化 将shop传给前端
-                response.getWriter().write(JSON.toJSONString(result));
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("展示订单失败~");
-            try {
-                response.getWriter().write("展示订单失败~");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
 
 }

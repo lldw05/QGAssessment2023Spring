@@ -24,4 +24,18 @@ public interface OrderFormService {
      * @return 查询到了则返回orderForm集合  否则返回null
      */
     ArrayList<OrderForm> queryOrderFormByUserId(User user);
+
+    /**
+     *  更新订单 状态 数量 等等
+     * @param orderForm 订单id以及要修改的信息 不修改的设为null
+     * @return  返回是否更新成功
+     */
+    boolean updateOrderForm(OrderForm orderForm);
+
+    /**
+     * 通过订单id查询订单
+     * @param orderForm id
+     * @return 查询到了 返回订单对象 否则返回null
+     */
+    OrderForm queryOrderFormById(OrderForm orderForm);
 }

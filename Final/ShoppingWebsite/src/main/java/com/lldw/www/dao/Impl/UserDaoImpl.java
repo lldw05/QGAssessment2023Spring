@@ -30,7 +30,6 @@ public class UserDaoImpl implements UserDao {
     @Override
     public int updateUser(User user) {
         System.out.println("--userDao.updateUser---");
-        String sql = "";
         //根据userId 先查出修改前的user数据
         User preUser = this.getUserById(user);
 
@@ -80,7 +79,7 @@ public class UserDaoImpl implements UserDao {
         }
         System.out.println("afterUser:");
         System.out.println(preUser);
-        //出错
+
         return ju.update("update user set nickname = ?,password= ?,address= ?,phone_number= ?" +
                         ",real_name=?,pay_password= ?,picture_id= ?,role_id= ? where user_id = ?",
                 preUser.getNickname(), preUser.getPassword(),preUser.getAddress(), preUser.getPhoneNumber(), preUser.getRealName()

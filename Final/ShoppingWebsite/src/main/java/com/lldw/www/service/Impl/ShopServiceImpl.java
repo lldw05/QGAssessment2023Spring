@@ -97,6 +97,7 @@ public class ShopServiceImpl implements ShopService {
         if(resultGoods!=null){
 
             //添加成功 新增一条添加商品的审核信息
+            //从从ShooService到MessageService
 
             //添加数据
             Message message = new Message();

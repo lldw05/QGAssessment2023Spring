@@ -13,6 +13,8 @@ import java.util.ArrayList;
  */
 public class OrderFormServiceImpl implements OrderFormService {
 
+
+
     OrderFormDaoImpl orderFormDao = new OrderFormDaoImpl();
     @Override
     public boolean addOrderInBulk(OrderForm[] orderForms) {
@@ -26,5 +28,15 @@ public class OrderFormServiceImpl implements OrderFormService {
     @Override
     public ArrayList<OrderForm> queryOrderFormByUserId(User user){
         return orderFormDao.getOrderFormByUserId(user);
+    }
+
+    @Override
+    public boolean updateOrderForm(OrderForm orderForm) {
+        return orderFormDao.updateOrderForm(orderForm)==1;
+    }
+
+    @Override
+    public OrderForm queryOrderFormById(OrderForm orderForm) {
+        return orderFormDao.getOrderFormById(orderForm);
     }
 }

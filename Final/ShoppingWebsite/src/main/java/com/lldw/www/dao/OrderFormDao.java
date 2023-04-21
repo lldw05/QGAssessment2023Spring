@@ -51,4 +51,11 @@ public interface OrderFormDao {
      * @return 返回orderForm对象
      */
     OrderForm getOrderFormFromMap(Map<String, Object> map);
+
+    /**
+     * 通过订单id查询订单
+     * @param orderForm id
+     * @return 查询到了 返回订单对象 否则返回null
+     */
+    OrderForm getOrderFormById(OrderForm orderForm);
 }

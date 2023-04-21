@@ -42,7 +42,35 @@ public class OrderFormDaoImpl implements OrderFormDao {
 
     @Override
     public int updateOrderForm(OrderForm orderForm) {
-        return 0;
+        System.out.println("--OrderFormDao.updateOrderForm---");
+
+        //根据orderFormId 查询中修改前的orderForm数据
+        OrderForm preOf = this.getOrderFormById(orderForm);
+        if(preOf==null){
+            return 0;
+        }
+
+        System.out.println("preOf:"+preOf);
+
+        if(orderForm.getAmount()!=null){
+            preOf.setAmount(orderForm.getAmount());
+        }
+//        if(orderForm.getUserId()!=null){
+//            preOf.setUserId(orderForm.getUserId());
+//        }
+//        if(orderForm.getShopId()!=null){
+//            preOf.setShopId(orderForm.getShopId());
+//        }
+//        if(orderForm.getGoodsId()!=null){
+//            preOf.setGoodsId(orderForm.getGoodsId());
+//        }
+        if(orderForm.getStatus()!=null){
+            preOf.setStatus(orderForm.getStatus());
+        }
+
+        System.out.println("afterOf:"+preOf);
+
+        return ju.update("update order_form set amount = ?,status = ? where id = ?",preOf.getAmount(),preOf.getStatus(),preOf.getId());
     }
 
     @Override
@@ -75,5 +103,15 @@ public class OrderFormDaoImpl implements OrderFormDao {
         orderForm.setStatus((String) map.get("status"));
 
         return orderForm;
+    }
+
+    @Override
+    public OrderForm getOrderFormById(OrderForm orderForm) {
+        ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from order_form where id = ?", new Object[]{orderForm.getId()});
+        if(maps==null){
+            return null;
+        }
+        OrderForm of = getOrderFormFromMap(maps.get(0));
+        return of;
     }
 }
