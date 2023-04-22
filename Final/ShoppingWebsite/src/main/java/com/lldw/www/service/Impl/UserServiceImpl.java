@@ -1,5 +1,6 @@
 package com.lldw.www.service.Impl;
 
+import com.lldw.www.constants.RoleId;
 import com.lldw.www.dao.Impl.UserDaoImpl;
 import com.lldw.www.po.OrderForm;
 import com.lldw.www.po.User;
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
         //查询不到 进行信息加密
         user = this.encryptUser(user);
-
+        user.setRoleId(RoleId.USER);
         //查询不到 注册 返回影响行数
         //影响行数大于0 返回新添加的user对象 否则返回null
 

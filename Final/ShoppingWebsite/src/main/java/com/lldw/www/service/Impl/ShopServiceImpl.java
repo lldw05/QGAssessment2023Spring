@@ -1,6 +1,7 @@
 package com.lldw.www.service.Impl;
 
 import com.lldw.www.constants.MessageConstants;
+import com.lldw.www.constants.RoleId;
 import com.lldw.www.dao.Impl.ShopDaoImpl;
 import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
@@ -40,7 +41,7 @@ public class ShopServiceImpl implements ShopService {
         if (resultId > 0) {
             //成功注册 将店主的roleId设为2
             User user = new User();
-            user.setRoleId(2);
+            user.setRoleId(RoleId.SHOPKEEPER);
             user.setUserId(shop.getShopKeeperId());
             UserServiceImpl userService = new UserServiceImpl();
             user = userService.updateUser(user);
