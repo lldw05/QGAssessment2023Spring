@@ -80,6 +80,17 @@ public class BaseServlet extends HttpServlet {
         //去除空格 不去除也行 只不过是多此一举
         jsonStr = jsonStr.replaceAll(" ","");
 
+
+        //处理时间
+        //jsonStr:{"messageContent":"测试发布动态","createTime":"2023-04-209:32:57","shopId":"6","goodsId":"8"}
+        StringBuilder stringBuffer = new StringBuilder(jsonStr);
+        int index = stringBuffer.indexOf("createTime");
+        if (index != -1) {
+            stringBuffer.insert(index + 23, "T");
+            jsonStr = stringBuffer.toString();
+//            System.out.println("jsonStr:" + jsonStr);
+        }
+
         //输出到控制台
         System.out.println("jsonStr:"+jsonStr);
         return jsonStr;

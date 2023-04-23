@@ -78,7 +78,10 @@ public class MessageDaoImpl implements MessageDao {
 
     @Override
     public int insertGoodsComplaint(Message message) {
-        return 0;
+
+        return ju.insert("insert into message (type, user_id,shop_id,goods_id,message_content,create_time)" +
+                        " values (?,?,?,?,?,?)",message.getType(),message.getUserId(),message.getShopId()
+                ,message.getGoodsId(),message.getMessageContent(),message.getCreateTime());
     }
 
     @Override
@@ -217,6 +220,13 @@ public class MessageDaoImpl implements MessageDao {
     public ArrayList<Message> queryGoodsLaunch() {
         ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from message where type = ?"
                 , new Object[]{MessageConstants.MESSAGE_TYPE_NEW_PRODUCT_LAUNCH});
+        return getMessageListFromMapList(maps);
+    }
+
+    @Override
+    public ArrayList<Message> queryComplaint() {
+        ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from message where type = ?"
+                , new Object[]{MessageConstants.MESSAGE_TYPE_GOODS_COMPLAINT});
         return getMessageListFromMapList(maps);
     }
 }

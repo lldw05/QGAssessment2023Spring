@@ -167,4 +167,10 @@ public interface MessageDao {
      * @return 查询到了 返回message集合 否则返回null
      */
     ArrayList<Message> queryGoodsLaunch();
+
+    /**
+     * 查询 商品上市的审核信息 商店注册的审核信息 投诉信息
+     * @return 查询到了 返回message集合 否则返回null
+     */
+    ArrayList<Message> queryComplaint();
 }

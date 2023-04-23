@@ -1,5 +1,6 @@
 package com.lldw.www.service.Impl;
 
+import com.lldw.www.constants.MessageConstants;
 import com.lldw.www.dao.Impl.MessageDaoImpl;
 import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
@@ -70,6 +71,24 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public boolean addGoodsComplaint(Message message) {
+        //判断前端是否传入shopId
+        if(message.getShopId()==null){
+            //没有传 那就由后台的大哥来吧
+            GoodsServiceImpl goodsService = new GoodsServiceImpl();
+            Goods goods = new Goods();
+            goods.setGoodsId(message.getGoodsId());
+
+            //通过goodsId查询goods对象进而得到shopId
+            goods = goodsService.queryGoodsByGoodsId(goods);
+            if(goods==null){
+                //没有该goods对象
+                System.out.println("没有该goods对象");
+                return false;
+            }
+            message.setShopId(goods.getShopId());
+        }
+        //设置信息type
+        message.setType(MessageConstants.MESSAGE_TYPE_GOODS_COMPLAINT);
         return messageDao.insertGoodsComplaint(message)>0;
     }
 
@@ -134,6 +153,11 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public ArrayList<Message> queryGoodsLaunch() {
         return messageDao.queryGoodsLaunch();
+    }
+
+    @Override
+    public ArrayList<Message> queryComplaint() {
+        return messageDao.queryComplaint();
     }
 
 

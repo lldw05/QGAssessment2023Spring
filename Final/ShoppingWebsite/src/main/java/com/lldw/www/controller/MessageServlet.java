@@ -100,14 +100,6 @@ public class MessageServlet extends BaseServlet {
     public void sendPost(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
         System.out.println("---MessageServlet.sendPost---");
 
-        //jsonStr:{"messageContent":"测试发布动态","createTime":"2023-04-209:32:57","shopId":"6","goodsId":"8"}
-        //处理字符串 时间类
-        StringBuffer stringBuffer = new StringBuffer(jsonStr);
-        int index = stringBuffer.indexOf("createTime");
-        stringBuffer.insert(index + 23, "T");
-        jsonStr = stringBuffer.toString();
-        System.out.println("jsonStr:" + jsonStr);
-
         //将JSON字符申转为Message对象
         Message post = JSON.parseObject(jsonStr, Message.class);
         System.out.println("prePost:" + post);
@@ -176,16 +168,6 @@ public class MessageServlet extends BaseServlet {
         System.out.println("MessageServlet.sendChat---");
 
 
-        //jsonStr:{"messageContent":"测试发布动态","createTime":"2023-04-209:32:57","shopId":"6","goodsId":"8"}
-        //处理字符串 时间类
-        StringBuilder stringBuffer = new StringBuilder(jsonStr);
-        int index = stringBuffer.indexOf("createTime");
-        if (index != -1) {
-            stringBuffer.insert(index + 23, "T");
-            jsonStr = stringBuffer.toString();
-            System.out.println("jsonStr:" + jsonStr);
-        }
-
         //将JSON字符申转为Message对象
         Message chatMessage = JSON.parseObject(jsonStr, Message.class);
         System.out.println("chatMessage:" + chatMessage);
@@ -251,6 +233,7 @@ public class MessageServlet extends BaseServlet {
         }
 
     }
+
     /**
      * 查询商店注册申请信息
      *
@@ -289,7 +272,7 @@ public class MessageServlet extends BaseServlet {
      * @param response resp
      * @param jsonStr  存储着messageId的json字符串 isProcessed
      */
-    public void updateShopRegistration(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+    public void updateShopRegistration(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
         System.out.println("MessageServlet.updateShopRegistration---");
 
         //将JSON字符申转为Shop对象
@@ -299,7 +282,7 @@ public class MessageServlet extends BaseServlet {
         boolean flag = messageService.updateMessage(m);
 
         //判断是否修改成功
-        if(flag){
+        if (flag) {
             //修改成功
             try {
                 response.setContentType("text/json;charset=utf-8");
@@ -310,7 +293,7 @@ public class MessageServlet extends BaseServlet {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else {
+        } else {
             System.out.println("修改失败");
             try {
                 response.getWriter().write("修改失败");
@@ -320,7 +303,7 @@ public class MessageServlet extends BaseServlet {
         }
     }
 
-    public void queryGoodsLaunch(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+    public void queryGoodsLaunch(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
         System.out.println("MessageServlet.updateShopRegistration---");
 
         ArrayList<Message> messageArrayList = messageService.queryGoodsLaunch();
@@ -351,21 +334,21 @@ public class MessageServlet extends BaseServlet {
      * @param response resp
      * @param jsonStr  存储着messageId的json字符串 isProcessed
      */
-    public void updateGoodsLaunch(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+    public void updateGoodsLaunch(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
         System.out.println("MessageServlet.updateGoodsLaunch---");
 
-        //将JSON字符申转为Shop对象
+        //将JSON字符申转为Message对象
         Message m = JSON.parseObject(jsonStr, Message.class);
         System.out.println("Message:" + m);
 
         boolean flag = messageService.updateMessage(m);
 
         //判断是否修改成功
-        if(flag){
+        if (flag) {
             //修改成功
 
             //将goods状态设为active
-            Goods goods  = new Goods();
+            Goods goods = new Goods();
             goods.setGoodsId(m.getGoodsId());
             goods.setActive(true);
             GoodsServiceImpl goodsService = new GoodsServiceImpl();
@@ -376,7 +359,7 @@ public class MessageServlet extends BaseServlet {
 
                 //将resultShop对象转换为JSON数据 序列化 将message传给前端
                 response.getWriter().write(JSON.toJSONString("succeed"));
-                if(result){
+                if (result) {
                     //如果商品状态更新成功
                     response.getWriter().write(JSON.toJSONString("商品状态更新成功"));
                 }
@@ -384,13 +367,95 @@ public class MessageServlet extends BaseServlet {
                 e.printStackTrace();
             }
 
-        }else {
+        } else {
             System.out.println("修改失败");
             try {
                 response.getWriter().write("修改失败");
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * @param request  req
+     * @param response resp
+     * @param jsonStr  userId,goodsId,shopId,createTime,messageContent
+     */
+    public void addGoodsComplaint(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
+        System.out.println("MessageServlet.addGoodsComplaint---");
+        //将JSON字符申转为Message对象
+        Message m = JSON.parseObject(jsonStr, Message.class);
+        System.out.println("Message:" + m);
+
+        //调用service
+        boolean rs = messageService.addGoodsComplaint(m);
+        try {
+            if (rs) {
+                //添加成功
+
+                response.setContentType("text/json;charset=utf-8");
+
+                //将resultShop对象转换为JSON数据 序列化 将message传给前端
+                response.getWriter().write(JSON.toJSONString("succeed"));
+            } else {
+                response.getWriter().write("添加失败");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void queryComplaint(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+        System.out.println("MessageServlet.queryComplaint---");
+        ArrayList<Message> messageArrayList = messageService.queryComplaint();
+        try {
+            if (messageArrayList!=null) {
+                //查询成功
+
+                response.setContentType("text/json;charset=utf-8");
+
+                //将resultShop对象转换为JSON数据 序列化 将message传给前端
+                response.getWriter().write(JSON.toJSONString(messageArrayList));
+            } else {
+                response.getWriter().write("查询失败");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 处理投诉信
+     *
+     * @param request  req
+     * @param response resp
+     * @param jsonStr  messageId isProcessed
+     */
+    public void handleComplaint(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
+        System.out.println("MessageServlet.handleComplaint---");
+
+        //将JSON字符申转为Message对象
+        Message m = JSON.parseObject(jsonStr, Message.class);
+        System.out.println("Message:" + m);
+
+        //调用service
+        boolean rs = messageService.updateMessage(m);
+        try {
+            if (rs) {
+                //修改成功
+
+                response.setContentType("text/json;charset=utf-8");
+
+                //将resultShop对象转换为JSON数据 序列化 将message传给前端
+                response.getWriter().write(JSON.toJSONString("succeed"));
+            } else {
+                response.getWriter().write("修改失败");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
