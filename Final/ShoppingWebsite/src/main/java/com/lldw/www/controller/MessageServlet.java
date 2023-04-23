@@ -164,8 +164,14 @@ public class MessageServlet extends BaseServlet {
 
     }
 
-
-    public void sendChat(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+    /**
+     * 发送聊天信息
+     *
+     * @param request  req
+     * @param response resp
+     * @param jsonStr  存储着message的json字符串
+     */
+    public void sendChat(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
         System.out.println("MessageServlet.sendChat---");
 
 
@@ -173,8 +179,7 @@ public class MessageServlet extends BaseServlet {
         //处理字符串 时间类
         StringBuilder stringBuffer = new StringBuilder(jsonStr);
         int index = stringBuffer.indexOf("createTime");
-        if(index!=-1)
-        {
+        if (index != -1) {
             stringBuffer.insert(index + 23, "T");
             jsonStr = stringBuffer.toString();
             System.out.println("jsonStr:" + jsonStr);
@@ -209,7 +214,14 @@ public class MessageServlet extends BaseServlet {
         }
     }
 
-    public void queryChatInShop(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+    /**
+     * 查询商店发送的聊天信息
+     *
+     * @param request  req
+     * @param response resp
+     * @param jsonStr  存储着shopId的json字符串
+     */
+    public void queryChatInShop(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
         System.out.println("MessageServlet.queryChatInShop---");
 
         //将JSON字符申转为Shop对象
@@ -239,4 +251,65 @@ public class MessageServlet extends BaseServlet {
 
     }
 
+    public void queryShopRegistration(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
+        System.out.println("MessageServlet.queryShopRegistration---");
+        ArrayList<Message> messageArrayList = messageService.queryShopRegistration();
+
+        if (messageArrayList != null) {
+            try {
+                response.setContentType("text/json;charset=utf-8");
+
+                //将resultShop对象转换为JSON数据 序列化 将message传给前端
+                response.getWriter().write(JSON.toJSONString(messageArrayList));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("暂时没有消息哦");
+            try {
+                response.getWriter().write("暂时没有审核哦");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    /**
+     * 通过商店注册申请 messageId
+     *
+     * @param request  req
+     * @param response resp
+     * @param jsonStr  存储着messageId的json字符串
+     */
+    public void updateShopRegistration(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+        System.out.println("MessageServlet.updateShopRegistration---");
+
+        //将JSON字符申转为Shop对象
+        Message m = JSON.parseObject(jsonStr, Message.class);
+        System.out.println("Message:" + m);
+
+        boolean flag = messageService.updateMessage(m);
+
+        //判断是否修改成功
+        if(flag){
+            //修改成功
+            try {
+                response.setContentType("text/json;charset=utf-8");
+
+                //将resultShop对象转换为JSON数据 序列化 将message传给前端
+                response.getWriter().write(JSON.toJSONString("succeed"));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            System.out.println("修改失败");
+            try {
+                response.getWriter().write("修改失败");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

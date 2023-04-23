@@ -119,5 +119,15 @@ public class MessageServiceImpl implements MessageService {
         return messageDao.getCharMessageByShopId(shop);
     }
 
+    @Override
+    public ArrayList<Message> queryShopRegistration() {
+        return messageDao.queryShopRegistration();
+    }
+
+    @Override
+    public boolean updateMessage(Message message) {
+        return messageDao.updateMessage(message)>0;
+    }
+
 
 }

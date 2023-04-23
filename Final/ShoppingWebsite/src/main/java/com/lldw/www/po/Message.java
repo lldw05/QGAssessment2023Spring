@@ -16,10 +16,7 @@ public class Message {
     private Integer goodsId;
     private Integer shopId;
     private String messageContent;
-
-
     private LocalDateTime createTime;
-
     private boolean isProcessed;
 
     public Integer getMessageId() {

@@ -5,7 +5,6 @@ import com.lldw.www.dao.MessageDao;
 import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
 import com.lldw.www.po.Shop;
-import com.lldw.www.po.User;
 import com.lldw.www.utils.JdbcUtils;
 
 import java.time.LocalDateTime;
@@ -27,7 +26,27 @@ public class MessageDaoImpl implements MessageDao {
 
     @Override
     public int updateMessage(Message message) {
-        return 0;
+        System.out.println("---MessageDao.update---");
+
+        //查找为修改前的message
+        Message preMessage = this.getMessageByMessageId(message);
+        System.out.println("preMessage:"+preMessage);
+
+
+        //进行修改
+        if(message.getMessageContent()!=null){
+            preMessage.setMessageContent(message.getMessageContent());
+        }
+        if(message.isProcessed()){
+            preMessage.setProcessed(message.isProcessed());
+        }
+
+
+        System.out.println("afterMessage:"+preMessage);
+
+
+        return ju.update("update message set message_content = ?, is_processed = ? where message_id = ?"
+        ,preMessage.getMessageContent(),preMessage.isProcessed(),preMessage.getMessageId());
     }
 
     @Override
@@ -74,7 +93,7 @@ public class MessageDaoImpl implements MessageDao {
         for (Integer id :
                 userIds) {
             if(ju.insert("insert into message (type,goods_id,user_id,message_content) values(?,?,?,?)"
-                    ,message.getType(),message.getGoodsId(),message.getUserId(),message.getMessageContent())>0){
+                    ,message.getType(),message.getGoodsId(),id,message.getMessageContent())>0){
                 cnt++;
             }
         }
@@ -145,7 +164,7 @@ public class MessageDaoImpl implements MessageDao {
     }
 
     @Override
-    public ArrayList<Message> getMessagesFromMapList(ArrayList<Map<String, Object>> maps) {
+    public ArrayList<Message> getMessageListFromMapList(ArrayList<Map<String, Object>> maps) {
         //判断集合是否为空 为空则直接返回null
         if (maps == null) {
             return null;
@@ -167,7 +186,7 @@ public class MessageDaoImpl implements MessageDao {
                 , new Object[]{MessageConstants.MESSAGE_TYPE_COMMENT, goods.getGoodsId()});
 
 
-        return getMessagesFromMapList(mapList);
+        return getMessageListFromMapList(mapList);
     }
 
     @Override
@@ -177,6 +196,14 @@ public class MessageDaoImpl implements MessageDao {
         ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from message where type = ? and sender_type = ? and shop_id = ?"
                 , new Object[]{MessageConstants.MESSAGE_TYPE_USER_CHAT_SHOP, MessageConstants.SENDER_SHOP, shop.getShopId()});
 
-        return getMessagesFromMapList(maps);
+        return getMessageListFromMapList(maps);
+    }
+
+    @Override
+    public ArrayList<Message> queryShopRegistration() {
+        ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from message where type = ?"
+                , new Object[]{MessageConstants.MESSAGE_TYPE_STORE_REGISTRATION});
+
+        return getMessageListFromMapList(maps);
     }
 }

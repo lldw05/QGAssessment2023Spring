@@ -90,7 +90,7 @@ public class ShopServiceImpl implements ShopService {
     public Goods addGoods(Goods goods) {
         System.out.println("---ShopService.addGoods---");
 
-        //从ShooService到GoodsService
+        //从ShooService到GoodsService 添加商品
         GoodsServiceImpl goodsService = new GoodsServiceImpl();
         Goods resultGoods = goodsService.addGoods(goods);
         System.out.println("resultGoods:"+resultGoods);

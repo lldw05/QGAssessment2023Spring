@@ -5,7 +5,6 @@ import com.lldw.www.po.Message;
 import com.lldw.www.po.Shop;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * @author
@@ -103,4 +102,17 @@ public interface MessageService {
      * @return 查询到了则返回Message集合 否则返回null
      */
     ArrayList<Message> queryChatMessageInShop(Shop shop);
+
+    /**
+     * 查询商店注册的审核信息
+     * @return 查询到了 返回message集合 否则返回null
+     */
+    ArrayList<Message> queryShopRegistration();
+
+    /**
+     * 更新信息
+     * @param message message对象
+     * @return 返回是否更新成功 如果不存在该信息 也会更新不成功
+     */
+    boolean updateMessage(Message message);
 }

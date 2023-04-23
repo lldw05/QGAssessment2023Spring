@@ -140,7 +140,7 @@ public interface MessageDao {
      * @param maps 将jdbc查询到的每个map传入
      * @return mapList为空则返回null 否则返回message对象的集合
      */
-    ArrayList<Message> getMessagesFromMapList (ArrayList<Map<String, Object>> maps);
+    ArrayList<Message> getMessageListFromMapList(ArrayList<Map<String, Object>> maps);
 
 
     /**
@@ -155,4 +155,10 @@ public interface MessageDao {
      * @return 查询到了则返回Message集合 否则返回null
      */
     ArrayList<Message> getCharMessageByShopId(Shop shop);
+
+    /**
+     *  查询商店注册的审核信息
+     *  @return 查询到了 返回message集合 否则返回null
+     */
+    ArrayList<Message> queryShopRegistration();
 }
