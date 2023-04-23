@@ -4,6 +4,8 @@ import com.lldw.www.constants.MessageConstants;
 import com.lldw.www.dao.MessageDao;
 import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
+import com.lldw.www.po.Shop;
+import com.lldw.www.po.User;
 import com.lldw.www.utils.JdbcUtils;
 
 import java.time.LocalDateTime;
@@ -17,11 +19,6 @@ import java.util.Map;
 public class MessageDaoImpl implements MessageDao {
 
     JdbcUtils ju = JdbcUtils.getInstance();
-
-    @Override
-    public int insertMessage(Message message, MessageConstants messageType) {
-        return 0;
-    }
 
     @Override
     public int deleteMessage(Message message) {
@@ -55,46 +52,74 @@ public class MessageDaoImpl implements MessageDao {
     }
 
     @Override
-    public int insertMessage1(Message message) {
+    public int insertGoodsComplaint(Message message) {
         return 0;
     }
 
     @Override
-    public int insertMessage2(Message message) {
+    public int insertStoreRegistration(Message message) {
         return ju.insert("insert into message (type, user_id,shop_id,message_content) values (?,?,?,?) "
                 , message.getType(), message.getUserId(), message.getShopId(), message.getMessageContent());
     }
 
     @Override
-    public int insertMessage3(Message message) {
+    public int insertMessageNewProductLaunch(Message message) {
         return ju.insert("insert into message (type, goods_id,shop_id,message_content) values (?,?,?,?) "
                 , message.getType(), message.getGoodsId(), message.getShopId(), message.getMessageContent());
     }
 
     @Override
-    public int insertMessage4(Message message) {
+    public int insertReminderGoodsLaunch(Message message, ArrayList<Integer> userIds) {
+        int cnt =0;
+        for (Integer id :
+                userIds) {
+            if(ju.insert("insert into message (type,goods_id,user_id,message_content) values(?,?,?,?)"
+                    ,message.getType(),message.getGoodsId(),message.getUserId(),message.getMessageContent())>0){
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+
+    @Override
+    public int insertReminderPost(Message message,ArrayList<Integer> userIds) {
+        int cnt =0;
+        for (Integer id :
+                userIds) {
+            if(ju.insert("insert into message (type,shop_id,user_id,message_content) values(?,?,?,?)"
+                    ,message.getType(),message.getShopId(), id,message.getMessageContent())>0){
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+
+    @Override
+    public int insertReminderGoodsPullOff(Message message) {
         return 0;
     }
 
     @Override
-    public int insertMessage5(Message message) {
+    public int insertMessageUserChatUser(Message message) {
         return 0;
     }
 
     @Override
-    public int insertMessage6(Message message) {
-        return 0;
+    public int insertMessageUserChatShop(Message message) {
+        return ju.insert("insert into message (type,sender_type,shop_id,user_id,message_content,create_time) values (?,?,?,?,?,?)",
+                message.getType(),message.getSenderType(),message.getShopId()
+                ,message.getUserId(),message.getMessageContent(),message.getCreateTime());
     }
 
     @Override
-    public int insertMessage7(Message message) {
+    public int insertComment(Message message) {
         return ju.insert("insert into message (type,goods_id,shop_id,message_content,user_id,create_time) values (?,?,?,?,?,?) "
                 , message.getType(), message.getGoodsId(), message.getShopId()
                 , message.getMessageContent(), message.getUserId(), message.getCreateTime());
     }
 
     @Override
-    public int insertMessage8(Message message) {
+    public int insertPost(Message message) {
         return ju.insert("insert into message (type,sender_type,goods_id,shop_id,message_content,user_id,create_time) values (?,?,?,?,?,?,?) "
                 , message.getType(), message.getSenderType(), message.getGoodsId(), message.getShopId()
                 , message.getMessageContent(), message.getUserId(), message.getCreateTime());
@@ -120,20 +145,38 @@ public class MessageDaoImpl implements MessageDao {
     }
 
     @Override
-    public ArrayList<Message> getMessageByGoodsId(Goods goods) {
-        System.out.println("---MessageDao.getMessageByGoodsId---");
-        ArrayList<Message> messageArrayList = new ArrayList<>();
-        ArrayList<Map<String, Object>> mapList = ju.execQueryList("select * from message where type = ? and goods_id = ?"
-                , new Object[]{MessageConstants.MESSAGE_TYPE_COMMENT, goods.getGoodsId()});
+    public ArrayList<Message> getMessagesFromMapList(ArrayList<Map<String, Object>> maps) {
         //判断集合是否为空 为空则直接返回null
-        if (mapList == null) {
+        if (maps == null) {
             return null;
         }
+
+        ArrayList<Message> messageArrayList = new ArrayList<>();
         for (Map<String, Object> map :
-                mapList) {
+                maps) {
             messageArrayList.add(getMessageFromMap(map));
         }
         System.out.println("messageArrayList:" + messageArrayList);
         return messageArrayList;
+    }
+
+    @Override
+    public ArrayList<Message> getCommentByGoodsId(Goods goods) {
+        System.out.println("---MessageDao.getCommentByGoodsId---");
+        ArrayList<Map<String, Object>> mapList = ju.execQueryList("select * from message where type = ? and goods_id = ?"
+                , new Object[]{MessageConstants.MESSAGE_TYPE_COMMENT, goods.getGoodsId()});
+
+
+        return getMessagesFromMapList(mapList);
+    }
+
+    @Override
+    public ArrayList<Message> getCharMessageByShopId(Shop shop) {
+        System.out.println("---MessageDao.getCharMessageByShopId---");
+
+        ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from message where type = ? and sender_type = ? and shop_id = ?"
+                , new Object[]{MessageConstants.MESSAGE_TYPE_USER_CHAT_SHOP, MessageConstants.SENDER_SHOP, shop.getShopId()});
+
+        return getMessagesFromMapList(maps);
     }
 }

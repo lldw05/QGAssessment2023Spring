@@ -8,7 +8,9 @@ public class MessageConstants {
     public static final int MESSAGE_TYPE_GOODS_COMPLAINT = 1;
     public static final int MESSAGE_TYPE_STORE_REGISTRATION = 2;
     public static final int MESSAGE_TYPE_NEW_PRODUCT_LAUNCH = 3;
-    public static final int MESSAGE_TYPE_REMINDER = 4;
+    public static final int MESSAGE_TYPE_REMINDER_GOODS_PULL_OFF = 10;
+    public static final int MESSAGE_TYPE_REMINDER_GOODS_LAUNCH = 9;
+    public static final int MESSAGE_TYPE_REMINDER_POST = 4;
     public static final int MESSAGE_TYPE_USER_CHAT_USER = 5;
     public static final int MESSAGE_TYPE_USER_CHAT_SHOP = 6;
     public static final int MESSAGE_TYPE_COMMENT = 7;

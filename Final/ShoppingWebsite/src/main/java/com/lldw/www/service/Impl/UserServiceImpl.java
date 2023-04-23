@@ -3,6 +3,7 @@ package com.lldw.www.service.Impl;
 import com.lldw.www.constants.RoleId;
 import com.lldw.www.dao.Impl.UserDaoImpl;
 import com.lldw.www.po.OrderForm;
+import com.lldw.www.po.Shop;
 import com.lldw.www.po.User;
 import com.lldw.www.service.UserService;
 import com.lldw.www.utils.EncryptUtil;
@@ -96,8 +97,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public ArrayList<OrderForm> checkOrderForm(User user) {
-        return new OrderFormServiceImpl().queryOrderFormByUserId(user);
-    }
+
+
+
 }

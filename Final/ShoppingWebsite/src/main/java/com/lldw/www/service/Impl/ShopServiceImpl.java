@@ -57,10 +57,9 @@ public class ShopServiceImpl implements ShopService {
             message.setUserId(shop.getShopKeeperId());
             message.setMessageContent("新店铺注册!");
 
-            //调用messageService
+            //调用messageService 添加申请店铺的审核信息
             MessageServiceImpl messageService = new MessageServiceImpl();
-            message = messageService.addMessage(message);
-            if(message!=null){
+            if( messageService.addShopRegistration(message)){
                 System.out.println("添加一条申请店铺待审核信息:添加成功");
             }
         }
@@ -107,22 +106,13 @@ public class ShopServiceImpl implements ShopService {
             message.setShopId(resultGoods.getShopId());
             message.setMessageContent("新品上市!");
 
-            //调用messageService
-            if(messageService.addMessage(message)!=null){
+            //调用messageService 添加商品审核信息
+            if(messageService.addMessageNewProductLaunch(message)){
                 System.out.println("添加商品审核信息成功");
             }
         }
         return resultGoods;
     }
 
-    @Override
-    public Message sendPost(Message message) {
-        System.out.println("---ShopService.sendPost---");
 
-        Message resultMessage = messageService.addMessage(message);
-        if(resultMessage!=null){
-            System.out.println("发布动态成功");
-        }
-        return resultMessage;
-    }
 }

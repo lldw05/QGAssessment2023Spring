@@ -1,6 +1,7 @@
 package com.lldw.www.service;
 
 import com.lldw.www.po.OrderForm;
+import com.lldw.www.po.Shop;
 import com.lldw.www.po.User;
 
 import java.util.ArrayList;
@@ -38,10 +39,7 @@ public interface UserService {
      */
     User updateUser(User user);
 
-    /**
-     * 查询用户订单
-     * @param user userId
-     * @return 查询到了则返回orderForm集合 否则返回null
-     */
-    ArrayList<OrderForm> checkOrderForm(User user);
+
+
+
 }

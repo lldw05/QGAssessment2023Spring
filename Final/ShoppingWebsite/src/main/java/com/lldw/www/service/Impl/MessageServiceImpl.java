@@ -1,15 +1,12 @@
 package com.lldw.www.service.Impl;
 
-import com.lldw.www.constants.MessageConstants;
 import com.lldw.www.dao.Impl.MessageDaoImpl;
-import com.lldw.www.dao.MessageDao;
 import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
+import com.lldw.www.po.Shop;
 import com.lldw.www.service.MessageService;
 
 import java.util.ArrayList;
-
-import static com.lldw.www.constants.MessageConstants.*;
 
 /**
  * @author lldw
@@ -19,65 +16,107 @@ public class MessageServiceImpl implements MessageService {
 
     MessageDaoImpl messageDao = new MessageDaoImpl();
 
-
     @Override
-    public Message addMessage(Message message) {
-        System.out.println("---MessageService.addMessage---");
-        int id = 0;
-        switch (message.getType()){
-            case MESSAGE_TYPE_GOODS_COMPLAINT:
-                id = messageDao.insertMessage1(message);
-                break;
-            case MESSAGE_TYPE_STORE_REGISTRATION:
-                id =messageDao.insertMessage2(message);
-                break;
-            case MESSAGE_TYPE_NEW_PRODUCT_LAUNCH:
-                System.out.println("insertMessage3");
-                id =messageDao.insertMessage3(message);
-                break;
-            case MESSAGE_TYPE_REMINDER:
-                id =messageDao.insertMessage4(message);
-                break;
-            case MESSAGE_TYPE_USER_CHAT_USER:
-                id =messageDao.insertMessage5(message);
-                break;
-            case MESSAGE_TYPE_USER_CHAT_SHOP:
-                id =messageDao.insertMessage6(message);
-                break;
-            case MESSAGE_TYPE_COMMENT:
-                System.out.println("insertMessage7");
-
-                //通过goodId查询goods 进而得到shopId
-                GoodsServiceImpl goodsService = new GoodsServiceImpl();
-
-                Goods goods = new Goods();
-                goods.setGoodsId(message.getGoodsId());
-
-                Goods resultGoods = goodsService.queryGoodsByGoodsId(goods);
-                if (resultGoods!=null){
-                    message.setShopId(resultGoods.getShopId());
-                }
-                id =messageDao.insertMessage7(message);
-                break;
-            case MESSAGE_TYPE_POST:
-                System.out.println("insertMessage8");
-                id =messageDao.insertMessage8(message);
-                break;
-            default:
-                System.out.println("根据信息类型调用MessageDao.insert失败~");
-                break;
-        }
-        if(id>0){
-            //返回完整的message信息 包括id
-            message.setMessageId(id);
-            message = messageDao.getMessageByMessageId(message);
-        }
-        return id>0?message:null;
+    public ArrayList<Message> getCommentByGoodsId(Goods goods) {
+        return messageDao.getCommentByGoodsId(goods);
     }
 
     @Override
-    public ArrayList<Message> getCommentByGoodsId(Goods goods) {
-        return messageDao.getMessageByGoodsId(goods);
+    public boolean addReminderPost(Message message) {
+        //提醒信息(user关注的商店发动态，给店铺的所有粉丝发提醒)
+
+        //先查询店铺的粉丝
+        Shop shop = new Shop();
+        shop.setShopId(message.getShopId());
+        UserFollowShopServiceImpl ufsService = new UserFollowShopServiceImpl();
+
+        //得到粉丝id  userIds
+        ArrayList<Integer> userIds = ufsService.queryFansOfShop(shop);
+        System.out.println("userIds:"+userIds);
+        return messageDao.insertReminderPost(message,userIds)>0;
+    }
+
+
+    @Override
+    public boolean addReminderGoodsLaunch(Message message) {
+
+        //先查询店铺的粉丝
+        Shop shop = new Shop();
+        shop.setShopId(message.getShopId());
+        UserFollowShopServiceImpl ufsService = new UserFollowShopServiceImpl();
+
+        //得到fansIds
+        ArrayList<Integer>userIds = ufsService.queryFansOfShop(shop);
+
+        return messageDao.insertReminderGoodsLaunch(message,userIds)>0;
+    }
+
+    @Override
+    public boolean addReminderGoodsPullOff(Message message){
+//            return messageDao.insertReminderGoodsPullOff(message)
+
+            return false;
+        }
+
+    @Override
+    public boolean addPost(Message message) {
+        System.out.println("addPost");
+        //调用dao进行添加
+        return messageDao.insertPost(message)>0;
+
+    }
+
+    @Override
+    public boolean addGoodsComplaint(Message message) {
+        return messageDao.insertGoodsComplaint(message)>0;
+    }
+
+    @Override
+    public boolean addShopRegistration(Message message) {
+        return messageDao.insertStoreRegistration(message)>0;
+    }
+
+    @Override
+    public boolean addComment(Message message) {
+        //商品评论
+        System.out.println("addComment");
+        //评论信息包含type,goods_id,shop_id,message_content,user_id,create_time
+        //前端没有传入shopId 现在通过goodId查询goods对象 进而得到shopId
+        GoodsServiceImpl goodsService = new GoodsServiceImpl();
+
+        //new goods对象 设置参数
+        Goods goods = new Goods();
+        goods.setGoodsId(message.getGoodsId());
+
+        Goods resultGoods = goodsService.queryGoodsByGoodsId(goods);
+        if (resultGoods!=null){
+            //查询到了商品 设置shopId
+            message.setShopId(resultGoods.getShopId());
+        }
+
+        //调用dao进行添加
+        int id =messageDao.insertComment(message);
+        return id>0;
+    }
+
+    @Override
+    public boolean addMessageNewProductLaunch(Message message) {
+        return messageDao.insertMessageNewProductLaunch(message)>0;
+    }
+
+    @Override
+    public boolean addMessageUserCharUser(Message message) {
+        return messageDao.insertMessageUserChatUser(message)>0;
+    }
+
+    @Override
+    public boolean addChatRoomMessage(Message message) {
+        return messageDao.insertMessageUserChatShop(message)>0;
+    }
+
+    @Override
+    public ArrayList<Message> queryChatMessageInShop(Shop shop) {
+        return messageDao.getCharMessageByShopId(shop);
     }
 
 

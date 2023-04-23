@@ -62,4 +62,6 @@ public interface UserDao {
      * @return 返回user对象
      */
     User getUserFromMap(Map<String,Object> map);
+
+
 }

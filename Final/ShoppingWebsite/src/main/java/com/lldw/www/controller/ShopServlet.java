@@ -129,52 +129,5 @@ public class ShopServlet extends BaseServlet {
 
 
 
-    /**
-     *  发布动态
-     * @param request req
-     * @param response resp
-     * @param jsonStr 已经转成string的json数据
-     */
-    public void sendPost(HttpServletRequest request, HttpServletResponse response, String jsonStr){
-        System.out.println("---ShopServlet.sendPost---");
 
-        //jsonStr:{"messageContent":"测试发布动态","createTime":"2023-04-209:32:57","shopId":"6","goodsId":"8"}
-        //处理字符串 时间类
-        StringBuffer stringBuffer = new StringBuffer(jsonStr);
-        int index = stringBuffer.indexOf("createTime");
-        stringBuffer.insert(index+23,"T");
-        jsonStr = stringBuffer.toString();
-        System.out.println("jsonStr:"+jsonStr);
-
-        //将JSON字符申转为Shop对象
-        Message post = JSON.parseObject(jsonStr, Message.class);
-
-        //设置messageType和sender
-        post.setType(MessageConstants.MESSAGE_TYPE_POST);
-        post.setSenderType(MessageConstants.SENDER_SHOP);
-        System.out.println("post:" + post);
-
-        //调用service
-        Message resultMessage = shopService.sendPost(post);
-
-
-        if (resultMessage != null) {
-            try {
-                response.setContentType("text/json;charset=utf-8");
-
-                //将resultShop对象转换为JSON数据 序列化
-                response.getWriter().write(JSON.toJSONString(resultMessage));
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("发布动态失败~");
-            try {
-                response.getWriter().write("发布动态失败，我也不知道为啥~");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
 }

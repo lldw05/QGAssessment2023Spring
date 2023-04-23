@@ -38,10 +38,5 @@ public interface ShopService {
      */
     Goods addGoods(Goods goods);
 
-    /**
-     *  发布动态 吸引顾客
-     * @param message 封装的商品对象
-     * @return 添加成功则返回该message对象(包括messageId) 否则返回null
-     */
-    Message sendPost(Message message);
+
 }
