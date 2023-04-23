@@ -14,6 +14,8 @@ import java.util.ArrayList;
  */
 public class MessageServiceImpl implements MessageService {
 
+
+
     MessageDaoImpl messageDao = new MessageDaoImpl();
 
     @Override
@@ -127,6 +129,11 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public boolean updateMessage(Message message) {
         return messageDao.updateMessage(message)>0;
+    }
+
+    @Override
+    public ArrayList<Message> queryGoodsLaunch() {
+        return messageDao.queryGoodsLaunch();
     }
 
 

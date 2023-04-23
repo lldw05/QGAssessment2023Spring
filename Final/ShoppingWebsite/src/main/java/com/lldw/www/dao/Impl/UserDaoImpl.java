@@ -33,8 +33,12 @@ public class UserDaoImpl implements UserDao {
         //根据userId 先查出修改前的user数据
         User preUser = this.getUserById(user);
 
-        System.out.println("preUser:");
-        System.out.println(preUser);
+        //判断是否存在该user
+        if (preUser==null){
+            return 0;
+        }
+
+        System.out.println("preUser:"+preUser);
 
         //
         if(user.getNickname()!=null){

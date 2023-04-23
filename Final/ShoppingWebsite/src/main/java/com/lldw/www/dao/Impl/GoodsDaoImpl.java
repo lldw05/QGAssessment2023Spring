@@ -31,7 +31,38 @@ public class GoodsDaoImpl implements GoodsDao {
 
     @Override
     public int updateGoods(Goods goods) {
-        return 0;
+        System.out.println("---GoodsDao.update---");
+
+        //先查询出原先的goods信息
+        Goods preGoods = this.selectGoodsByGoodsId(goods);
+        //判断该goods是否存在
+        if(preGoods==null){
+            return 0;
+        }
+
+        //修改
+        if(goods.getGoodsIntroduction()!=null){
+            preGoods.setGoodsIntroduction(goods.getGoodsIntroduction());
+        }
+        if(goods.getPrice()!=0){
+            preGoods.setPrice(goods.getPrice());
+        }
+        if(goods.getPictureId()!=null){
+            preGoods.setPictureId(goods.getPictureId());
+        }
+        if(goods.getMonthlySales()!=null){
+            preGoods.setMonthlySales(goods.getMonthlySales());
+        }
+        if(goods.getAmount()!=null){
+            preGoods.setAmount(goods.getAmount());
+        }
+        if(goods.isActive()){
+            preGoods.setActive(goods.isActive());
+        }
+        return ju.update("update goods set goods_introduction = ?,price = ?,picture_id = ?" +
+                ",monthly_sales = ?,amount = ?,is_active = ? where goods_id = ?",
+                goods.getGoodsIntroduction(),goods.getPrice(),goods.getPictureId(),goods.getMonthlySales()
+                ,goods.getAmount(),goods.isActive(),goods.getGoodsId());
     }
 
     @Override

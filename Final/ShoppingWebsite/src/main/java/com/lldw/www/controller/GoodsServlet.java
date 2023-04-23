@@ -53,4 +53,33 @@ public class GoodsServlet extends BaseServlet {
             }
         }
     }
+
+    public void addGoods(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+        System.out.println("---MessageServlet.addGoods---");
+
+        //将JSON字符申转为String对象
+        Goods goods = JSON.parseObject(jsonStr, Goods.class);
+        System.out.println("Goods:" + goods);
+
+        //调用service
+        Goods resultGoods = goodsService.addGoods(goods);
+        if (resultGoods!=null){
+            try {
+                response.setContentType("text/json;charset=utf-8");
+
+                //将resultShop对象转换为JSON数据 序列化 将goods传给前端
+                response.getWriter().write(JSON.toJSONString(resultGoods));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            System.out.println("添加商品失败~");
+            try {
+                response.getWriter().write("添加商品失败~");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

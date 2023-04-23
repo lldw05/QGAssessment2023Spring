@@ -115,4 +115,12 @@ public interface MessageService {
      * @return 返回是否更新成功 如果不存在该信息 也会更新不成功
      */
     boolean updateMessage(Message message);
+
+    /**
+     * 查询商品上市审核信息
+     * @return 查询到了 返回message集合 否则返回null
+     */
+    ArrayList<Message>  queryGoodsLaunch();
+
+
 }

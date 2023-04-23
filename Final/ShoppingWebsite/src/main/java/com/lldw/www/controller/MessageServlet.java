@@ -5,6 +5,7 @@ import com.lldw.www.constants.MessageConstants;
 import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
 import com.lldw.www.po.Shop;
+import com.lldw.www.service.Impl.GoodsServiceImpl;
 import com.lldw.www.service.Impl.MessageServiceImpl;
 
 import javax.servlet.annotation.WebServlet;
@@ -250,7 +251,13 @@ public class MessageServlet extends BaseServlet {
         }
 
     }
-
+    /**
+     * 查询商店注册申请信息
+     *
+     * @param request  req
+     * @param response resp
+     * @param jsonStr  null
+     */
     public void queryShopRegistration(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
         System.out.println("MessageServlet.queryShopRegistration---");
         ArrayList<Message> messageArrayList = messageService.queryShopRegistration();
@@ -266,9 +273,9 @@ public class MessageServlet extends BaseServlet {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("暂时没有消息哦");
+            System.out.println("暂时没有审核申请哦");
             try {
-                response.getWriter().write("暂时没有审核哦");
+                response.getWriter().write("暂时没有审核申请哦");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -280,7 +287,7 @@ public class MessageServlet extends BaseServlet {
      *
      * @param request  req
      * @param response resp
-     * @param jsonStr  存储着messageId的json字符串
+     * @param jsonStr  存储着messageId的json字符串 isProcessed
      */
     public void updateShopRegistration(HttpServletRequest request, HttpServletResponse response, String jsonStr){
         System.out.println("MessageServlet.updateShopRegistration---");
@@ -309,6 +316,80 @@ public class MessageServlet extends BaseServlet {
                 response.getWriter().write("修改失败");
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void queryGoodsLaunch(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+        System.out.println("MessageServlet.updateShopRegistration---");
+
+        ArrayList<Message> messageArrayList = messageService.queryGoodsLaunch();
+        if (messageArrayList != null) {
+            try {
+                response.setContentType("text/json;charset=utf-8");
+
+                //将resultShop对象转换为JSON数据 序列化 将message传给前端
+                response.getWriter().write(JSON.toJSONString(messageArrayList));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("暂时没有新品上市哦");
+            try {
+                response.getWriter().write("暂时没有新品上市哦");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    /**
+     * 通过商店注册申请 messageId
+     *
+     * @param request  req
+     * @param response resp
+     * @param jsonStr  存储着messageId的json字符串 isProcessed
+     */
+    public void updateGoodsLaunch(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+        System.out.println("MessageServlet.updateGoodsLaunch---");
+
+        //将JSON字符申转为Shop对象
+        Message m = JSON.parseObject(jsonStr, Message.class);
+        System.out.println("Message:" + m);
+
+        boolean flag = messageService.updateMessage(m);
+
+        //判断是否修改成功
+        if(flag){
+            //修改成功
+
+            //将goods状态设为active
+            Goods goods  = new Goods();
+            goods.setGoodsId(m.getGoodsId());
+            goods.setActive(true);
+            GoodsServiceImpl goodsService = new GoodsServiceImpl();
+            Boolean result = goodsService.updateGoods(goods);
+
+            try {
+                response.setContentType("text/json;charset=utf-8");
+
+                //将resultShop对象转换为JSON数据 序列化 将message传给前端
+                response.getWriter().write(JSON.toJSONString("succeed"));
+                if(result){
+                    //如果商品状态更新成功
+                    response.getWriter().write(JSON.toJSONString("商品状态更新成功"));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }else {
+            System.out.println("修改失败");
+            try {
+                response.getWriter().write("修改失败");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

@@ -1,7 +1,9 @@
 package com.lldw.www.service.Impl;
 
+import com.lldw.www.constants.MessageConstants;
 import com.lldw.www.dao.Impl.GoodsDaoImpl;
 import com.lldw.www.po.Goods;
+import com.lldw.www.po.Message;
 import com.lldw.www.po.Shop;
 import com.lldw.www.service.GoodsService;
 
@@ -14,18 +16,6 @@ import java.util.ArrayList;
 public class GoodsServiceImpl implements GoodsService {
     GoodsDaoImpl goodsDao = new GoodsDaoImpl();
 
-
-    @Override
-    public Goods addGoods(Goods goods) {
-        int id = goodsDao.insertGoods(goods);
-        if(id>0){
-            //返回完整的goods对象(包括id)
-            goods.setGoodsId(id);
-            goods = goodsDao.selectGoodsByGoodsId(goods);
-            System.out.println("返回完整的goods对象(包括id):"+goods);
-        }
-        return id>0?goods:null;
-    }
 
     @Override
     public ArrayList<Goods> queryGoodsOfShop(Shop shop) {
@@ -42,10 +32,48 @@ public class GoodsServiceImpl implements GoodsService {
         return goodsDao.selectGoodsByGoodsName(s);
     }
 
-    /*@Override
-    public Goods queryGoodsByGoodsId(Integer goodsId) {
-        Goods goods = new Goods();
-        goods.setGoodsId(goodsId);
-        return goodsDao.selectGoodsByGoodsId(goods);
-    }*/
+    @Override
+    public Boolean updateGoods(Goods goods) {
+        return goodsDao.updateGoods(goods)>0;
+    }
+
+
+    @Override
+    public Goods addGoods(Goods goods) {
+        System.out.println("---ShopService.addGoods---");
+
+        //从ShooService到GoodsService 添加商品
+        GoodsServiceImpl goodsService = new GoodsServiceImpl();
+//        Goods resultGoods = goodsService.addGoods(goods);
+
+        //调用dao 添加goods
+        int id = goodsDao.insertGoods(goods);
+        if(id>0){
+
+            //查询完整的goods对象(包括goodsId)
+            goods.setGoodsId(id);
+            goods = goodsDao.selectGoodsByGoodsId(goods);
+            System.out.println("返回完整的goods对象(包括id):"+goods);
+
+
+            //添加成功 新增一条添加商品的审核信息
+            //从从ShooService到MessageService
+
+            //添加数据
+            Message message = new Message();
+            message.setType(MessageConstants.MESSAGE_TYPE_NEW_PRODUCT_LAUNCH);
+            message.setGoodsId(goods.getGoodsId());
+            message.setShopId(goods.getShopId());
+            message.setMessageContent("新品上市!");
+
+            //调用messageService 添加商品审核信息
+            MessageServiceImpl messageService = new MessageServiceImpl();
+            if(messageService.addMessageNewProductLaunch(message)){
+                System.out.println("添加商品审核信息成功");
+            }
+        }
+
+        //添加商品成功则返回goods对象 否则返回null  id返回主键时必定大于0 id返回0时说明添加失败
+        return id>0?goods:null;
+    }
 }

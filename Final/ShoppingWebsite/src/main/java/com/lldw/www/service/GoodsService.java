@@ -37,4 +37,13 @@ public interface GoodsService {
      * @return 搜索到了 返回搜索结果 否则返回null
      */
     ArrayList<Goods> searchGoods(String s);
+
+    /**
+     * 更新商品
+     * @param goods goodsId
+     * @return 返回是否更新成功
+     */
+    Boolean updateGoods(Goods goods);
+
+
 }

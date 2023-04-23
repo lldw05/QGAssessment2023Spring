@@ -28,8 +28,14 @@ public class MessageDaoImpl implements MessageDao {
     public int updateMessage(Message message) {
         System.out.println("---MessageDao.update---");
 
-        //查找为修改前的message
+        //查找未修改前的message
         Message preMessage = this.getMessageByMessageId(message);
+
+        //判断是否存在该message
+        if(preMessage==null){
+            return 0;
+        }
+
         System.out.println("preMessage:"+preMessage);
 
 
@@ -204,6 +210,13 @@ public class MessageDaoImpl implements MessageDao {
         ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from message where type = ?"
                 , new Object[]{MessageConstants.MESSAGE_TYPE_STORE_REGISTRATION});
 
+        return getMessageListFromMapList(maps);
+    }
+
+    @Override
+    public ArrayList<Message> queryGoodsLaunch() {
+        ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from message where type = ?"
+                , new Object[]{MessageConstants.MESSAGE_TYPE_NEW_PRODUCT_LAUNCH});
         return getMessageListFromMapList(maps);
     }
 }

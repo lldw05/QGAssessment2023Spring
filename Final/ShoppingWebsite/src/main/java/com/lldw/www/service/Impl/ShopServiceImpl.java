@@ -86,33 +86,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
 
-    @Override
-    public Goods addGoods(Goods goods) {
-        System.out.println("---ShopService.addGoods---");
 
-        //从ShooService到GoodsService 添加商品
-        GoodsServiceImpl goodsService = new GoodsServiceImpl();
-        Goods resultGoods = goodsService.addGoods(goods);
-        System.out.println("resultGoods:"+resultGoods);
-        if(resultGoods!=null){
-
-            //添加成功 新增一条添加商品的审核信息
-            //从从ShooService到MessageService
-
-            //添加数据
-            Message message = new Message();
-            message.setType(MessageConstants.MESSAGE_TYPE_NEW_PRODUCT_LAUNCH);
-            message.setGoodsId(resultGoods.getGoodsId());
-            message.setShopId(resultGoods.getShopId());
-            message.setMessageContent("新品上市!");
-
-            //调用messageService 添加商品审核信息
-            if(messageService.addMessageNewProductLaunch(message)){
-                System.out.println("添加商品审核信息成功");
-            }
-        }
-        return resultGoods;
-    }
 
 
 }
