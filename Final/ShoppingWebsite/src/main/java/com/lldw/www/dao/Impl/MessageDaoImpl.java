@@ -191,8 +191,8 @@ public class MessageDaoImpl implements MessageDao {
     @Override
     public ArrayList<Message> getCommentByGoodsId(Goods goods) {
         System.out.println("---MessageDao.getCommentByGoodsId---");
-        ArrayList<Map<String, Object>> mapList = ju.execQueryList("select * from message where type = ? and goods_id = ?"
-                , new Object[]{MessageConstants.MESSAGE_TYPE_COMMENT, goods.getGoodsId()});
+        ArrayList<Map<String, Object>> mapList = ju.execQueryList("select * from message where type = ? and goods_id = ? and is_processed = ?"
+                , new Object[]{MessageConstants.MESSAGE_TYPE_COMMENT, goods.getGoodsId(),MessageConstants.MESSAGE_IS_PROCESSED});
 
 
         return getMessageListFromMapList(mapList);
