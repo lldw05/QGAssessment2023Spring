@@ -14,6 +14,7 @@ import java.util.Map;
 public class ShopDaoImpl implements ShopDao {
 
     JdbcUtils ju = JdbcUtils.getInstance();
+
     @Override
     public int insertShop(Shop shop) {
         System.out.println("---ShopDao.insertShop---");
@@ -33,29 +34,30 @@ public class ShopDaoImpl implements ShopDao {
 
     @Override
     public Shop getShopByShopId(Shop shop) {
-        return null;
+        ArrayList<Map<String, Object>> list = ju.execQueryList("select * from shop where shop_id = ?", new Object[]{shop.getShopId()});
+
+        if (list == null) {
+            return null;
+        }
+
+        //从ArrayList<Map>中获取map
+        return getShopFromMap(list.get(0));
     }
+
     @Override
     public Shop getShopByShopName(Shop shop) {
         ArrayList<Map<String, Object>> list = ju.execQueryList("select * from shop where shop_name = ?", new Object[]{shop.getShopName()});
 
-        if(list==null){
+        if (list == null) {
             return null;
         }
-        //从ArrayList<Map>中获取map
-        Map<String,Object> map =  list.get(0);
-        Shop shop1 = new Shop();
-        shop1.setShopId((Integer) map.get("shop_id"));
-        shop1.setShopKeeperId((Integer) map.get("shopkeeper_id"));
-        shop1.setShopName((String) map.get("shop_name"));
-        shop1.setShopIntroduction((String) map.get("shop_introduction"));
-        shop1.setFansNum((Integer) map.get("fans_num"));
-        shop1.setAverageMonthlySales((Integer) map.get("average_monthly_sales"));
-        shop1.setStatus((Boolean) map.get("status"));
-        System.out.println(shop1);
 
-        return shop1;
+        //从ArrayList<Map>中获取map
+
+
+        return getShopFromMap(list.get(0));
     }
+
     @Override
     public ArrayList<Object> getShopList() {
         return null;
@@ -64,5 +66,19 @@ public class ShopDaoImpl implements ShopDao {
     @Override
     public int getShopCount() {
         return 0;
+    }
+
+    @Override
+    public Shop getShopFromMap(Map<String, Object> map) {
+        Shop shop = new Shop();
+        shop.setShopId((Integer) map.get("shop_id"));
+        shop.setShopKeeperId((Integer) map.get("shopkeeper_id"));
+        shop.setShopName((String) map.get("shop_name"));
+        shop.setShopIntroduction((String) map.get("shop_introduction"));
+        shop.setFansNum((Integer) map.get("fans_num"));
+        shop.setAverageMonthlySales((Integer) map.get("average_monthly_sales"));
+        shop.setStatus((Boolean) map.get("status"));
+        System.out.println("shop" + shop);
+        return shop;
     }
 }

@@ -35,8 +35,8 @@ public interface MessageService {
     boolean addReminderGoodsLaunch(Message message);
 
     /**
-     * 添加提醒信息(user的店铺 商品被下架了)
-     * @param message message
+     * 添加商品下架提醒信息
+     * @param message goodsId,shopId,shopKeeperId(即userId),messageContent
      * @return 添加成功则返回true 否则返回null
      */
     boolean addReminderGoodsPullOff(Message message);

@@ -74,19 +74,17 @@ public class ShopServiceImpl implements ShopService {
         return shopDao.getShopByShopName(shop);
     }
 
-    @Override
-    public ArrayList<Goods> showShopGoods(Shop shop) {
 
-        GoodsServiceImpl goodsService = new GoodsServiceImpl();
-        if(shop.getShopId()==null){
-            //如果shopId没传进来 先通过shopName查询shopId
-            shop.setShopId(shopDao.getShopByShopName(shop).getShopId());
-        }
-        return goodsService.queryGoodsOfShop(shop);
+
+    @Override
+    public Shop getShopByShopId(Shop shop) {
+        return shopDao.getShopByShopId(shop);
     }
 
-
-
+    @Override
+    public Shop queryShopByShopName(Shop shop) {
+        return shopDao.getShopByShopName(shop);
+    }
 
 
 }

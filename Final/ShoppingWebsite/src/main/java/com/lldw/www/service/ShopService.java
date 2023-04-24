@@ -24,14 +24,19 @@ public interface ShopService {
      * @return 查询到了 则返回封装好的shop对象 否则返回null
      */
     Shop showShopMessage(Shop shop);
+
+
     /**
-     *  展示商店的商品 返回商店所有商品
-     * @param shop shopName(shopId) 一定要有shopName
-     * @return 查询到了 则返回装有goods的集合 否则返回null
+     * 通过shopId 查询shop
+     * @param shop shopId
+     * @return  查询到了 则返回shop 否则返回null
      */
-    ArrayList<Goods> showShopGoods(Shop shop);
+    Shop getShopByShopId(Shop shop);
 
-
-
-
+    /**
+     * 通过ShopName 查询shop
+     * @param shop ShopName
+     * @return  查询到了 则返回shop 否则返回null
+     */
+    Shop queryShopByShopName(Shop shop);
 }

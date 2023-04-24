@@ -4,6 +4,7 @@ import com.lldw.www.po.Shop;
 import com.lldw.www.po.User;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * @author lldw
@@ -56,5 +57,10 @@ public interface ShopDao {
      */
     int getShopCount();
 
-
+    /**
+     * 从map中获取打包好的shop
+     * @param map map
+     * @return 打包好的shop对象
+     */
+    Shop getShopFromMap(Map<String,Object> map);
 }

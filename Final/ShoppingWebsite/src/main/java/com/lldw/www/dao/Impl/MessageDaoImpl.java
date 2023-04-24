@@ -124,7 +124,9 @@ public class MessageDaoImpl implements MessageDao {
 
     @Override
     public int insertReminderGoodsPullOff(Message message) {
-        return 0;
+        return ju.insert("insert into message (type,goods_id,shop_id,user_id,message_content,create_time) values (?,?,?,?,?,?)",
+                message.getType(),message.getGoodsId(),message.getShopId()
+                ,message.getUserId(),message.getMessageContent(),message.getCreateTime());
     }
 
     @Override

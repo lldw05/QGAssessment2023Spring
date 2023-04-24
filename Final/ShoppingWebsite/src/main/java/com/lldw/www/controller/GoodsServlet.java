@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.lldw.www.constants.MessageConstants;
 import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
+import com.lldw.www.po.Shop;
 import com.lldw.www.service.Impl.GoodsServiceImpl;
 
 import javax.servlet.annotation.WebServlet;
@@ -117,4 +118,44 @@ public class GoodsServlet extends BaseServlet {
             }
         }
     }
+
+
+    /**
+     *  前端传入shopName或者shopId 查询店铺并返回shop对象
+     * @param request req
+     * @param response resp
+     * @param jsonStr shop
+     */
+    public void showShopGoods(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+        System.out.println("---GoodsServlet.showShopGoods---");
+
+        //将JSON字符申转为Shop对象
+        Shop shop = JSON.parseObject(jsonStr, Shop.class);
+        System.out.println("shop:" + shop);
+
+        //调用service
+        ArrayList<Goods> resultGoodsList = goodsService.queryGoodsOfShop(shop);
+
+
+        if (resultGoodsList != null) {
+            try {
+                response.setContentType("text/json;charset=utf-8");
+
+                //将resultGoodsList转换为JSON数据 序列化 将goods集合传给前端
+                response.getWriter().write(JSON.toJSONString(resultGoodsList));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("商品查询失败，肿么回事？？~");
+            try {
+                response.getWriter().write("商品查询失败，肿么回事？？~");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
 }

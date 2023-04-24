@@ -19,6 +19,13 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public ArrayList<Goods> queryGoodsOfShop(Shop shop) {
+
+        //最终dao层使用shopId查询商店下的商品
+        if(shop.getShopId()==null){
+            //如果shopId没传进来 先通过shopName查询shopId
+            ShopServiceImpl shopService  = new ShopServiceImpl();
+            shop.setShopId(shopService.queryShopByShopName(shop).getShopId());
+        }
        return goodsDao.selectGoodsByShopId(shop);
     }
 
