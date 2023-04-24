@@ -17,4 +17,8 @@ public class MessageConstants {
     public static final int MESSAGE_TYPE_POST = 8;
     public static final String SENDER_SHOP = "shop";
     public static final String SENDER_USER = "user";
+    public static final boolean MESSAGE_IS_ACTIVE = true;
+    public static final boolean MESSAGE_NO_ACTIVE = false;
+    public static final boolean MESSAGE_IS_PROCESSED = true;
+    public static final boolean MESSAGE_NO_PROCESSED = false;
 }

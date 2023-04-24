@@ -141,9 +141,9 @@ public class MessageDaoImpl implements MessageDao {
 
     @Override
     public int insertComment(Message message) {
-        return ju.insert("insert into message (type,goods_id,shop_id,message_content,user_id,create_time) values (?,?,?,?,?,?) "
+        return ju.insert("insert into message (type,goods_id,shop_id,message_content,user_id,create_time,is_processed) values (?,?,?,?,?,?,?) "
                 , message.getType(), message.getGoodsId(), message.getShopId()
-                , message.getMessageContent(), message.getUserId(), message.getCreateTime());
+                , message.getMessageContent(), message.getUserId(), message.getCreateTime(),MessageConstants.MESSAGE_IS_PROCESSED);
     }
 
     @Override
