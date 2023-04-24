@@ -303,6 +303,13 @@ public class MessageServlet extends BaseServlet {
         }
     }
 
+    /**
+     * 通过商品上市申请
+     *
+     * @param request  req
+     * @param response resp
+     * @param jsonStr  null
+     */
     public void queryGoodsLaunch(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
         System.out.println("MessageServlet.updateShopRegistration---");
 
@@ -407,6 +414,12 @@ public class MessageServlet extends BaseServlet {
         }
     }
 
+    /**
+     * 查询投诉信息
+     * @param request req
+     * @param response resp
+     * @param jsonStr null
+     */
     public void queryComplaint(HttpServletRequest request, HttpServletResponse response, String jsonStr){
         System.out.println("MessageServlet.queryComplaint---");
         ArrayList<Message> messageArrayList = messageService.queryComplaint();

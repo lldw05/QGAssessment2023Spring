@@ -56,9 +56,9 @@ public class GoodsDaoImpl implements GoodsDao {
         if(goods.getAmount()!=null){
             preGoods.setAmount(goods.getAmount());
         }
-        if(goods.isActive()){
-            preGoods.setActive(goods.isActive());
-        }
+
+        preGoods.setActive(goods.isActive());
+
         return ju.update("update goods set goods_introduction = ?,price = ?,picture_id = ?" +
                 ",monthly_sales = ?,amount = ?,is_active = ? where goods_id = ?",
                 goods.getGoodsIntroduction(),goods.getPrice(),goods.getPictureId(),goods.getMonthlySales()

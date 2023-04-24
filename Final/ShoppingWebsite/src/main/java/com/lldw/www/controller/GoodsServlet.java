@@ -55,7 +55,7 @@ public class GoodsServlet extends BaseServlet {
     }
 
     public void addGoods(HttpServletRequest request, HttpServletResponse response, String jsonStr){
-        System.out.println("---MessageServlet.addGoods---");
+        System.out.println("---GoodsServlet.addGoods---");
 
         //将JSON字符申转为String对象
         Goods goods = JSON.parseObject(jsonStr, Goods.class);
@@ -77,6 +77,41 @@ public class GoodsServlet extends BaseServlet {
             System.out.println("添加商品失败~");
             try {
                 response.getWriter().write("添加商品失败~");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    /**
+     * 更新商品
+     * @param request req
+     * @param response resp
+     * @param jsonStr goodsId isActive = false
+     */
+    public void updateGoods(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+        System.out.println("---GoodsServlet.updateGoods---");
+
+        //将JSON字符申转为String对象
+        Goods goods = JSON.parseObject(jsonStr, Goods.class);
+        System.out.println("Goods:" + goods);
+
+        //调用service
+        Boolean result = goodsService.updateGoods(goods);
+        if (result){
+            //修改成功
+            try {
+                response.setContentType("text/json;charset=utf-8");
+
+                //将resultShop对象转换为JSON数据 序列化 将goods传给前端
+                response.getWriter().write(JSON.toJSONString("succeed"));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            try {
+                response.getWriter().write("failed");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
