@@ -22,4 +22,6 @@ public class QueryFansOfShopTest {
         System.out.println(integer);
         System.out.println(userFollowShopService.queryFansOfShop(shop));
     }
+
+
 }

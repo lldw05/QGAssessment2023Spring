@@ -66,10 +66,10 @@ public class MessageServlet extends BaseServlet {
         message.setType(MessageConstants.MESSAGE_TYPE_COMMENT);
 
         //调用service
-        boolean rusult = messageService.addComment(message);
+        boolean result = messageService.addComment(message);
 
 
-        if (rusult) {
+        if (result) {
             //添加成功
             try {
                 response.setContentType("text/json;charset=utf-8");
@@ -455,6 +455,71 @@ public class MessageServlet extends BaseServlet {
 
         //调用service
         boolean rs = messageService.updateMessage(m);
+        try {
+            if (rs) {
+                //修改成功
+
+                response.setContentType("text/json;charset=utf-8");
+
+                //将resultShop对象转换为JSON数据 序列化 将message传给前端
+                response.getWriter().write(JSON.toJSONString("succeed"));
+            } else {
+                response.getWriter().write("修改失败");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 管理评论：删除等等
+     *
+     * @param request  req
+     * @param response resp
+     * @param jsonStr  messageId isProcessed
+     */
+    public void manageComment(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+        System.out.println("MessageServlet.manageComment---");
+
+        //将JSON字符申转为Message对象
+        Message m = JSON.parseObject(jsonStr, Message.class);
+        System.out.println("Message:" + m);
+
+        //调用service
+        boolean rs = messageService.updateMessage(m);
+        try {
+            if (rs) {
+                //修改成功
+
+                response.setContentType("text/json;charset=utf-8");
+
+                //将resultShop对象转换为JSON数据 序列化 将message传给前端
+                response.getWriter().write(JSON.toJSONString("succeed"));
+            } else {
+                response.getWriter().write("修改失败");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 给店主添加商品下架提醒
+     *
+     * @param request  req
+     * @param response resp
+         * @param jsonStr  goodsId,messageContent,shopId,createTime
+     */
+    public void addReminderGoodsPullOff(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+
+        System.out.println("MessageServlet.addReminderGoodsPullOff---");
+
+        //将JSON字符申转为Message对象
+        Message m = JSON.parseObject(jsonStr, Message.class);
+        System.out.println("Message:" + m);
+
+        //调用service
+        boolean rs = messageService.addReminderGoodsPullOff(m);
         try {
             if (rs) {
                 //修改成功

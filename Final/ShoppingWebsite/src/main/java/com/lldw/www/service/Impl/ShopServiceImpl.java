@@ -9,7 +9,9 @@ import com.lldw.www.po.Shop;
 import com.lldw.www.po.User;
 import com.lldw.www.service.ShopService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * @author
@@ -32,6 +34,7 @@ public class ShopServiceImpl implements ShopService {
             System.out.println("ERROR:shopName存在");
             return null;
         }
+
 
         //shopName未被使用 进行注册 返回值为id 或 0
         int resultId = shopDao.insertShop(shop);
@@ -62,6 +65,7 @@ public class ShopServiceImpl implements ShopService {
             if( messageService.addShopRegistration(message)){
                 System.out.println("添加一条申请店铺待审核信息:添加成功");
             }
+
         }
 
 

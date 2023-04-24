@@ -31,6 +31,7 @@ public class GoodsDaoImpl implements GoodsDao {
 
     @Override
     public int updateGoods(Goods goods) {
+
         System.out.println("---GoodsDao.update---");
 
         //先查询出原先的goods信息

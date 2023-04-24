@@ -108,7 +108,7 @@
 
                 <el-form-item label="验证码">
                     <el-input v-model="verifyCode" ></el-input>
-                    <img id="verifyCodeImg" src="/QGDemo/verifyCodeServlet">
+                    <img id="verifyCodeImg" src="/ShoppingWebsite/verifyCodeServlet">
                 </el-form-item>
 
                 <el-form-item>
@@ -176,18 +176,22 @@
         data() {
             return {
 
-                registerData:{
-                    verifyCode:{
-                        code:'',
-                        time:''
-                    },
-                    user: {
-                        username: '',
-                        phoneNumber:'',
-                        password:''
-                    }
+                // registerData:{
+                //     verifyCode:{
+                //         code:'',
+                //         time:''
+                //     },
+                //     user: {
+                //         username: '',
+                //         phoneNumber:'',
+                //         password:''
+                //     }
+                // }
+                user: {
+                    username: '',
+                    phoneNumber:'',
+                    password:''
                 }
-
 
             }
         },

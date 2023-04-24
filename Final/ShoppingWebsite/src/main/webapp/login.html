@@ -4,32 +4,55 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
+
     <style>
+        .loginDiv {
+            /*background: no-repeat center/80% url("img/background.jpg");*/
+            background:no-repeat left/100% url("img/background.jpg");
+
+            display: flex;
+            align-items: center;
+            height: 100vh;
+        }
         .el-header, .el-footer {
-            background-color: #409EFF;
+            /*background-color: #409EFF;*/
+            background-color:transparent;
+        font-size: 2.5em; /* 40px/16=2.5em */
             color: #333;
             text-align: center;
             line-height: 60px;
             width: 350px;
+            margin: 0 auto;
+            /*vertical-align:middle;*/
         }
-
 
 
         .el-main {
-            background-color: #E9EEF3;
+            /*background-color: #E9EEF3;*/
+            background-color:transparent;
+            /*background-image: url("img/background.jpg");*/
             color: #333;
             text-align: center;
             line-height: 160px;
+            /*height: 500px;*/
+            /*height: 100%;*/
+
             width: 350px;
+            margin: 0 auto;
             /*height : 60px;*/
+            /*vertical-align:middle;!*设置表格属性，此时垂直居中了*!*/
         }
 
         body > .el-container {
+            /*background-image: url("img/background.jpg");*/
+            /*margin: 0 auto;*/
+
             margin-bottom: 40px;
         }
 
         .el-container:nth-child(5) .el-aside,
         .el-container:nth-child(6) .el-aside {
+            /*margin: 0 auto;*/
             line-height: 260px;
         }
 
@@ -60,7 +83,7 @@
 <!--    </form>-->
 <!--</div>-->
 
-<div id="loginDiv">
+<div id="loginDiv" class="loginDiv">
 
     <el-container>
         <el-header>
@@ -87,9 +110,6 @@
         </el-main>
 
     </el-container>
-
-
-
 
 
 </div>
