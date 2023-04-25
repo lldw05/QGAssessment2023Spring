@@ -92,13 +92,18 @@
 
         <el-main>
             <!--表单-->
-            <el-form ref="form" :model="user" label-width="80px" size = "mini">
+            <el-form ref="form" :model="loginData" label-width="80px" size = "mini">
                 <el-form-item label="username">
-                    <el-input v-model="user.username" ></el-input>
+                    <el-input v-model="loginData.user.username" ></el-input>
                 </el-form-item>
 
-                <el-form-item label="password">
-                    <el-input v-model="user.password" ></el-input>
+                <el-form-item label="password" >
+                    <el-input v-model="loginData.user.password" show-password></el-input>
+                </el-form-item>
+
+                <el-form-item label="验证码">
+                    <el-input v-model="loginData.verifyCode" ></el-input>
+                    <img id="verifyCodeImg" src="/ShoppingWebsite/verifyCodeServlet">
                 </el-form-item>
 
                 <el-form-item>
@@ -125,11 +130,15 @@
         el: "#loginDiv",
         data() {
             return {
-                user: {
-                    username: '',
-                    phoneNumber:'',
-                    password:''
+                loginData:{
+                    verifyCode:'',
+                    user: {
+                        username: '',
+                        phoneNumber:'',
+                        password:''
+                    }
                 }
+
             }
         },
         methods: {
@@ -139,12 +148,10 @@
                 axios({
                     method: "post",
                     url: "http://localhost:8080/ShoppingWebsite/userServlet/login",
-                    data: _this.user
+                    data: _this.loginData
                 }).then(function (resp) {
                     if (resp.data === "succeed") {
                         //登录成功
-                        alert("登录成功")
-
                         //登录成功 提示信息
                         _this.$message({
                             message: '恭喜你，登录成功',

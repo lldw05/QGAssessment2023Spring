@@ -22,7 +22,9 @@ public class VerifyCodeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //生成验证码
         VerifyCodeUtil code = new VerifyCodeUtil();
+
         BufferedImage image = code.createImage();
+        System.out.println("code:"+code.getText());
         ImageIO.write(image,"jpg",response.getOutputStream());
 
         //存入Session
