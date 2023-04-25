@@ -83,7 +83,7 @@ public class Goods {
         return "Goods{" +
                 "goodsId=" + goodsId +
                 ", goodsIntroduction='" + goodsIntroduction + '\'' +
-                ", pirce=" + price +
+                ", price=" + price +
                 ", pictureId=" + pictureId +
                 ", shopId=" + shopId +
                 ", monthlySales=" + monthlySales +

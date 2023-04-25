@@ -45,5 +45,9 @@ public interface GoodsService {
      */
     Boolean updateGoods(Goods goods);
 
-
+    /**
+     * 随机获取商品
+     * @return  商品集合
+     */
+    ArrayList<Goods> getRandomGoods();
 }

@@ -44,6 +44,19 @@ public class GoodsServiceImpl implements GoodsService {
         return goodsDao.updateGoods(goods)>0;
     }
 
+    @Override
+    public ArrayList<Goods> getRandomGoods() {
+        ArrayList<Goods> goodsArrayList = goodsDao.selectAll();
+        if (goodsArrayList.size()<=10){
+            return goodsArrayList;
+        }
+        ArrayList<Goods> result = new ArrayList<>();
+//        for (int i = 0; i < 10; i++) {
+//
+//        }
+        return goodsArrayList;
+    }
+
 
     @Override
     public Goods addGoods(Goods goods) {

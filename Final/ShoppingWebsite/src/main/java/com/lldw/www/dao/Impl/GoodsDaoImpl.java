@@ -69,16 +69,9 @@ public class GoodsDaoImpl implements GoodsDao {
     @Override
     public ArrayList<Goods> selectGoodsByShopId(Shop shop) {
         System.out.println("---GoodsDaoImpl.selectGoodsByShopId---");
-        ArrayList<Goods> goodsList = new ArrayList<>();
         ArrayList<Map<String, Object>> mapList = ju.execQueryList("select * from goods where shop_id = ?", new Object[]{shop.getShopId()});
-        if(mapList==null){
-            return null;
-        }
-        for (Map<String, Object> map :
-                mapList) {
-            goodsList.add(getGoodsFromMap(map));
-        }
-        return goodsList;
+
+        return getGoodsListFromMapList(mapList);
     }
 
     @Override
@@ -101,21 +94,14 @@ public class GoodsDaoImpl implements GoodsDao {
     @Override
     public ArrayList<Goods> selectGoodsByGoodsName(String s) {
         ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from goods where goods_introduction like \'%" + s + "%\'", null);
-        if(maps==null){
-            return null;
-        }
-        ArrayList<Goods> goods = new ArrayList<>();
-        for (Map<String, Object> m:
-        maps){
-            goods.add(getGoodsFromMap(m));
-        }
-        return goods;
+
+        return getGoodsListFromMapList(maps);
     }
 
 
     @Override
     public Goods getGoodsFromMap(Map<String, Object> map) {
-        System.out.println("---GoodsDao.getGoodsFromMap---");
+//        System.out.println("---GoodsDao.getGoodsFromMap---");
 
         //从map中获取值
         Goods goods = new Goods();
@@ -127,7 +113,26 @@ public class GoodsDaoImpl implements GoodsDao {
         goods.setMonthlySales((Integer) map.get("monthly_sales"));
         goods.setAmount((Integer) map.get("amount"));
         goods.setActive((Boolean) map.get("is_active"));
-        System.out.println("---GoodsDao.getGoodsFromMap END---");
+//        System.out.println("---GoodsDao.getGoodsFromMap END---");
+        return goods;
+    }
+
+    @Override
+    public ArrayList<Goods> selectAll() {
+        ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from goods ", null);
+        return getGoodsListFromMapList(maps);
+    }
+
+    @Override
+    public ArrayList<Goods> getGoodsListFromMapList(ArrayList<Map<String, Object>> mapList) {
+        if(mapList==null){
+            return null;
+        }
+        ArrayList<Goods> goods = new ArrayList<>();
+        for (Map<String, Object> m:
+                mapList){
+            goods.add(getGoodsFromMap(m));
+        }
         return goods;
     }
 }

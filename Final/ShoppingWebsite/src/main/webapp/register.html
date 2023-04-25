@@ -5,22 +5,40 @@
     <title>欢迎注册！</title>
 
     <style>
+
+        .registerDiv {
+            /*background: no-repeat center/80% url("img/background.jpg");*/
+            background:no-repeat left/100% url("img/background.jpg");
+
+            display: flex;
+            align-items: center;
+            height: 100vh;
+        }
         .el-header, .el-footer {
-            background-color: #409EFF;
+            /*background-color: #409EFF;*/
+            background-color:transparent;
+            font-size: 2.5em; /* 40px/16=2.5em */
+
             color: #333;
             text-align: center;
             line-height: 60px;
             width: 350px;
+            margin: 0 auto;
+
         }
 
 
 
         .el-main {
-            background-color: #E9EEF3;
+            /*background-color: #E9EEF3;*/
+            background-color:transparent;
+
             color: #333;
             text-align: center;
             line-height: 160px;
             width: 350px;
+            margin: 0 auto;
+
             /*height : 60px;*/
         }
 
@@ -90,7 +108,7 @@
 
 
 
-<div id="registerDiv">
+<div id="registerDiv" class="registerDiv">
 
     <el-container>
         <el-header>注册</el-header>

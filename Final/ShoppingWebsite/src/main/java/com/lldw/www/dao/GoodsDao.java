@@ -59,4 +59,17 @@ public interface GoodsDao {
      * @return 返回goods对象
      */
     Goods getGoodsFromMap(Map<String,Object> map);
+
+    /**
+     * 随机获取商品
+     * @return goods集合
+     */
+    ArrayList<Goods> selectAll();
+
+    /**
+     * 从map集合中获取goods 并放到list集合中返回
+     * @param mapList
+     * @return 有则返回goods集合 否则返回null
+     */
+    ArrayList<Goods> getGoodsListFromMapList(ArrayList<Map<String, Object>> mapList);
 }

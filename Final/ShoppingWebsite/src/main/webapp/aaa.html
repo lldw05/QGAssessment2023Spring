@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        .el-header {
+            background-color: #B3C0D1;
+            color: #333;
+            line-height: 60px;
+        }
+
+        .el-aside {
+            color: #333;
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="app">
+    <!--搜索表单-->
+    <el-form :inline="true" :model="search" class="demo-form-inline">
+
+
+        <el-form-item label="搜索商品">
+            <el-input v-model="search.searchKeyword" placeholder="商品名称" style="width:500px"></el-input>
+        </el-form-item>
+
+        <el-form-item>
+            <el-button type="primary" @click="searchOnSubmit()">搜索</el-button>
+        </el-form-item>
+    </el-form>
+
+    <!--表格-->
+    <el-container style="height: 500px; border: 1px solid #eee">
+        <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+            <el-menu :default-openeds="['1', '3']">
+                <el-submenu index="1">
+                    <template slot="title"><i class="el-icon-message"></i>首页</template>
+                    <el-menu-item-group>
+                        <!--                        <template slot="title">分组一</template>-->
+                        <!--                        <el-menu-item index="1-1">选项1</el-menu-item>-->
+                        <el-menu-item index="1-2">首页</el-menu-item>
+                    </el-menu-item-group>
+                    <!--                    <el-menu-item-group title="分组2">-->
+                    <!--                        <el-menu-item index="1-3">选项3</el-menu-item>-->
+                    </el-menu-item-group>
+                    <!--                    <el-submenu index="1-4">-->
+                    <!--                        <template slot="title">选项4</template>-->
+                    <!--                        <el-menu-item index="1-4-1">选项4-1</el-menu-item>-->
+                </el-submenu>
+                </el-submenu>
+                <el-submenu index="2">
+                    <template slot="title"><i class="el-icon-menu"></i>消息</template>
+                    <el-menu-item-group>
+                        <!--                        <template slot="title">分组一</template>-->
+                        <el-menu-item index="2-1">查看消息</el-menu-item>
+                        <!--                        <el-menu-item index="2-2">选项2</el-menu-item>-->
+                    </el-menu-item-group>
+                    <!--                    <el-menu-item-group title="分组2">-->
+                    <!--                        <el-menu-item index="2-3">选项3</el-menu-item>-->
+                    <!--                    </el-menu-item-group>-->
+                    <!--                    <el-submenu index="2-4">-->
+                    <!--                        <template slot="title">选项4</template>-->
+                    <!--                        <el-menu-item index="2-4-1">选项4-1</el-menu-item>-->
+                    <!--                    </el-submenu>-->
+                </el-submenu>
+                <el-submenu index="3">
+                    <template slot="title"><i class="el-icon-setting"></i>我的</template>
+                    <el-menu-item-group>
+                        <!--                        <template slot="title">分组一</template>-->
+                        <el-menu-item index="3-1">选项1</el-menu-item>
+                        <el-menu-item index="3-2">选项2</el-menu-item>
+                    </el-menu-item-group>
+                    <!--                    <el-menu-item-group title="分组2">-->
+                    <el-menu-item index="3-3">选项3</el-menu-item>
+                    <!--                    </el-menu-item-group>-->
+                    <!--                    <el-submenu index="3-4">-->
+                    <!--                        <template slot="title">选项4</template>-->
+                    <!--                        <el-menu-item index="3-4-1">选项4-1</el-menu-item>-->
+                    <!--                    </el-submenu>-->
+                </el-submenu>
+            </el-menu>
+        </el-aside>
+
+        <el-container>
+            <el-header style="text-align: right; font-size: 12px">
+                <el-dropdown>
+                    <i class="el-icon-setting" style="margin-right: 15px"></i>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>查看</el-dropdown-item>
+                        <el-dropdown-item>新增</el-dropdown-item>
+                        <el-dropdown-item>删除</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <span>username</span>
+            </el-header>
+
+            <el-main>
+                <el-table :data="tableData" style="line-height: 20px;">
+                    <el-table-column prop="price" label="图片" width="250">
+                    </el-table-column>
+                    <el-table-column prop="goodsIntroduction" label="商品介绍" width="250">
+                    </el-table-column>
+                    <el-table-column prop="price" label="价格" width="100">
+                    </el-table-column>
+                    <el-table-column prop="monthlySales" label="月销量" width="100">
+                    </el-table-column>
+                    <el-table-column label="查看评论">
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <el-row>
+                            <el-button type="primary" round @click="dialogVisibleOfPurchaseNow = true">立即购买
+                            </el-button>
+                            <el-button type="danger" round @click="dialogVisibleOfAddIntoShopCart = true">加入购物车</el-button>
+                        </el-row>
+                    </el-table-column>
+                </el-table>
+            </el-main>
+        </el-container>
+    </el-container>
+
+    <!--立即购买对话框表单-->
+    <el-dialog
+            title="提示"
+            :visible.sync="dialogVisibleOfPurchaseNow"
+            width="30%"
+    >
+        <!--表单数据-->
+        <el-form ref="form" :model="purchaseNowForm" label-width="80px">
+            <el-form-item label="购买数量">
+                <el-input
+
+                        v-model.number="purchaseNowForm.amount"
+                        oninput="value=value.replace(/[^0-9.]/g,'')">
+                    <!--                        type="number"-->
+                    <!--                        onkeyup="this.value=this.value.replace(/\D/g,'')"-->
+                    <!--                        onafterpaste="this.value=this.value.replace(/\D/g,'')"-->
+
+
+                </el-input>
+            </el-form-item>
+            <el-form-item label="配送地址">
+                <el-input
+                        v-model="purchaseNowForm.address"
+                >
+                </el-input>
+            </el-form-item>
+            <el-form-item label="支付密码">
+                <el-input
+                        type="password"
+                        v-model="purchaseNowForm.payPassword"
+                        onkeyup="this.value=this.value.replace(/\D/g,'')"
+                        onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                >
+                </el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="purchaseNow">立即购买</el-button>
+                <el-button @click="dialogVisibleOfPurchaseNow = false">取消</el-button>
+            </el-form-item>
+        </el-form>
+
+        <!--  </span>-->
+    </el-dialog>
+
+    <!--添加到购物车对话框表单-->
+    <el-dialog
+            title="提示"
+            :visible.sync="dialogVisibleOfAddIntoShopCart"
+            width="30%"
+    >
+        <!--表单数据-->
+        <el-form ref="form" :model="addIntoShopCartForm" label-width="80px">
+            <el-form-item label="购买数量">
+                <el-input
+
+                        v-model.number="addIntoShopCartForm.amount"
+                        oninput="value=value.replace(/[^0-9.]/g,'')">
+                    <!--                        type="number"-->
+                    <!--                        onkeyup="this.value=this.value.replace(/\D/g,'')"-->
+                    <!--                        onafterpaste="this.value=this.value.replace(/\D/g,'')"-->
+
+
+                </el-input>
+            </el-form-item>
+
+            <el-form-item>
+                <el-button type="primary" @click="addIntoShopCart">立即添加</el-button>
+                <el-button @click="dialogVisibleOfAddIntoShopCart = false">取消</el-button>
+            </el-form-item>
+        </el-form>
+
+        <!--  </span>-->
+    </el-dialog>
+
+</div>
+
+<script src="js/axios.js"></script>
+<script src="js/vue.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+
+<script>
+    new Vue({
+        el: "#app",
+        mounted(){
+            //当页面加载完成后，发送异步请求，获取数据
+            var _this = this;
+            axios({
+                method:"get",
+                url:"http://localhost:8080/ShoppingWebsite/goodsServlet/randomGoods",
+
+            }).then(function (resp){
+                console.log(resp.data);
+
+                // console.log(resp.data.data);
+
+
+                _this.tableData = resp.data;
+                // _this.tableData = resp.data.data;
+            })
+        },
+        methods: {
+            //搜索商品方法
+            searchOnSubmit() {
+                console.log(this.search);
+            },
+            /*立即购买*/
+            purchaseNow() {
+                console.log(this.purchaseNowForm);
+            },
+            addIntoShopCart() {
+                console.log(this.addIntoShopCartForm);
+            }
+        },
+        data() {
+
+            const item = {
+                date: '2016-05-02',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1518 弄'
+            };
+            return {
+                //立即购买对话框是否展示的标记
+                dialogVisibleOfPurchaseNow: false,
+                dialogVisibleOfAddIntoShopCart:false,
+                //表格数据
+                // tableData: Array(20).fill(item),
+                tableData:{
+                    goodsIntroduction:'',
+                    price:'',
+                    monthlySales:'',
+
+
+                },
+                //搜索表单数据
+                search: {
+                    searchKeyword: '',
+                },
+                purchaseNowForm: {
+                    amount: '',
+                    address: '',
+                    payPassword: ''
+                },
+                addIntoShopCartForm:{
+                    amount: '',
+                }
+            }
+        }
+
+    })
+
+
+</script>
+
+
+</body>
+</html>
