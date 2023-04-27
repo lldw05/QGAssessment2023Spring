@@ -11,49 +11,49 @@ import java.util.Properties;
  * @date
  */
 public class DbConfig {
-    public static String driverName = "com.mysql.cj.jdbc.Driver";
+    public static String driverName;
 
-    public static String url = "jdbc:mysql:///qgfinalexamine?useUnicode=true&characterEncoding=UTF-8&userSSL=false&serverTimezone=GMT%2B8&useServerPrepStmts=true";
+    public static String url;
 
-    public static String userName = "root";
+    public static String userName;
 
-    public static String password = "1234";
+    public static String password;
     /**
      * 空闲池，最小连接数
      */
-    public static int minConnections = 1;
+    public static int minConnections;
     /**
      * 空闲池，最大连接数
      */
-    public static int maxConnections = 50;
+    public static int maxConnections;
     /**
      * 初始化连接数
      */
-    public static int initConnections = 5;
+    public static int initConnections;
     /**
      * 重复获得连接的频率
      */
-    public static long connTimeOut = 1000;
+    public static long connTimeOut;
 
     /**
      * 最大允许的连接数，和数据库对应
      */
-    public static int maxActiveConnections = 100;
+    public static int maxActiveConnections;
 
     /**
      * 连接超时时间，默认20分钟
      */
-    public static long connectionTimeOut = 1000 * 60 * 20;
+    public static long connectionTimeOut;
 
 
     static {
-        try{
+        try {
             System.out.println(">>>>开始读取connPool文件配置");
             //new对象
             Properties pro = new Properties();
 
             //读取配置 properties文件与src同级
-            pro.load(new FileReader(new File("connPool.properties")));
+            pro.load(new FileReader(new File("src/main/resources/connPool.properties")));
 
             driverName = pro.getProperty("driverName");
             url = pro.getProperty("url");

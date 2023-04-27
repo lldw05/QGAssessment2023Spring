@@ -1,16 +1,26 @@
 package com.lldw.www.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.lldw.www.po.OrderForm;
+import com.lldw.www.po.Result;
+import com.lldw.www.po.Token;
 import com.lldw.www.po.User;
 import com.lldw.www.service.Impl.UserServiceImpl;
+import com.lldw.www.utils.JwtUtil;
+import com.lldw.www.utils.OthersUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.lldw.www.constants.ResultConstants.TOKEN;
 
 /**
  * @author LLDW
@@ -31,7 +41,20 @@ public class UserServlet extends BaseServlet {
         User loginUser = JSON.parseObject(jsonStr, User.class);
         System.out.println("loginUser:"+loginUser);
 
+        //得到验证码
+        String verifyCode = JSONObject.parseObject(jsonStr).getString("verifyCode");
+        System.out.println("verifyCode"+verifyCode);
 
+        //获取程序生成的验证码，从Session获得
+        HttpSession session = request.getSession();
+        String verifyCodeGen = (String) session.getAttribute("verifyCodeGen");
+        System.out.println("verifyCodeGen"+verifyCodeGen);
+
+        if(!verifyCodeGen.equalsIgnoreCase(verifyCode)){
+            //验证码错误 无法注册
+            response.getWriter().write(JSON.toJSONString(Result.error("验证码错误")));
+            return;
+        }
 
         //2.将loginUser对象传入service 返回user对象
         User user = userService.login(loginUser);
@@ -42,38 +65,25 @@ public class UserServlet extends BaseServlet {
         if(user!=null){
             //返回user对象不为空且用户名和密码正确
 
-            /*//判断用户是否勾选记住我
-            if("1".equals(remember)){
-                //勾选了
-
-                //new cookie对象
-                Cookie cUsername = new Cookie("username", user.getUserName());
-                Cookie cPassword = new Cookie("password", user.getPassword());
-
-                //设置存活时间 7days
-                cUsername.setMaxAge(60*60*24*7);
-                cPassword.setMaxAge(60*60*24*7);
-
-                //发送
-                response.addCookie(cUsername);
-                response.addCookie(cPassword);
-            }
-
-            //将登陆成功后的user对象,存储到session
-            HttpSession httpSession = request.getSession();
-            httpSession.setAttribute("user",user);*/
-
 
             //登录成功 跳转到别的页面
 //            String contextPath = request.getContextPath();
 //            response.sendRedirect(contextPath+"");
+            //准备token 将userId，username，roleId放入token中
+            Map<String,Object> map = new HashMap<>();
+            map.put("userId",user.getUserId());
+            map.put("username",user.getUsername());
+            map.put("roleId",user.getRoleId());
+
+            Token token = new Token(JwtUtil.getToken(map));
             response.setContentType("text/json;charset=utf-8");
 
-            response.getWriter().write(JSON.toJSONString(user));
+            response.getWriter().write(JSON.toJSONString(Result.success(token)));
+
             //response.getWriter().write("登录成功test2023-04-18 17:29:43");
         }else{
             //结果为空 即用户名or密码错误
-            writer.write("用户名或密码错误~");
+            writer.write(JSON.toJSONString(Result.error("用户名或密码错误")));
 
 //            //存储错误信息到request
 //            request.setAttribute("login_msg","用户名或密码错误~");
@@ -94,23 +104,24 @@ public class UserServlet extends BaseServlet {
     public void register(HttpServletRequest request,HttpServletResponse response,String jsonStr) throws IOException, ServletException {
         System.out.println("---UserServlet.register---");
 
-        /*//0.校对验证码
-        //获取用户输入的验证码
-        String verifyCode = request.getParameter("verifyCode");
+        //0.校对验证码
+
+        //得到验证码
+        String verifyCode = JSONObject.parseObject(jsonStr).getString("verifyCode");
+        System.out.println("verifyCode"+verifyCode);
 
         //获取程序生成的验证码，从Session获得
         HttpSession session = request.getSession();
         String verifyCodeGen = (String) session.getAttribute("verifyCodeGen");
+        System.out.println("verifyCodeGen"+verifyCodeGen);
 
-        //校对验证码
         if(!verifyCodeGen.equalsIgnoreCase(verifyCode)){
-              //验证码错误 无法注册
-
-            request.setAttribute("verifyCode_msg","验证码错误");
-            request.getRequestDispatcher("register.html").forward(request,response);
-
+            //验证码错误 无法注册
+            response.getWriter().write(JSON.toJSONString(Result.error("验证码错误")));
             return;
-        }*/
+        }
+
+        //验证码正确 进行注册
 
         //将JSON字符申转为Java对象
         User user = JSON.parseObject(jsonStr, User.class);
@@ -122,11 +133,10 @@ public class UserServlet extends BaseServlet {
 
         if(registerUser!=null){
             response.setContentType("text/json;charset=utf-8");
-            response.getWriter().write(jsonStr);
+            response.getWriter().write(JSON.toJSONString(Result.success(registerUser)));
         }else{
-            String s = "注册失败,用户名已存在！";
             System.out.println("注册失败,用户名存在");
-            response.getWriter().write(s);
+            response.getWriter().write(JSON.toJSONString(Result.error("用户名已存在(或用户名或密码为空)")));
 
         }
 //

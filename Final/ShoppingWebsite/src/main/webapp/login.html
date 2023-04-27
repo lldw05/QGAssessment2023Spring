@@ -93,17 +93,17 @@
 
         <el-main>
             <!--表单-->
-            <el-form ref="form" :model="loginData" label-width="80px" size="mini">
+            <el-form ref="form" :model="tableData" label-width="80px" size="mini">
                 <el-form-item label="username">
-                    <el-input v-model="loginData.user.username"></el-input>
+                    <el-input v-model="tableData.username"></el-input>
                 </el-form-item>
 
                 <el-form-item label="password">
-                    <el-input v-model="loginData.user.password" show-password></el-input>
+                    <el-input v-model="tableData.password" show-password></el-input>
                 </el-form-item>
 
                 <el-form-item label="验证码">
-                    <el-input v-model="loginData.verifyCode"></el-input>
+                    <el-input v-model="tableData.verifyCode"></el-input>
                     <img id="verifyCodeImg" src="/ShoppingWebsite/verifyCodeServlet">
                 </el-form-item>
 
@@ -132,13 +132,23 @@
         el: "#loginDiv",
         data() {
             return {
-                loginData: {
-                    verifyCode: '',
-                    user: {
-                        username: '',
-                        phoneNumber: '',
-                        password: ''
-                    }
+                // loginData: {
+                //     verifyCode: '',
+                //     user: {
+                //         username: '',
+                //         phoneNumber: '',
+                //         password: ''
+                //     }
+                // },
+                /*
+                user: {
+
+                }*/
+                tableData:{
+                    verifyCode:'',
+                    username: '',
+                    phoneNumber: '',
+                    password: ''
                 }
 
             }
@@ -150,17 +160,37 @@
                 axios({
                     method: "post",
                     url: "http://localhost:8080/ShoppingWebsite/userServlet/login",
-                    data: _this.loginData
+                    data: /*_this.loginData*/_this.tableData
                 }).then(function (resp) {
-                    if (resp.data === "succeed") {
+                    // console.log(resp.data);
+
+                    if (resp.data.code === 1) {
                         //登录成功
+
+                        console.log(resp.data.data.token);
+                        //保存token
+                        window.localStorage.setItem("token",resp.data.data.token);
                         //登录成功 提示信息
                         _this.$message({
-                            message: '恭喜你，登录成功',
+                            message: '恭喜你，登录成功,1秒之后跳转...',
                             type: 'success'
                         });
 
+                        setTimeout(function (){
+                            // location.href="https://www.bilibili.com/video/BV1ct4y1n7t9?t=1.1";
+                            location.href="http://localhost:8080/ShoppingWebsite/homePage.html"
+                        },1000)
 
+
+                        // window.location.replace('http://localhost:8080/ShoppingWebsite/aaa.html');
+
+
+                    }else{
+                        console.log(resp.data);
+                        _this.$message({
+                            message:resp.data.msg,
+                            type: 'error'
+                        });
                     }
                 })
             }

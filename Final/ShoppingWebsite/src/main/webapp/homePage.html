@@ -4,160 +4,395 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
+<!--上传头像-->
     <style>
-        .app {
-            height: 100%;
-            width: 100%;
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 178px;
+            height: 178px;
+            line-height: 178px;
+            text-align: center;
+        }
+        .avatar {
+            width: 178px;
+            height: 178px;
+            display: block;
+        }
+    </style>
 
-        .el-header, .el-footer {
+
+    <style>
+        .el-header {
             background-color: #B3C0D1;
             color: #333;
-            font-size: 2.5em; /* 40px/16=2.5em */
-            text-align: center;
             line-height: 60px;
         }
 
         .el-aside {
-            background-color: #D3DCE6;
             color: #333;
-            /*text-align: center;*/
-            /*line-height: 200px;*/
-            line-height: 100%;
-        }
-
-        .el-main {
-            background-color: #E9EEF3;
-            color: #333;
-            /*text-align: center;*/
-            line-height: 50px;
-            height: 590px;
-            /*line-height: 50px;*/
-            /*display: flex;*/
-
-        }
-
-
-        body > .el-container {
-            margin-bottom: 40px;
-        }
-
-        .el-container:nth-child(5) .el-aside,
-        .el-container:nth-child(6) .el-aside {
-            line-height: 260px;
-        }
-
-        .el-container:nth-child(7) .el-aside {
-            line-height: 320px;
         }
     </style>
 
 </head>
 <body>
 
-<div id="app" class="app">
-    <el-row class="tac">
+<div id="app">
+    <!--搜索表单-->
+    <el-form :inline="true" :model="search" class="demo-form-inline">
 
 
-    </el-row>
-    <el-container>
-        <el-header>QG购物网</el-header>
+        <el-form-item label="搜索商品">
+            <el-input v-model="search.searchKeyword" placeholder="商品名称" style="width:500px"></el-input>
+        </el-form-item>
+
+        <el-form-item>
+            <el-button type="primary" @click="searchOnSubmit">搜索</el-button>
+        </el-form-item>
+    </el-form>
+
+    <!--表格-->
+    <el-container style="height: 500px; border: 1px solid #eee">
+        <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+            <el-menu :default-openeds="['1', '3']">
+                <el-submenu index="1">
+                    <template slot="title"><i class="el-icon-message"></i>首页</template>
+                    <el-menu-item-group>
+                        <!--                        <template slot="title">分组一</template>-->
+                        <!--                        <el-menu-item index="1-1">选项1</el-menu-item>-->
+                        <el-menu-item index="1-2">首页</el-menu-item>
+                    </el-menu-item-group>
+                    <!--                    <el-menu-item-group title="分组2">-->
+                    <!--                        <el-menu-item index="1-3">选项3</el-menu-item>-->
+                    </el-menu-item-group>
+                    <!--                    <el-submenu index="1-4">-->
+                    <!--                        <template slot="title">选项4</template>-->
+                    <!--                        <el-menu-item index="1-4-1">选项4-1</el-menu-item>-->
+                </el-submenu>
+                </el-submenu>
+                <el-submenu index="2">
+                    <template slot="title"><i class="el-icon-menu"></i>消息</template>
+                    <el-menu-item-group>
+                        <!--                        <template slot="title">分组一</template>-->
+                        <el-menu-item index="2-1">查看消息</el-menu-item>
+                        <!--                        <el-menu-item index="2-2">选项2</el-menu-item>-->
+                    </el-menu-item-group>
+                    <!--                    <el-menu-item-group title="分组2">-->
+                    <!--                        <el-menu-item index="2-3">选项3</el-menu-item>-->
+                    <!--                    </el-menu-item-group>-->
+                    <!--                    <el-submenu index="2-4">-->
+                    <!--                        <template slot="title">选项4</template>-->
+                    <!--                        <el-menu-item index="2-4-1">选项4-1</el-menu-item>-->
+                    <!--                    </el-submenu>-->
+                </el-submenu>
+                <el-submenu index="3">
+                    <template slot="title"><i class="el-icon-setting"></i>我的</template>
+                    <el-menu-item-group>
+                        <!--                        <template slot="title">分组一</template>-->
+                        <el-menu-item index="3-1">选项1</el-menu-item>
+                        <el-menu-item index="3-2">选项2</el-menu-item>
+                    </el-menu-item-group>
+                    <!--                    <el-menu-item-group title="分组2">-->
+                    <el-menu-item index="3-3">选项3</el-menu-item>
+                    <!--                    </el-menu-item-group>-->
+                    <!--                    <el-submenu index="3-4">-->
+                    <!--                        <template slot="title">选项4</template>-->
+                    <!--                        <el-menu-item index="3-4-1">选项4-1</el-menu-item>-->
+                    <!--                    </el-submenu>-->
+                </el-submenu>
+            </el-menu>
+        </el-aside>
+
         <el-container>
+            <el-header style="text-align: right; font-size: 12px">
+                <el-dropdown>
+                    <i class="el-icon-setting" style="margin-right: 15px"></i>
 
-            <!--aside-->
-            <el-aside width="160px">
-                <el-menu
-                        default-active="2"
-                        class="el-menu-vertical-demo"
-                        @open="handleOpen"
-                        @close="handleClose">
-                    <el-submenu index="1">
-<!--                        <template slot="title">-->
-                            <i class="el-icon-message-solid"></i>
-                            <span slot="title">消息</span>
-<!--                        </template>-->
-                    </el-submenu>
-                    <el-menu-item index="2">
-                        <i class="el-icon-message-solid"></i>
-                        <span slot="title">消息</span>
-                    </el-menu-item>
-                    <el-menu-item index="3">
-                        <i class="el-icon-shopping-cart-2"></i>
-                        <span slot="title">购物车</span>
-                    </el-menu-item>
-                    <el-menu-item index="4">
-                        <i class="el-icon-user"></i>
-                        <span slot="title">我的主页</span>
-                    </el-menu-item>
-                </el-menu>
-            </el-aside>
+                </el-dropdown>
+                <span>你好</span>
+<!--                <p id = "name"></p>-->
+            </el-header>
 
-
-            <!--main-->
             <el-main>
-                <el-table :data="tableData">
-                    <el-table-column prop="date" label="日期" width="140">
+                <el-table :data="tableData" style="line-height: 20px;">
+                    <el-table-column prop="price" label="图片" width="250">
                     </el-table-column>
-                    <el-table-column prop="name" label="姓名" width="120">
+                    <el-table-column prop="goodsIntroduction" label="商品介绍" width="250">
                     </el-table-column>
-                    <el-table-column prop="address" label="地址">
+                    <el-table-column prop="price" label="价格" width="100">
+                    </el-table-column>
+                    <el-table-column prop="monthlySales" label="月销量" width="100">
+                    </el-table-column>
+                    <el-table-column label="查看评论">
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <el-row>
+                            <el-button type="primary" round @click="dialogVisibleOfPurchaseNow = true">立即购买
+                            </el-button>
+                            <el-button type="danger" round @click="dialogVisibleOfAddIntoShopCart = true">加入购物车
+                            </el-button>
+                        </el-row>
                     </el-table-column>
                 </el-table>
             </el-main>
         </el-container>
     </el-container>
 
+    <!--立即购买对话框表单-->
+    <el-dialog
+            title="提示"
+            :visible.sync="dialogVisibleOfPurchaseNow"
+            width="30%"
+    >
+        <!--表单数据-->
+        <el-form ref="form" :model="purchaseNowForm" label-width="80px">
+            <el-form-item label="购买数量">
+                <el-input
+
+                        v-model.number="purchaseNowForm.amount"
+                        oninput="value=value.replace(/[^0-9.]/g,'')">
+                    <!--                        type="number"-->
+                    <!--                        onkeyup="this.value=this.value.replace(/\D/g,'')"-->
+                    <!--                        onafterpaste="this.value=this.value.replace(/\D/g,'')"-->
+
+
+                </el-input>
+            </el-form-item>
+            <el-form-item label="配送地址">
+                <el-input
+                        v-model="purchaseNowForm.address"
+                >
+                </el-input>
+            </el-form-item>
+            <el-form-item label="支付密码">
+                <el-input
+                        type="password"
+                        v-model="purchaseNowForm.payPassword"
+                        onkeyup="this.value=this.value.replace(/\D/g,'')"
+                        onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                >
+                </el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="purchaseNow">立即购买</el-button>
+                <el-button @click="dialogVisibleOfPurchaseNow = false">取消</el-button>
+            </el-form-item>
+        </el-form>
+
+        <!--  </span>-->
+    </el-dialog>
+
+    <!--添加到购物车对话框表单-->
+    <el-dialog
+            title="提示"
+            :visible.sync="dialogVisibleOfAddIntoShopCart"
+            width="30%"
+    >
+        <!--表单数据-->
+        <el-form ref="form" :model="addIntoShopCartForm" label-width="80px">
+            <el-form-item label="购买数量">
+                <el-input
+
+                        v-model.number="addIntoShopCartForm.amount"
+                        oninput="value=value.replace(/[^0-9.]/g,'')">
+                    <!--                        type="number"-->
+                    <!--                        onkeyup="this.value=this.value.replace(/\D/g,'')"-->
+                    <!--                        onafterpaste="this.value=this.value.replace(/\D/g,'')"-->
+
+
+                </el-input>
+            </el-form-item>
+
+            <el-form-item>
+                <el-button type="primary" @click="addIntoShopCart">立即添加</el-button>
+                <el-button @click="dialogVisibleOfAddIntoShopCart = false">取消</el-button>
+            </el-form-item>
+        </el-form>
+
+        <!--  </span>-->
+    </el-dialog>
+
+<!--上传头像
+    <el-upload
+            class="avatar-uploader"
+            action="http://localhost:8080/ShoppingWebsite/pictureServlet/uploadPicture"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
+        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+    </el-upload>-->
+
 </div>
-
-<script>
-    new Vue({
-        el: "#app",
-        mounted(){
-            var _this = this;
-            alert("aaa")
-            axios({
-                method:"get",
-                url:"http://localhost:8080/ShoppingWebsite/randomGoods"
-            }).then(function (resp){
-                _this.tableData = resp.data;
-            })
-
-        },
-        methods: {
-            tableRowClassName({row, rowIndex}) {
-                if (rowIndex === 1) {
-                    return 'warning-row';
-                } else if (rowIndex === 3) {
-                    return 'success-row';
-                }
-                return '';
-            }
-        },
-        data() {
-            const item = {
-                date: '2016-05-02',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            };
-            return {
-                tableData: Array(20).fill(item)
-            }
-        }
-    })
-
-</script>
-
 
 <script src="js/axios.js"></script>
 <script src="js/vue.js"></script>
 <script src="element-ui/lib/index.js"></script>
 <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
 
+
+
+
 <script>
     new Vue({
-        el: "#app"
+        el: "#app",
+        mounted() {
+            //当页面加载完成后，发送异步请求，获取数据
+            var _this = this;
+
+            // 请求拦截器
+            axios.interceptors.request.use(function (config) {
+                console.log('请求拦截器 成功-2')
+                //设置响应头
+                config.headers.Authorization = localStorage.getItem('token');
+                //throw "参数异常"
+
+                return config;
+            }, function (error) {
+                console.log("请求拦截器 失败-2")
+                return Promise.reject(error);
+            });
+
+            axios({
+                method: "get",
+                url: "http://localhost:8080/ShoppingWebsite/goodsServlet/randomGoods",
+                // url: "http://localhost:8080/ShoppingWebsite/goodsServlet/randomGoods?Authorization="+localStorage.getItem('token'),
+            }).then(function (resp) {
+                console.log(resp.data);
+
+                // console.log(resp.data.data);
+
+
+                _this.tableData = resp.data;
+                // _this.tableData = resp.data.data;
+            }).catch(err=>{
+                // handle error
+                console.log(err.response)
+            });
+
+
+
+
+
+        }
+
+
+        ,
+        methods: {
+            //搜索商品方法
+            searchOnSubmit() {
+                console.log(this.search);
+                var _this = this;
+                axios({
+                    method: "post",
+                    url:"http://localhost:8080/ShoppingWebsite/goodsServlet/searchGoods",
+                    data: /*_this.search*/
+                        {
+                        keyword:_this.search.searchKeyword
+                    }
+                }).then(function (resp) {
+                    // console.log(resp.data);
+                    if(resp.data.code === 1){
+                        //查找成功 提示信息
+                        _this.$message({
+                            message: '查找成功!',
+                            type: 'success'
+                        });
+                        //显示查找的商品
+                        _this.tableData = resp.data.data;
+                    }else {
+                        console.log(resp.data);
+                        _this.$message({
+                            message:'没有找到你想要的商品哦',
+                            type: 'warning'
+                            // type: 'error'
+                        });
+                    }
+
+
+                })
+            }
+            ,
+            /*立即购买*/
+            purchaseNow() {
+                console.log(this.purchaseNowForm);
+            },
+            //加入购物车
+            addIntoShopCart() {
+                console.log(this.addIntoShopCartForm);
+            },
+
+            //上传图片
+            // handleAvatarSuccess(res, file) {
+            //     this.imageUrl = URL.createObjectURL(file.raw);
+            // },
+            // beforeAvatarUpload(file) {
+            //     const isJPG = file.type === 'image/jpeg';
+            //     const isLt2M = file.size / 1024 / 1024 < 2;
+            //
+            //     if (!isJPG) {
+            //         this.$message.error('上传头像图片只能是 JPG 格式!');
+            //     }
+            //     if (!isLt2M) {
+            //         this.$message.error('上传头像图片大小不能超过 2MB!');
+            //     }
+            //     return isJPG && isLt2M;
+            // }
+        }
+        ,
+        data() {
+
+            /*const item = {
+                date: '2016-05-02',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1518 弄'
+            };*/
+            return {
+                username:'',
+                //图片上传
+                imageUrl: '',
+                //立即购买对话框是否展示的标记
+                dialogVisibleOfPurchaseNow: false,
+                dialogVisibleOfAddIntoShopCart: false,
+                //表格数据
+                tableData: {
+                    goodsIntroduction: '',
+                    price: '',
+                    monthlySales: '',
+
+
+                },
+                //搜索表单数据
+                searchKeyword: '',
+                search: {
+                    searchKeyword: '',
+                },
+                purchaseNowForm: {
+                    amount: '',
+                    address: '',
+                    payPassword: ''
+                },
+                addIntoShopCartForm: {
+                    amount: '',
+                }
+            }
+        }
+
     })
+
+
 </script>
+
 
 </body>
 </html>

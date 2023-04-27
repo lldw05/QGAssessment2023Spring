@@ -1,5 +1,6 @@
 package com.lldw.www.utils;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,28 +10,23 @@ import java.util.Map;
  */
 public class OthersUtil {
     /**
-     * 将jsonStr转为map
-     * @param str jsonStr语句
+     * 将bean实体属性和值 存在map
+     * @param o jsonStr语句
      * @return Map<String, String>
      */
-    public static Map<String, String> jsonStringtoMap(String str) {
-        //{"messageContent":"测试发布动态","createTime":"2023-04-209:32:57","shopId":"6","goodsId":"8"}
+    public static Map<String, Object> beantoMap(Object o) {
+        Map<String,Object> map = new HashMap<>();
+        try {
+            //获取 属性字段 和 属性值 存放到 map 中
+            for(Field field : o.getClass().getDeclaredFields()){
+                //通过get方法直接获取属性值
+                field.setAccessible(true);
+                // field.getName() 获取 属性名 ，field.get(v1) 获取 属性数值
+                map.put( field.getName(), field.get(o));
+            }
 
-        //去掉头尾大括号
-        str = str.substring(1, str.length() - 1);
-
-        //去掉双引号
-        str.replace("\"", "");
-
-        //以逗号分割
-        String[] strs = str.split(",");
-        Map<String, String> map = new HashMap<>();
-        for (String s :
-                strs) {
-            String key = s.split(":")[0];
-            String value = s.split(":")[1];
-
-            map.put(key, value);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return map;
     }

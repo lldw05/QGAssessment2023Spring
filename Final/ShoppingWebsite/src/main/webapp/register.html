@@ -8,7 +8,7 @@
 
         .registerDiv {
             /*background: no-repeat center/80% url("img/background.jpg");*/
-            background:no-repeat left/100% url("img/background.jpg");
+            background:no-repeat left/100% url("img/background3.jpg");
 
             display: flex;
             align-items: center;
@@ -59,54 +59,6 @@
 </head>
 <body>
 
-<!--<div class="form-div">
-    <div class="reg-content">
-        <h1>欢迎注册</h1>
-        <span>已有账号？</span><a href="login.html">登录</a>
-    </div>
-    <form id="reg-form" action="/QGDemo/userServlet" method="post">
-        <table>
-            <tr>
-                <td>用户名</td>
-                <td class="inputs">
-                    <input name="username" type="text" id="username">
-                    <br>
-                    <span id="username_err" class="err_msg" style="display: none">用户名太受欢迎了喵...</span>
-
-                </td>
-            </tr>
-            <tr>
-                <td>密码</td>
-                <td class="inputs">
-                    <input name="password" type="password" id="password">
-                    <br>
-                    <span id="password_err" class="err_msg" style="display: none">密码格式有误</span>
-
-                </td>
-            </tr>
-
-            <tr>
-                <td>验证码</td>
-                <td class="inputs">
-                    <input name="verifyCode" type="text" id="verifyCode">
-                    <img id="verifyCodeImg" src="/QGDemo/verifyCodeServlet">
-                    <a href="#" id="changeImg">看不清?</a>
-
-                </td>
-            </tr>
-
-        </table>
-        <input type="hidden" id="method" name="method" value="register">
-        <div class="button">
-            <input value="注 册" type="submit" id="reg_btn">
-
-        </div>
-        <br class="clear">
-    </form>
-
-</div>-->
-
-
 
 <div id="registerDiv" class="registerDiv">
 
@@ -115,31 +67,24 @@
 
         <el-main>
             <!--表单-->
-            <el-form ref="form" :model="user" label-width="80px" size = "mini">
+            <el-form ref="form" :model="tableData" label-width="80px" size = "mini">
                 <el-form-item label="username">
-                    <el-input v-model="user.username" ></el-input>
+                    <el-input v-model="tableData.username" ></el-input>
                 </el-form-item>
 
                 <el-form-item label="password">
-                    <el-input v-model="user.password" ></el-input>
+                    <el-input v-model="tableData.password" ></el-input>
                 </el-form-item>
 
                 <el-form-item label="验证码">
-                    <el-input v-model="verifyCode" ></el-input>
+                    <el-input v-model="tableData.verifyCode" ></el-input>
                     <img id="verifyCodeImg" src="/ShoppingWebsite/verifyCodeServlet">
                 </el-form-item>
 
                 <el-form-item>
-                    <el-button type="primary" @click="checkVerifyCode">注册</el-button>
+                    <el-button type="primary" @click="register">注册</el-button>
                     <el-link href="login.html" target="_blank">突然想起密码？去登录!</el-link><br>
 
-<!--                    <el-link href="register.html" target="_blank" type="primary">没有账号？立即注册</el-link>-->
-                    <!--<tr>
-                        <td>验证码</td>
-                        <td class="inputs">
-                            <input name="verifyCode" type="text" v-model="verifyCode">
-                            <img id="verifyCodeImg" src="/QGDemo/verifyCodeServlet">
-                            <a href="#" id="changeImg">看不清?</a>
 
                         </td>
                     </tr>-->
@@ -205,10 +150,12 @@
                 //         password:''
                 //     }
                 // }
-                user: {
+
+                tableData:{
                     username: '',
                     phoneNumber:'',
-                    password:''
+                    password:'',
+                    verifyCode:''
                 }
 
             }
@@ -220,18 +167,35 @@
                 axios({
                     method: "post",
                     url: "http://localhost:8080/ShoppingWebsite/userServlet/register",
-                    data: _this.user
+                    data: _this.tableData
                 }).then(function (resp) {
-                    if (resp.data === "succeed") {
-                        //修改成功
+                    if (resp.data.code === 1) {
+                        //登录成功
 
-                        //修改成功 提示信息
+                        console.log(resp.data.data.token);
+                        //保存token
+                        window.localStorage.setItem("token",resp.data.data.token);
+                        //登录成功 提示信息
                         _this.$message({
-                            message: '恭喜你，添加成功',
+                            message: '注册成功,1秒之后跳转...',
                             type: 'success'
                         });
 
+                        setTimeout(function (){
+                            // location.href="https://www.bilibili.com/video/BV1ct4y1n7t9?t=1.1";
+                            location.href="http://localhost:8080/ShoppingWebsite/homePage.html"
+                        },1000)
 
+
+                        // window.location.replace('http://localhost:8080/ShoppingWebsite/aaa.html');
+
+
+                    }else{
+                        console.log(resp.data);
+                        _this.$message({
+                            message:resp.data.msg,
+                            type: 'error'
+                        });
                     }
                 })
             },

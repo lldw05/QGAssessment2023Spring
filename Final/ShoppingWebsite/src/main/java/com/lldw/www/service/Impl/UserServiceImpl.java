@@ -29,10 +29,10 @@ public class UserServiceImpl implements UserService {
         //对用户的密码进行加密
         user = this.encryptUser(user);
 
-        if (userById!=null&&userById.getPassword().equals(user.getPassword())){
+        if (userById != null && userById.getPassword().equals(user.getPassword())) {
             //返回userById对象不为空且用户名和密码正确
             return userById;
-        }else {
+        } else {
             //返回对象为空 即用户名或密码错误
             return null;
         }
@@ -41,9 +41,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(User user) {
         System.out.println("---UserService.register---");
+
+        //健壮性:判断密码和用户名是否为null值
+        if(user.getPassword() == null || user.getUsername() == null) {
+            return null;
+        }
+
         User userByUsername = userDao.getUserByUsername(user);
         //判断是否查询到结果
-        if(userByUsername!=null){
+        if (userByUsername != null) {
             //查询到了 说明用户名已经被使用 返回null表示注册失败
             System.out.println("ERROR:用户名存在");
             return null;
@@ -55,7 +61,7 @@ public class UserServiceImpl implements UserService {
         //查询不到 注册 返回影响行数
         //影响行数大于0 返回新添加的user对象 否则返回null
 
-        return userDao.insertUser(user)>0?userDao.getUserByUsername(user):null;
+        return userDao.insertUser(user) > 0 ? userDao.getUserByUsername(user) : null;
     }
 
     @Override
@@ -65,10 +71,11 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 对用户的对用户的密码和支付密码进行加密
+     *
      * @param user 未加密的user对象
      * @return 返回已加密的user对象
      */
-    public User encryptUser(User user){
+    public User encryptUser(User user) {
         //对用户的密码进行加密 连续加密两次
         user.setPassword(EncryptUtil.encrypt(user.getPassword()));
         user.setPassword(EncryptUtil.encrypt(user.getPassword()));
@@ -78,26 +85,24 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    public User updateUser(User user){
+    public User updateUser(User user) {
         //判断密码和支付密码是否需要修改
 
-        if(user.getPassword()!=null){
+        if (user.getPassword() != null) {
             //密码需要修改 加密一下下先
             user = this.encryptUser(user);
         }
 
-        if(user.getPayPassword()!=null){
+        if (user.getPayPassword() != null) {
             //支付密码需要修改 加密一下下先
             user.setPayPassword(EncryptUtil.encrypt(user.getPayPassword()));
             user.setPayPassword(EncryptUtil.encrypt(user.getPayPassword()));
         }
         //进行更新 返回修改的行数
         //修改行数大于0 返回修改完的user对象 否则返回null
-        return userDao.updateUser(user) >0?userDao.getUserById(user):null;
+        return userDao.updateUser(user) > 0 ? userDao.getUserById(user) : null;
 
     }
-
-
 
 
 }

@@ -61,6 +61,18 @@ public class BaseServlet extends HttpServlet {
         this.doGet(request, response);
     }
 
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        super.doPut(req, resp);
+        this.doGet(req, resp);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        super.doDelete(req, resp);
+        this.doGet(req, resp);
+    }
+
     /**
      *  获取前端传来的json数据 转换成字符串
      * @param request request
@@ -91,6 +103,9 @@ public class BaseServlet extends HttpServlet {
 //            System.out.println("jsonStr:" + jsonStr);
         }
 
+        /*if(jsonStr.contains("file")){
+            return jsonStr;
+        }*/
         //输出到控制台
         System.out.println("jsonStr:"+jsonStr);
         return jsonStr;

@@ -2,10 +2,7 @@ package com.lldw.www.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.lldw.www.constants.MessageConstants;
-import com.lldw.www.po.Goods;
-import com.lldw.www.po.Message;
-import com.lldw.www.po.Result;
-import com.lldw.www.po.Shop;
+import com.lldw.www.po.*;
 import com.lldw.www.service.Impl.GoodsServiceImpl;
 
 import javax.servlet.annotation.WebServlet;
@@ -24,16 +21,26 @@ public class GoodsServlet extends BaseServlet {
     GoodsServiceImpl goodsService = new GoodsServiceImpl();
 
     public  void searchGoods(HttpServletRequest request, HttpServletResponse response, String jsonStr){
-        System.out.println("---MessageServlet.addComment---");
+        System.out.println("---MessageServlet.searchGoods---");
 
         //将JSON字符申转为String对象
-        String s = JSON.parseObject(jsonStr, String.class);
-        System.out.println("搜索关键词:" + s);
+//         request.getParameter("searchKeyword");
+//        String searchKeyword = JSON.parseObject("keyword", String.class);
+//        String keyword = (String) JSON.parse("keyword");
+//        String s = JSON.parseObject(jsonStr, String.class);
+
+        //将JSON字符申转为Java对象
+//        SearchKeyword searchKeyword = JSON.parseObject(jsonStr, SearchKeyword.class);
+        String searchKeyword = JSON.parseObject(jsonStr).getString("keyword");
+
+//        System.out.println("搜索关键词:" + searchKeyword.getKeyword());
+        System.out.println("搜索关键词:" + searchKeyword);
 
 
 
         //调用service
-        ArrayList<Goods> goods = goodsService.searchGoods(s);
+//        ArrayList<Goods> goods = goodsService.searchGoods(searchKeyword.getKeyword());
+        ArrayList<Goods> goods = goodsService.searchGoods(searchKeyword);
 
 
         if (goods != null) {
@@ -41,7 +48,7 @@ public class GoodsServlet extends BaseServlet {
                 response.setContentType("text/json;charset=utf-8");
 
                 //将resultShop对象转换为JSON数据 序列化 将shop传给前端
-                response.getWriter().write(JSON.toJSONString(goods));
+                response.getWriter().write(JSON.toJSONString(Result.success(goods)));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -49,7 +56,7 @@ public class GoodsServlet extends BaseServlet {
         } else {
             System.out.println("没有找到您想要的商品哦~");
             try {
-                response.getWriter().write("没有找到您想要的商品哦~");
+                response.getWriter().write(JSON.toJSONString(Result.error(null)));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

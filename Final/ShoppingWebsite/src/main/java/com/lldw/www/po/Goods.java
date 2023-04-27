@@ -80,6 +80,23 @@ public class Goods {
 
     @Override
     public String toString() {
+        return this.getVo();
+    }
+
+    public String getVo() {
+        return "Goods{" +
+                "goodsId=" + goodsId +
+                ", goodsIntroduction='" + goodsIntroduction + '\'' +
+                ", price=" + price +
+                ", pictureId=" + pictureId +
+                ", shopId=" + shopId +
+                ", monthlySales=" + monthlySales +
+                ", amount=" + amount +
+                ", isActive=" + isActive +
+                '}';
+    }
+
+    public String getDto() {
         return "Goods{" +
                 "goodsId=" + goodsId +
                 ", goodsIntroduction='" + goodsIntroduction + '\'' +
@@ -92,3 +109,4 @@ public class Goods {
                 '}';
     }
 }
+
