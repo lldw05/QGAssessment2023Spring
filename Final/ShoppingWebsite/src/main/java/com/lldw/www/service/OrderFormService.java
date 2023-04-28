@@ -17,6 +17,13 @@ public interface OrderFormService {
       * @return 是否完全添加(就算添加了一部分 但没完全添加 也返回false)
       */
     boolean addOrderInBulk(OrderForm[] orderForms);
+    /**
+     *  立即购买 验证密码 以及 添加订单
+     * @param orderForm 订单
+     * @param user userId和payPassword
+     * @return 是否添加成功
+     */
+    boolean purchaseNow(OrderForm orderForm,User user);
 
     /**
      *  通过userId查询订单

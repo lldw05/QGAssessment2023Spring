@@ -54,7 +54,13 @@ public class MessageServlet extends BaseServlet {
             }
         }
     }
-
+    /**
+     * 添加评论
+     *
+     * @param request  req
+     * @param response resp
+     * @param jsonStr  已经转成string的json数据
+     */
     public void addComment(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
         System.out.println("---MessageServlet.addComment---");
 

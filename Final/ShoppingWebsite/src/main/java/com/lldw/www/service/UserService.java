@@ -1,10 +1,6 @@
 package com.lldw.www.service;
 
-import com.lldw.www.po.OrderForm;
-import com.lldw.www.po.Shop;
 import com.lldw.www.po.User;
-
-import java.util.ArrayList;
 
 /**
  * @author
@@ -30,7 +26,13 @@ public interface UserService {
      * @param user username
      * @return 查询到了 则返回User对象 查询不到则返回null
      */
-    User queryUser(User user);
+    User queryUserByUsername(User user);
+    /**
+     * 通过userId查找user对象
+     * @param user userid
+     * @return 查询到了 则返回User对象 查询不到则返回null
+     */
+    User queryUserByUserId(User user);
 
     /**
      * 更新user数据
@@ -40,6 +42,19 @@ public interface UserService {
     User updateUser(User user);
 
 
+    /**
+     * 核实支付密码是否正确
+     * @param user userId payPassword
+     * @return 返回密码是否正确
+     */
+    boolean checkPayPassword(User user);
+
+    /**
+     * 查询支付密码是否为null
+     * @param user userId
+     * @return 返回支付密码是否为null
+     */
+    boolean checkPayPasswordIsNull(User user);
 
 
 }

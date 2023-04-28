@@ -18,4 +18,13 @@ public class ResultConstants {
      */
     public static final String TOKEN = "token";
 
+    /**
+     * 验证码错误
+     */
+    public static final String VERIFY_CODE_ERROR = "验证码错误";
+    /**
+     * 返回信息success
+     */
+    public static final String SUCCESS = "success";
+
 }

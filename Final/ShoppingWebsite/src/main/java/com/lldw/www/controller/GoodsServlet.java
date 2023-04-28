@@ -23,11 +23,7 @@ public class GoodsServlet extends BaseServlet {
     public  void searchGoods(HttpServletRequest request, HttpServletResponse response, String jsonStr){
         System.out.println("---MessageServlet.searchGoods---");
 
-        //将JSON字符申转为String对象
-//         request.getParameter("searchKeyword");
-//        String searchKeyword = JSON.parseObject("keyword", String.class);
-//        String keyword = (String) JSON.parse("keyword");
-//        String s = JSON.parseObject(jsonStr, String.class);
+
 
         //将JSON字符申转为Java对象
 //        SearchKeyword searchKeyword = JSON.parseObject(jsonStr, SearchKeyword.class);

@@ -1,6 +1,7 @@
 package com.lldw.www.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.lldw.www.po.Result;
 import com.lldw.www.po.ShopCart;
 import com.lldw.www.service.Impl.ShopCartServiceImpl;
 
@@ -35,7 +36,7 @@ public class ShopCartServlet extends BaseServlet {
                 response.setContentType("text/json;charset=utf-8");
 
                 //将resultShop对象转换为JSON数据 序列化 将shop传给前端
-                response.getWriter().write(JSON.toJSONString(resultShopCart));
+                response.getWriter().write(JSON.toJSONString(Result.success()));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -43,7 +44,7 @@ public class ShopCartServlet extends BaseServlet {
         } else {
             System.out.println("添加购物车失败~");
             try {
-                response.getWriter().write("添加购物车失败~");
+                response.getWriter().write(JSON.toJSONString(Result.error(null)));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

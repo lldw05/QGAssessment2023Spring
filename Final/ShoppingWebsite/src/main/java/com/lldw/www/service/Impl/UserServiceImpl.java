@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
         System.out.println("---UserService.register---");
 
         //健壮性:判断密码和用户名是否为null值
-        if(user.getPassword() == null || user.getUsername() == null) {
+        if (user.getPassword() == null || user.getUsername() == null) {
             return null;
         }
 
@@ -65,8 +65,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User queryUser(User user) {
+    public User queryUserByUsername(User user) {
         return userDao.getUserByUsername(user);
+    }
+
+    @Override
+    public User queryUserByUserId(User user) {
+        return userDao.getUserById(user);
     }
 
     /**
@@ -102,6 +107,31 @@ public class UserServiceImpl implements UserService {
         //修改行数大于0 返回修改完的user对象 否则返回null
         return userDao.updateUser(user) > 0 ? userDao.getUserById(user) : null;
 
+    }
+
+    @Override
+    public boolean checkPayPassword(User user) {
+
+        //根据id查询user
+        User user1 = userDao.getUserById(user);
+
+
+        //支付密码 加密一下下先
+        user.setPayPassword(EncryptUtil.encrypt(user.getPayPassword()));
+        user.setPayPassword(EncryptUtil.encrypt(user.getPayPassword()));
+
+
+
+        return user1.getPayPassword().equals(user.getPayPassword());
+    }
+
+    @Override
+    public boolean checkPayPasswordIsNull(User user) {
+
+        //根据id查询user
+        User user1 = userDao.getUserById(user);
+
+        return user1.getPayPassword()==null;
     }
 
 

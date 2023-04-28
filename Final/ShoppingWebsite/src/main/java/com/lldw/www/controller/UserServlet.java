@@ -2,13 +2,11 @@ package com.lldw.www.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.lldw.www.po.OrderForm;
 import com.lldw.www.po.Result;
 import com.lldw.www.po.Token;
 import com.lldw.www.po.User;
 import com.lldw.www.service.Impl.UserServiceImpl;
 import com.lldw.www.utils.JwtUtil;
-import com.lldw.www.utils.OthersUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,11 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.lldw.www.constants.ResultConstants.TOKEN;
 
 /**
  * @author LLDW
@@ -43,7 +38,7 @@ public class UserServlet extends BaseServlet {
 
         //得到验证码
         String verifyCode = JSONObject.parseObject(jsonStr).getString("verifyCode");
-        System.out.println("verifyCode"+verifyCode);
+        System.out.println("loginVerifyCode:"+verifyCode);
 
         //获取程序生成的验证码，从Session获得
         HttpSession session = request.getSession();
@@ -58,17 +53,14 @@ public class UserServlet extends BaseServlet {
 
         //2.将loginUser对象传入service 返回user对象
         User user = userService.login(loginUser);
+        System.out.println("user:"+user);
         /*String remember = request.getParameter("remember");*/
 
         PrintWriter writer = response.getWriter();
 
         if(user!=null){
             //返回user对象不为空且用户名和密码正确
-
-
-            //登录成功 跳转到别的页面
-//            String contextPath = request.getContextPath();
-//            response.sendRedirect(contextPath+"");
+            System.out.println("返回user对象不为空且用户名和密码正确");
             //准备token 将userId，username，roleId放入token中
             Map<String,Object> map = new HashMap<>();
             map.put("userId",user.getUserId());
@@ -78,11 +70,14 @@ public class UserServlet extends BaseServlet {
             Token token = new Token(JwtUtil.getToken(map));
             response.setContentType("text/json;charset=utf-8");
 
-            response.getWriter().write(JSON.toJSONString(Result.success(token)));
+            response.getWriter().write(JSON.toJSONString(Result.success(user.getUserId().toString(),token)));
+//            response.getWriter().write(JSON.toJSONString("userId="+user.getUserId()));
 
             //response.getWriter().write("登录成功test2023-04-18 17:29:43");
+            System.out.println("完成返回信息");
         }else{
             //结果为空 即用户名or密码错误
+            System.out.println("结果为空 即用户名or密码错误");
             writer.write(JSON.toJSONString(Result.error("用户名或密码错误")));
 
 //            //存储错误信息到request
@@ -209,7 +204,7 @@ public class UserServlet extends BaseServlet {
         PrintWriter writer = response.getWriter();
 
         User loginUser = packagingUser(request,response,jsonStr);
-        User user = userService.queryUser(loginUser);
+        User user = userService.queryUserByUsername(loginUser);
         if(user==null){
             //查询不到 说明username未使用过
             writer.write(""+true);
@@ -261,7 +256,7 @@ public class UserServlet extends BaseServlet {
         //将JSON字符申转为Java对象
         User user = JSON.parseObject(jsonStr, User.class);
         System.out.println("user:"+user);
-        User resultUser = userService.queryUser(user);
+        User resultUser = userService.queryUserByUsername(user);
         System.out.println("resultUser:"+resultUser);
 
         //响应数据

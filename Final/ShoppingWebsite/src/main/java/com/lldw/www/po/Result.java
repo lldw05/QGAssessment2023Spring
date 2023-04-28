@@ -1,5 +1,7 @@
 package com.lldw.www.po;
 
+import com.lldw.www.constants.ResultConstants;
+
 /**
  * @author lldw
  * @date 2023-04-24 23:12:15
@@ -52,11 +54,14 @@ public class Result {
     }
 
     public static Result success(Object data){
-        return new Result(1,"success",data);
+        return new Result(1,ResultConstants.SUCCESS,data);
+    }
+    public static Result success(String msg,Object data){
+        return new Result(1,msg,data);
     }
 
     public static Result success(){
-        return new Result(1,"success",null);
+        return new Result(1, ResultConstants.SUCCESS,null);
     }
 
     public static Result error(String msg){
@@ -70,6 +75,15 @@ public class Result {
 //                ", msg='" + msg + '\'' +
 //                ", data=" + data +
 //                '}';
+        /*
+
+        return JSON.toJSONString("{" +
+                "code=" + code +
+                ", msg='" + msg + '\'' +
+                ", data=" + data +
+                '}');
+
+                */
 
         return "{" +
                 "code=" + code +

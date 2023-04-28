@@ -162,14 +162,18 @@
                     url: "http://localhost:8080/ShoppingWebsite/userServlet/login",
                     data: /*_this.loginData*/_this.tableData
                 }).then(function (resp) {
-                    // console.log(resp.data);
+                    console.log(resp.data);
 
                     if (resp.data.code === 1) {
                         //登录成功
 
-                        console.log(resp.data.data.token);
-                        //保存token
+                        // console.log(resp.data.data.token);
+
+                        console.log(resp.data);
+
+                        //保存token 和userId
                         window.localStorage.setItem("token",resp.data.data.token);
+                        window.localStorage.setItem('userId',resp.data.msg);
                         //登录成功 提示信息
                         _this.$message({
                             message: '恭喜你，登录成功,1秒之后跳转...',
@@ -186,7 +190,7 @@
 
 
                     }else{
-                        console.log(resp.data);
+                        // console.log(resp.data);
                         _this.$message({
                             message:resp.data.msg,
                             type: 'error'

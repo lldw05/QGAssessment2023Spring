@@ -17,8 +17,9 @@ public class OrderFormDaoImpl implements OrderFormDao {
     JdbcUtils ju = JdbcUtils.getInstance();
 
     @Override
-    public int insertOrderForm(OrderForm orderForm) {
-        return 0;
+    public int insertOrderForm(OrderForm of) {
+        return ju.insert("insert into order_form (user_id,goods_id,amount,status) values (?,?,?,?)"
+                , of.getUserId(), of.getGoodsId(), of.getAmount(), OrderFormConstants.STATUS_UNDELIVERED);
     }
 
     @Override
