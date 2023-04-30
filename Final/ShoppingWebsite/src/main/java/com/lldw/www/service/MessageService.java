@@ -3,6 +3,7 @@ package com.lldw.www.service;
 import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
 import com.lldw.www.po.Shop;
+import com.lldw.www.po.User;
 
 import java.util.ArrayList;
 
@@ -127,4 +128,11 @@ public interface MessageService {
      * @return 查询到了 返回message集合 否则返回null
      */
     ArrayList<Message> queryComplaint();
+
+    /**
+     * 查询用户的信息
+     * @param user userId
+     * @return 查询到了 返回message集合 否则返回null
+     */
+    ArrayList<Message> queryMessageOfUser(User user);
 }

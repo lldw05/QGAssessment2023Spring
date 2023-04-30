@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.lldw.www.constants.MessageConstants;
 import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
+import com.lldw.www.po.Result;
 import com.lldw.www.po.Shop;
 import com.lldw.www.service.Impl.ShopServiceImpl;
 
@@ -37,7 +38,7 @@ public class ShopServlet extends BaseServlet {
                 response.setContentType("text/json;charset=utf-8");
 
                 //将resultShop对象转换为JSON数据 序列化
-                response.getWriter().write(JSON.toJSONString(resultShop));
+                response.getWriter().write(JSON.toJSONString(Result.success()));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -45,7 +46,7 @@ public class ShopServlet extends BaseServlet {
         } else {
             System.out.println("店铺注册失败，店铺名太受欢迎啦~");
             try {
-                response.getWriter().write("店铺注册失败，店铺名太受欢迎啦~");
+                response.getWriter().write(JSON.toJSONString(Result.error("店铺注册失败，店铺名太受欢迎啦~")));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

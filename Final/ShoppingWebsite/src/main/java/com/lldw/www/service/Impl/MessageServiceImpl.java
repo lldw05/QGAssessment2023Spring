@@ -5,6 +5,7 @@ import com.lldw.www.dao.Impl.MessageDaoImpl;
 import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
 import com.lldw.www.po.Shop;
+import com.lldw.www.po.User;
 import com.lldw.www.service.MessageService;
 
 import java.util.ArrayList;
@@ -207,6 +208,11 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public ArrayList<Message> queryComplaint() {
         return messageDao.queryComplaint();
+    }
+
+    @Override
+    public ArrayList<Message> queryMessageOfUser(User user) {
+        return messageDao.getReminderMessageListOfUser(user);
     }
 
 

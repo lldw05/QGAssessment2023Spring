@@ -15,6 +15,13 @@ public interface UserService {
     User login(User user);
 
     /**
+     *  通过手机号登录
+     * @param user user 传入用户名 phoneNumber
+     * @return 登录成功返回封装的User对象  登录失败则返回null
+     */
+    User loginByPhoneNumber(User user);
+
+    /**
      * 注册功能
      * @param user 传入用户名 密码
      * @return 注册成功返回封装的User对象  注册失败则返回null
@@ -56,5 +63,10 @@ public interface UserService {
      */
     boolean checkPayPasswordIsNull(User user);
 
-
+    /**
+     * 校对用户手机号码
+     * @param phoneNumber  手机号码
+     * @return 返回手机号码是否正确
+     */
+    boolean checkPhoneNumber(String phoneNumber);
 }

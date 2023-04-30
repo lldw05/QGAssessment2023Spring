@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.lldw.www.constants.MessageConstants;
 import com.lldw.www.po.*;
 import com.lldw.www.service.Impl.GoodsServiceImpl;
+import com.lldw.www.service.Impl.ShopServiceImpl;
+import com.lldw.www.service.ShopService;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -139,14 +141,17 @@ public class GoodsServlet extends BaseServlet {
 
         //调用service
         ArrayList<Goods> resultGoodsList = goodsService.queryGoodsOfShop(shop);
+        ShopService shopService = new ShopServiceImpl();
+        shop = shopService.getShopByShopId(shop);
 
 
         if (resultGoodsList != null) {
+            System.out.println("查询商店商品成功");
             try {
                 response.setContentType("text/json;charset=utf-8");
 
                 //将resultGoodsList转换为JSON数据 序列化 将goods集合传给前端
-                response.getWriter().write(JSON.toJSONString(resultGoodsList));
+                response.getWriter().write(JSON.toJSONString(Result.success(shop.getShopName(),resultGoodsList)));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -154,7 +159,7 @@ public class GoodsServlet extends BaseServlet {
         } else {
             System.out.println("商品查询失败，肿么回事？？~");
             try {
-                response.getWriter().write("商品查询失败，肿么回事？？~");
+                response.getWriter().write(JSON.toJSONString(Result.error("商品查询失败，肿么回事？？~")));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -173,7 +178,7 @@ public class GoodsServlet extends BaseServlet {
                 //将resultGoodsList转换为JSON数据 序列化 将goods集合传给前端
 
 //                response.getWriter().write(JSON.toJSONString(Result.success(resultGoodsList).toString()));
-                response.getWriter().write(JSON.toJSONString(resultGoodsList));
+                response.getWriter().write(JSON.toJSONString(Result.success(resultGoodsList)));
 
             } catch (IOException e) {
                 e.printStackTrace();

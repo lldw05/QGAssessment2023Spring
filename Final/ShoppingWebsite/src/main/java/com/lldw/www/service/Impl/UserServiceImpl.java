@@ -11,6 +11,7 @@ import com.lldw.www.utils.EncryptUtil;
 import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * @author
@@ -32,6 +33,27 @@ public class UserServiceImpl implements UserService {
         if (userById != null && userById.getPassword().equals(user.getPassword())) {
             //返回userById对象不为空且用户名和密码正确
             return userById;
+        } else {
+            //返回对象为空 即用户名或密码错误
+            return null;
+        }
+    }
+
+    @Override
+    public User loginByPhoneNumber(User user) {
+
+        //校对手机号码
+        if (!this.checkPhoneNumber(user.getPhoneNumber())){
+            //不正确 返回null
+            return null;
+        }
+
+        //通过username查询user
+        User userByName = userDao.getUserByUsername(user);
+
+        if (userByName != null && userByName.getPhoneNumber().equals(user.getPhoneNumber())) {
+            //返回userById对象不为空且用户名和手机号码正确
+            return userByName;
         } else {
             //返回对象为空 即用户名或密码错误
             return null;
@@ -81,6 +103,7 @@ public class UserServiceImpl implements UserService {
      * @return 返回已加密的user对象
      */
     public User encryptUser(User user) {
+
         //对用户的密码进行加密 连续加密两次
         user.setPassword(EncryptUtil.encrypt(user.getPassword()));
         user.setPassword(EncryptUtil.encrypt(user.getPassword()));
@@ -120,8 +143,6 @@ public class UserServiceImpl implements UserService {
         user.setPayPassword(EncryptUtil.encrypt(user.getPayPassword()));
         user.setPayPassword(EncryptUtil.encrypt(user.getPayPassword()));
 
-
-
         return user1.getPayPassword().equals(user.getPayPassword());
     }
 
@@ -132,6 +153,14 @@ public class UserServiceImpl implements UserService {
         User user1 = userDao.getUserById(user);
 
         return user1.getPayPassword()==null;
+    }
+
+    @Override
+    public boolean checkPhoneNumber(String phoneNumber) {
+        if ((phoneNumber != null) && (!phoneNumber.isEmpty())) {
+            return Pattern.matches("^1[3-9]\\d{9}$", phoneNumber);
+        }
+        return false;
     }
 
 

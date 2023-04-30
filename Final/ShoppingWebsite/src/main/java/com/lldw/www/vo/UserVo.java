@@ -1,32 +1,87 @@
-package com.lldw.www.po;
+package com.lldw.www.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.lldw.www.po.User;
 
 /**
  * @author
  * @date
  */
-public class User {
+public class UserVo extends User {
+
+    /**
+     * 用户id
+     */
     private Integer userId;
+    /**
+     * 用户名
+     */
     private String username;
+    /**
+     * 昵称
+     */
     private String nickname;
 
+    /**
+     * 密码
+     */
     @JSONField(serialize = false)
     private String password;
 
+    /**
+     * 地址
+     */
     private String address;
+    /**
+     * 手机号码
+     */
     private String phoneNumber;
+    /**
+     * 真是姓名
+     */
     private String realName;
 
+    /**
+     * 支付密码
+     */
     @JSONField(serialize = false)
     private String payPassword;
 
+    /**
+     * 图片id
+     */
     private Integer pictureId;
+    /**
+     * 商店id
+     */
     private Integer  shopId;
+    /**
+     * 是否启用
+     */
     private boolean isActive;
+    /**
+     * 角色id
+     */
     private Integer roleId;
 
-    public User() {
+    public UserVo() {
+    }
+
+    /**
+     * user转userVo
+     * @param user
+     */
+    public UserVo(User user) {
+        this.userId = user.getUserId();
+        this.username = user.getUsername();
+        this.nickname = user.getNickname();
+        this.address = user.getAddress();
+        this.phoneNumber = user.getPhoneNumber();
+        this.realName = user.getRealName();
+        this.pictureId = user.getPictureId();
+        this.shopId = user.getShopId();
+        this.isActive = user.isActive();
+        this.roleId = user.getRoleId();
     }
 
     public Integer getUserId() {
@@ -127,23 +182,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", username='" + username + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", password='" + password + '\'' +
-                ", address='" + address + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", realName='" + realName + '\'' +
-                ", payPassword='" + payPassword + '\'' +
-                ", pictureId=" + pictureId +
-                ", shopId=" + shopId +
-                ", isActive=" + isActive +
-                ", roleId=" + roleId +
-                '}';
-    }
-
-    public String getVo(){
         return "{" +
                 "userId=" + userId +
                 ", username='" + username + '\'' +
@@ -155,8 +193,4 @@ public class User {
                 ", roleId=" + roleId +
                 '}';
     }
-
-
-
-
 }

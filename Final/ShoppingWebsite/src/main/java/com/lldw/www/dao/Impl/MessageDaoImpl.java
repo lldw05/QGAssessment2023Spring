@@ -5,6 +5,7 @@ import com.lldw.www.dao.MessageDao;
 import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
 import com.lldw.www.po.Shop;
+import com.lldw.www.po.User;
 import com.lldw.www.utils.JdbcUtils;
 
 import java.time.LocalDateTime;
@@ -59,6 +60,8 @@ public class MessageDaoImpl implements MessageDao {
     public Message getMessageByMessageId(Message message) {
         ArrayList<Map<String, Object>> mapList = ju.execQueryList("select * from message where message_id = ?"
                 , new Object[]{message.getMessageId()});
+
+        //判断查询结果是否为空
         if (mapList == null) {
             return null;
         }
@@ -67,8 +70,21 @@ public class MessageDaoImpl implements MessageDao {
     }
 
     @Override
-    public ArrayList<Message> getMessageList() {
-        return null;
+    public ArrayList<Message> getReminderMessageListOfUser(User user) {
+        //设置sql语句查询范围
+        String  s = "("+MessageConstants.MESSAGE_TYPE_REMINDER_GOODS_PULL_OFF+","+
+                MessageConstants.MESSAGE_TYPE_REMINDER_GOODS_LAUNCH+","+
+                MessageConstants.MESSAGE_TYPE_REMINDER_POST+")";
+        ArrayList<Map<String, Object>> mapList =
+                ju.execQueryList("select * from message where user_id = ? and type in "+s
+                , new Object[]{user.getUserId()});
+
+        //判断查询结果是否为空
+        if (mapList == null) {
+            return null;
+        }
+
+        return getMessageListFromMapList(mapList);
     }
 
     @Override
@@ -193,8 +209,8 @@ public class MessageDaoImpl implements MessageDao {
     @Override
     public ArrayList<Message> getCommentByGoodsId(Goods goods) {
         System.out.println("---MessageDao.getCommentByGoodsId---");
-        ArrayList<Map<String, Object>> mapList = ju.execQueryList("select * from message where type = ? and goods_id = ? and is_processed = ?"
-                , new Object[]{MessageConstants.MESSAGE_TYPE_COMMENT, goods.getGoodsId(),MessageConstants.MESSAGE_IS_PROCESSED});
+        ArrayList<Map<String, Object>> mapList = ju.execQueryList("select * from message where type = ? and goods_id = ? "
+                , new Object[]{MessageConstants.MESSAGE_TYPE_COMMENT, goods.getGoodsId()});
 
 
         return getMessageListFromMapList(mapList);

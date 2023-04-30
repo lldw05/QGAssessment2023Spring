@@ -18,6 +18,9 @@ public class OrderFormDaoImpl implements OrderFormDao {
 
     @Override
     public int insertOrderForm(OrderForm of) {
+        if (of.getAmount()==null){
+            return 0;
+        }
         return ju.insert("insert into order_form (user_id,goods_id,amount,status) values (?,?,?,?)"
                 , of.getUserId(), of.getGoodsId(), of.getAmount(), OrderFormConstants.STATUS_UNDELIVERED);
     }
@@ -27,6 +30,9 @@ public class OrderFormDaoImpl implements OrderFormDao {
         int cnt = 0;
         for (OrderForm of :
                 orderForm) {
+            if(of.getAmount()==null){
+                continue;
+            }
             if (ju.insert("insert into order_form (user_id,goods_id,amount,status) values (?,?,?,?)"
                     , of.getUserId(), of.getGoodsId(), of.getAmount(), OrderFormConstants.STATUS_UNDELIVERED) > 0) {
                 cnt++;

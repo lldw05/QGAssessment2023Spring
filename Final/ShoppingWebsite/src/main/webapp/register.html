@@ -169,12 +169,12 @@
                     url: "http://localhost:8080/ShoppingWebsite/userServlet/register",
                     data: _this.tableData
                 }).then(function (resp) {
+
                     if (resp.data.code === 1) {
                         //登录成功
 
                         console.log(resp.data.data.token);
-                        //保存token
-                        window.localStorage.setItem("token",resp.data.data.token);
+
                         //登录成功 提示信息
                         _this.$message({
                             message: '注册成功,1秒之后跳转...',
@@ -183,11 +183,10 @@
 
                         setTimeout(function (){
                             // location.href="https://www.bilibili.com/video/BV1ct4y1n7t9?t=1.1";
-                            location.href="http://localhost:8080/ShoppingWebsite/homePage.html"
+                            location.href="http://localhost:8080/ShoppingWebsite/login.html"
                         },1000)
 
 
-                        // window.location.replace('http://localhost:8080/ShoppingWebsite/aaa.html');
 
 
                     }else{
@@ -199,27 +198,6 @@
                     }
                 })
             },
-            checkVerifyCode(){
-                //发送ajax 添加数据
-                var _this = this;
-                axios({
-                    method: "post",
-                    url: "http://localhost:8080/ShoppingWebsite/verifyCodeServlet",
-                    data: _this.user
-                }).then(function (resp) {
-                    if (resp.data === "succeed") {
-                        //修改成功
-
-                        //修改成功 提示信息
-                        _this.$message({
-                            message: '恭喜你，添加成功',
-                            type: 'success'
-                        });
-
-
-                    }
-                })
-            }
 
         }
 

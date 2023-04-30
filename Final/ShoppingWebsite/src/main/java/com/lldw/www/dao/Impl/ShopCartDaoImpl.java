@@ -18,6 +18,9 @@ public class ShopCartDaoImpl implements ShopCartDao {
 
     @Override
     public int insertShopCart(ShopCart shopCart) {
+        if (shopCart.getAmount()==null){
+            return 0;
+        }
         return ju.insert("insert into shop_cart (goods_id,user_id,amount) values (?,?,?)",
                 shopCart.getGoodsId(), shopCart.getUserId(), shopCart.getAmount());
     }

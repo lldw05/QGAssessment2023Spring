@@ -3,6 +3,7 @@ package com.lldw.www.dao;
 import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
 import com.lldw.www.po.Shop;
+import com.lldw.www.po.User;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -37,10 +38,11 @@ public interface MessageDao {
 
 
     /**
-     * //用于查询message列表
+     * //用于查询user的提醒信息 如Reminder信息一类
+     * @param user userId
      * @return message集合
      */
-    ArrayList<Message> getMessageList();
+    ArrayList<Message> getReminderMessageListOfUser(User user);
 
     /**
      * //用于查询message列表数量
@@ -136,7 +138,7 @@ public interface MessageDao {
     Message getMessageFromMap(Map<String, Object> map);
 
     /**
-     * 将存有map的list集合传入 转化为装有message对象的list集合
+     * 将存有map的list集合传入 转化为装有message对象的list集合 该函数会进行判断传进来的mapList是否为空
      * @param maps 将jdbc查询到的每个map传入
      * @return mapList为空则返回null 否则返回message对象的集合
      */

@@ -2,9 +2,7 @@ package com.lldw.www.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.lldw.www.constants.MessageConstants;
-import com.lldw.www.po.Goods;
-import com.lldw.www.po.Message;
-import com.lldw.www.po.Shop;
+import com.lldw.www.po.*;
 import com.lldw.www.service.Impl.GoodsServiceImpl;
 import com.lldw.www.service.Impl.MessageServiceImpl;
 
@@ -40,7 +38,7 @@ public class MessageServlet extends BaseServlet {
                 response.setContentType("text/json;charset=utf-8");
 
                 //将resultShop对象转换为JSON数据 序列化 将shop传给前端
-                response.getWriter().write(JSON.toJSONString(messageList));
+                response.getWriter().write(JSON.toJSONString(Result.success(messageList)));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -48,7 +46,7 @@ public class MessageServlet extends BaseServlet {
         } else {
             System.out.println("评论查询失败，可能是还没有评论呢~");
             try {
-                response.getWriter().write("评论查询失败，可能是还没有评论呢~");
+                response.getWriter().write(JSON.toJSONString(Result.error("评论查询失败，可能是还没有评论呢~")));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -536,6 +534,32 @@ public class MessageServlet extends BaseServlet {
                 response.getWriter().write(JSON.toJSONString("succeed"));
             } else {
                 response.getWriter().write("修改失败");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void queryMessageOfUser(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+        System.out.println("MessageServlet.queryMessageOfUser---");
+
+        //将JSON字符申转为Message对象
+        User user = JSON.parseObject(jsonStr, User.class);
+        System.out.println("User:" + user);
+
+        //调用service
+        ArrayList<Message> messages = messageService.queryMessageOfUser(user);
+        try {
+            if (messages!=null) {
+                //修改成功
+
+                response.setContentType("text/json;charset=utf-8");
+
+                //将resultShop对象转换为JSON数据 序列化 将message传给前端
+                response.getWriter().write(JSON.toJSONString(Result.success(messages)));
+            } else {
+                response.getWriter().write(JSON.toJSONString(Result.error(null)));
             }
 
         } catch (IOException e) {

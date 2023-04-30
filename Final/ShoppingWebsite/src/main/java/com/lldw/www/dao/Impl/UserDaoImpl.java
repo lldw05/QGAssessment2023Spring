@@ -6,6 +6,7 @@ import com.lldw.www.utils.JdbcUtils;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author
@@ -40,46 +41,53 @@ public class UserDaoImpl implements UserDao {
 
         System.out.println("preUser:"+preUser);
 
-        //
-        if(user.getNickname()!=null){
+        //用户名不可修改
+        //修改昵称
+        if(user.getNickname()!=null&& !"".equals(user.getNickname())){
             System.out.println(1);
             preUser.setNickname(user.getNickname());
-//            ju.update("update user set nickname = ? where user_id = ?",preUser.getNickname(),preUser.getUserId());
         }
-        if(user.getPassword()!=null){
+
+        //修改密码
+        if(user.getPassword()!=null&& !"".equals(user.getPassword())){
             System.out.println(2);
             preUser.setPassword(user.getPassword());
-//            ju.update("update user set password = ? where user_id = ?",preUser.getPassword(),preUser.getUserId());
         }
-        if(user.getAddress()!=null){
+
+        //修改地址
+        if(user.getAddress()!=null&& !"".equals(user.getAddress())){
             System.out.println(3);
             preUser.setAddress(user.getAddress());
-//            ju.update("update user set address = ? where user_id = ?",preUser.getAddress(),preUser.getUserId());
         }
-        if(user.getPhoneNumber()!=null){
+
+        //修改手机号码
+        if(user.getPhoneNumber()!=null&& !"".equals(user.getPhoneNumber())){
             System.out.println(4);
             preUser.setPhoneNumber(user.getPhoneNumber());
-//            ju.update("update user set phone_number = ? where user_id = ?",preUser.getPhoneNumber(),preUser.getUserId());
         }
-        if(user.getRealName()!=null){
+
+        //修改收件姓名
+        if(user.getRealName()!=null&& !"".equals(user.getRealName())){
             System.out.println(5);
             preUser.setRealName(user.getRealName());
-//            ju.update("update user set real_name = ? where user_id = ?",preUser.getRealName(),preUser.getUserId());
         }
-        if(user.getPayPassword()!=null){
+
+        //修改支付密码
+        if(user.getPayPassword()!=null&& !"".equals(user.getPayPassword())){
             System.out.println(6);
             preUser.setPayPassword(user.getPayPassword());
-//            ju.update("update user set pay_password = ? where user_id = ?",preUser.getPayPassword(),preUser.getUserId());
         }
+
+        //修改头像
         if(user.getPictureId()!=null){
             System.out.println(7);
             preUser.setPictureId(user.getPictureId());
-//            ju.update("update user set picture_id = ? where user_id = ?",preUser.getPictureId(),preUser.getUserId());
         }
+
+        //修改角色id
         if(user.getRoleId()!=null){
             System.out.println(8);
             preUser.setRoleId(user.getRoleId());
-//            ju.update("update user set role_id = ? where user_id = ?",preUser.getRoleId(),preUser.getUserId());
         }
         System.out.println("afterUser:");
         System.out.println(preUser);
@@ -100,15 +108,13 @@ public class UserDaoImpl implements UserDao {
         System.out.println("---UserDao.getUserByUsername---");
         // 根据用户名查询一个用户
         ArrayList<Map<String, Object>> list = ju.execQueryList("select * from user where username = ?", new Object[]{user.getUsername()});
-        //System.out.println(list==null);
+
+        //判断查询结果是否为空
         if(list==null) {
             return null;
         }
 
-        //System.out.println(list);
-//        Map<String,Object> map = (Map<String, Object>) list.get(0);
-        //System.out.println(map);
-
+        //取出第一个map
         User user1 = getUserFromMap( list.get(0));
 
         System.out.println(user1);

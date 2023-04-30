@@ -23,6 +23,7 @@ public class VerifyCodeServlet extends HttpServlet {
         //生成验证码
         VerifyCodeUtil code = new VerifyCodeUtil();
 
+
         BufferedImage image = code.createImage();
         System.out.println("code:"+code.getText());
         ImageIO.write(image,"jpg",response.getOutputStream());
@@ -30,6 +31,7 @@ public class VerifyCodeServlet extends HttpServlet {
         //存入Session
         HttpSession session = request.getSession();
         session.setAttribute("verifyCodeGen",code.getText());
+
     }
 
     @Override
