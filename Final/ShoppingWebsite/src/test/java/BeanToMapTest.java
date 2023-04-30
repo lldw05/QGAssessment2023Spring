@@ -20,7 +20,6 @@ public class BeanToMapTest {
         Goods goods =new Goods();
         goods.setGoodsId(1);
         Goods g = goodsDao.selectGoodsByGoodsId(goods);
-        System.out.println(g);
         Map<String,Object> map = OthersUtil.beantoMap(g);
         System.out.println(map);
     }

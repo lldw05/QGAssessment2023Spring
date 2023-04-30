@@ -2,10 +2,11 @@ package com.lldw.www.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.lldw.www.constants.MessageConstants;
+import com.lldw.www.constants.ResultConstants;
 import com.lldw.www.po.*;
 import com.lldw.www.service.Impl.GoodsServiceImpl;
 import com.lldw.www.service.Impl.MessageServiceImpl;
-import com.lldw.www.vo.Result;
+import com.lldw.www.po.Result;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -255,7 +256,7 @@ public class MessageServlet extends BaseServlet {
                 response.setContentType("text/json;charset=utf-8");
 
                 //将resultShop对象转换为JSON数据 序列化 将message传给前端
-                response.getWriter().write(JSON.toJSONString(messageArrayList));
+                response.getWriter().write(JSON.toJSONString(Result.success(messageArrayList)));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -263,7 +264,7 @@ public class MessageServlet extends BaseServlet {
         } else {
             System.out.println("暂时没有审核申请哦");
             try {
-                response.getWriter().write("暂时没有审核申请哦");
+                response.getWriter().write(JSON.toJSONString(Result.error(ResultConstants.QUERY_SHOP_REGISTRATION_ERROR)));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -293,7 +294,7 @@ public class MessageServlet extends BaseServlet {
                 response.setContentType("text/json;charset=utf-8");
 
                 //将resultShop对象转换为JSON数据 序列化 将message传给前端
-                response.getWriter().write(JSON.toJSONString("succeed"));
+                response.getWriter().write(JSON.toJSONString(Result.success()));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -301,7 +302,7 @@ public class MessageServlet extends BaseServlet {
         } else {
             System.out.println("修改失败");
             try {
-                response.getWriter().write("修改失败");
+                response.getWriter().write(JSON.toJSONString(Result.error(ResultConstants.MESSAGE_UPDATE_ERROR)));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -309,7 +310,7 @@ public class MessageServlet extends BaseServlet {
     }
 
     /**
-     * 通过商品上市申请
+     * 查询商品上市申请
      *
      * @param request  req
      * @param response resp
@@ -323,8 +324,8 @@ public class MessageServlet extends BaseServlet {
             try {
                 response.setContentType("text/json;charset=utf-8");
 
-                //将resultShop对象转换为JSON数据 序列化 将message传给前端
-                response.getWriter().write(JSON.toJSONString(messageArrayList));
+                //将将messageList传给前端
+                response.getWriter().write(JSON.toJSONString(Result.success(messageArrayList)));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -332,7 +333,7 @@ public class MessageServlet extends BaseServlet {
         } else {
             System.out.println("暂时没有新品上市哦");
             try {
-                response.getWriter().write("暂时没有新品上市哦");
+                response.getWriter().write(JSON.toJSONString(Result.error(ResultConstants.QUERY_GOODS_LAUNCH_ERROR)));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -340,7 +341,7 @@ public class MessageServlet extends BaseServlet {
     }
 
     /**
-     * 通过商店注册申请 messageId
+     * 通过商店新品上市申请 messageId
      *
      * @param request  req
      * @param response resp
@@ -435,9 +436,9 @@ public class MessageServlet extends BaseServlet {
                 response.setContentType("text/json;charset=utf-8");
 
                 //将resultShop对象转换为JSON数据 序列化 将message传给前端
-                response.getWriter().write(JSON.toJSONString(messageArrayList));
+                response.getWriter().write(JSON.toJSONString(Result.success(messageArrayList)));
             } else {
-                response.getWriter().write("查询失败");
+                response.getWriter().write(JSON.toJSONString(Result.error(ResultConstants.QUERY_NO_COMPLAINT_ERROR)));
             }
 
         } catch (IOException e) {
@@ -467,9 +468,9 @@ public class MessageServlet extends BaseServlet {
                 response.setContentType("text/json;charset=utf-8");
 
                 //将resultShop对象转换为JSON数据 序列化 将message传给前端
-                response.getWriter().write(JSON.toJSONString("succeed"));
+                response.getWriter().write(JSON.toJSONString(Result.success()));
             } else {
-                response.getWriter().write("修改失败");
+                response.getWriter().write(JSON.toJSONString(Result.error(ResultConstants.MESSAGE_UPDATE_ERROR)));
             }
 
         } catch (IOException e) {
@@ -542,6 +543,12 @@ public class MessageServlet extends BaseServlet {
         }
     }
 
+    /**
+     * 查询用户的消息
+     * @param request req
+     * @param response resp
+     * @param jsonStr userId
+     */
     public void queryMessageOfUser(HttpServletRequest request, HttpServletResponse response, String jsonStr){
         System.out.println("MessageServlet.queryMessageOfUser---");
 
@@ -565,6 +572,36 @@ public class MessageServlet extends BaseServlet {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 查询所有评论信息
+     * @param request req
+     * @param response resp
+     * @param jsonStr none
+     */
+    public void queryAllComment(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+        System.out.println("MessageServlet.queryAllComment---");
+
+        ArrayList<Message> messageArrayList = messageService.queryAllComment();
+        if (messageArrayList != null) {
+            try {
+                response.setContentType("text/json;charset=utf-8");
+
+                //将将messageList传给前端
+                response.getWriter().write(JSON.toJSONString(Result.success(messageArrayList)));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("暂时没哟任何评论");
+            try {
+                response.getWriter().write(JSON.toJSONString(Result.error(ResultConstants.QUERY_NO_COMMENT_ERROR)));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

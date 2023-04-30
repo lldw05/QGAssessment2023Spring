@@ -3,6 +3,7 @@ package com.lldw.www.service;
 import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
 import com.lldw.www.po.Shop;
+import com.lldw.www.po.User;
 
 import java.util.ArrayList;
 
@@ -39,4 +40,11 @@ public interface ShopService {
      * @return  查询到了 则返回shop 否则返回null
      */
     Shop queryShopByShopName(Shop shop);
+
+    /**
+     *  通过userId查询商店
+     * @param user userId
+     * @return 查询到了 则返回shop 否则返回null
+     */
+    Shop queryShopByUserId(User user);
 }

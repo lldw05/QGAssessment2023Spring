@@ -135,4 +135,10 @@ public interface MessageService {
      * @return 查询到了 返回message集合 否则返回null
      */
     ArrayList<Message> queryMessageOfUser(User user);
+
+    /**
+     * 查询所有评论信息
+     * @return 返回所有评论信息
+     */
+    ArrayList<Message> queryAllComment();
 }

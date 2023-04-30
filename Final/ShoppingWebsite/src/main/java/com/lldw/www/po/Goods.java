@@ -5,13 +5,37 @@ package com.lldw.www.po;
  * @date
  */
 public class Goods {
+    /**
+     * 商品id
+     */
     private Integer goodsId;
+    /**
+     * 商品介绍
+     */
     private String goodsIntroduction;
+    /**
+     * 商品价格
+     */
     private double price;
+    /**
+     * 商品图片id
+     */
     private Integer pictureId;
+    /**
+     * 商店id
+     */
     private Integer shopId;
+    /**
+     * 月销量
+     */
     private Integer monthlySales;
+    /**
+     * 库存数量
+     */
     private Integer amount;
+    /**
+     * 商品是否启用
+     */
     private boolean isActive;
 
     public Integer getGoodsId() {

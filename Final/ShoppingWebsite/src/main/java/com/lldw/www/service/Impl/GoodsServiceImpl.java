@@ -5,7 +5,9 @@ import com.lldw.www.dao.Impl.GoodsDaoImpl;
 import com.lldw.www.po.Goods;
 import com.lldw.www.po.Message;
 import com.lldw.www.po.Shop;
+import com.lldw.www.po.User;
 import com.lldw.www.service.GoodsService;
+import com.lldw.www.service.ShopService;
 
 import java.util.ArrayList;
 
@@ -55,6 +57,15 @@ public class GoodsServiceImpl implements GoodsService {
 //
 //        }
         return goodsArrayList;
+    }
+
+    @Override
+    public ArrayList<Goods> queryGoodsByUserId(User user) {
+        //先根据userId查询shopId
+        ShopService shopService = new ShopServiceImpl();
+        Shop shop = shopService.queryShopByUserId(user);
+        ArrayList<Goods> goods = goodsDao.selectGoodsByShopId(shop);
+        return goods;
     }
 
 

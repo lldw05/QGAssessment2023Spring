@@ -3,7 +3,7 @@ package com.lldw.www.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.lldw.www.constants.ResultConstants;
-import com.lldw.www.vo.Result;
+import com.lldw.www.po.Result;
 import com.lldw.www.po.Token;
 import com.lldw.www.po.User;
 import com.lldw.www.service.Impl.UserServiceImpl;

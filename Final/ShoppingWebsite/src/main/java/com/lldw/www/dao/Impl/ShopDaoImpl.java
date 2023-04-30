@@ -2,6 +2,7 @@ package com.lldw.www.dao.Impl;
 
 import com.lldw.www.dao.ShopDao;
 import com.lldw.www.po.Shop;
+import com.lldw.www.po.User;
 import com.lldw.www.utils.JdbcUtils;
 
 import java.util.ArrayList;
@@ -80,5 +81,21 @@ public class ShopDaoImpl implements ShopDao {
         shop.setStatus((Boolean) map.get("status"));
         System.out.println("shop" + shop);
         return shop;
+    }
+
+    @Override
+    public Shop getShopByShopkeeperId(User user) {
+        System.out.println("---ShopDao.getShopByShopkeeperId");
+        ArrayList<Map<String, Object>> list = ju.execQueryList("select * from shop where shopkeeper_id = ?", new Object[]{user.getUserId()});
+
+        //判断是否为空
+        if (list == null) {
+            return null;
+        }
+
+        //从ArrayList<Map>中获取map
+
+
+        return getShopFromMap(list.get(0));
     }
 }

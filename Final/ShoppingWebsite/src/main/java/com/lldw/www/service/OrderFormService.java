@@ -3,6 +3,7 @@ package com.lldw.www.service;
 import com.lldw.www.po.Message;
 import com.lldw.www.po.OrderForm;
 import com.lldw.www.po.User;
+import com.lldw.www.vo.OrderFormVo;
 
 import java.util.ArrayList;
 
@@ -30,7 +31,7 @@ public interface OrderFormService {
      * @param user userId
      * @return 查询到了则返回orderForm集合  否则返回null
      */
-    ArrayList<OrderForm> queryOrderFormByUserId(User user);
+    ArrayList<OrderFormVo> queryOrderFormByUserId(User user);
 
     /**
      *  更新订单 状态 数量 等等

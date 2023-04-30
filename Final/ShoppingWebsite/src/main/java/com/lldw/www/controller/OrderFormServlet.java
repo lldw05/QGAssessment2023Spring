@@ -1,10 +1,12 @@
 package com.lldw.www.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.lldw.www.constants.ResultConstants;
 import com.lldw.www.po.OrderForm;
-import com.lldw.www.vo.Result;
+import com.lldw.www.po.Result;
 import com.lldw.www.po.User;
 import com.lldw.www.service.Impl.OrderFormServiceImpl;
+import com.lldw.www.vo.OrderFormVo;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -84,14 +86,21 @@ public class OrderFormServlet extends BaseServlet {
 
     }
 
-    public void checkOrderForm(HttpServletRequest request,HttpServletResponse response,String jsonStr){
-        System.out.println("---UserServlet.checkOrderForm---");
+    /**
+     * 查询用户订单
+     * @param request req
+     * @param response resp
+     * @param jsonStr userId
+     */
+    public void queryOrderForm(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+        System.out.println("---OrderServlet.queryOrderForm---");
 
         //将JSON字符申转为Java对象
         User user = JSON.parseObject(jsonStr, User.class);
         System.out.println("user:"+user);
-        ArrayList<OrderForm> result = orderFormService.queryOrderFormByUserId(user);
-        System.out.println("resultUser:"+result);
+
+        //调用service
+        ArrayList<OrderFormVo> result = orderFormService.queryOrderFormByUserId(user);
 
         //响应数据
 
@@ -100,7 +109,7 @@ public class OrderFormServlet extends BaseServlet {
                 response.setContentType("text/json;charset=utf-8");
 
                 //将resultShop对象转换为JSON数据 序列化 将shop传给前端
-                response.getWriter().write(JSON.toJSONString(result));
+                response.getWriter().write(JSON.toJSONString(Result.success(result)));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -108,13 +117,19 @@ public class OrderFormServlet extends BaseServlet {
         } else {
             System.out.println("展示订单失败~");
             try {
-                response.getWriter().write("展示订单失败~");
+                response.getWriter().write(JSON.toJSONString(Result.error(ResultConstants.ORDER_QUERY_ERROR)));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
+    /**
+     * 更新订单
+     * @param request req
+     * @param response resp
+     * @param jsonStr orderFormId
+     */
     public void updateOrderForm(HttpServletRequest request, HttpServletResponse response, String jsonStr){
         System.out.println("---UserServlet.updateOrderForm---");
 

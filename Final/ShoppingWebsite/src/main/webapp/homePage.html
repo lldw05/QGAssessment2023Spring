@@ -66,7 +66,8 @@
                 <el-submenu index="1">
                     <template slot="title"><i class="el-icon-message"></i>首页</template>
                     <el-menu-item-group>
-                        <el-menu-item index="1-2">首页</el-menu-item>
+                        <el-menu-item index="1-2" @click="homePageShowRandomGoods">首页</el-menu-item>
+                        <el-menu-item index="1-3" @click="queryMyShopGoods">我的商店</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
                 </el-submenu>
@@ -112,6 +113,9 @@
                     <!--退出账号按钮-->
                     <el-button @click="logOut">退出账号</el-button>
 
+                    <!--账号按钮-->
+                    <el-button @click="toLoginHtml">登录账号</el-button>
+
                     Hello,<span id="username_span"></span>
                 </el-form>
 
@@ -134,10 +138,6 @@
                     <el-table-column prop="monthlySales" label="月销量" width="100">
                     </el-table-column>
                     <el-table-column label="查看评论">
-                        <!--                            <el-button size="mini" type="success" round @click='queryComment(scope.$index, scope.row)'>点击查看商品评论-->
-                        <!--                            </el-button>-->
-                        <!--                            <el-button type="warning" round @click='showShopGoods(tableData.shopId)'>查看商店-->
-                        <!--                            </el-button>-->
                         <template slot-scope="scope">
                             <el-button
                                     size="mini"
@@ -318,20 +318,60 @@
         //加载主页数据
         mounted() {
 
-
-            this.queryUserInformation();
             this.homePageShowRandomGoods();
-
         }
 
 
         ,
         methods: {
 
+            //查看我的商店
+            queryMyShopGoods(){
+                var _this = this;
+
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/ShoppingWebsite/goodsServlet/queryGoodsByUserId",
+                    data:{
+                        userId:localStorage.getItem('userId'),
+                    }
+                }).then(function (resp) {
+                    console.log(resp.data);
+
+                    if(resp.data.code===1){
+                        //查找成功
+
+                        //打乱数组顺序
+                        resp.data.data = _this.shuffle(resp.data.data);
+
+                        _this.tableData = resp.data.data;
+
+                        //查找成功 提示信息
+                        _this.$message({
+                            message: 'Welcome to shop: ' + resp.data.msg + '!',
+                            type: 'success'
+                        });
+                    }
+                    else{
+                        //查找成功 提示信息
+                        _this.$message({
+                            message: resp.data.msg,
+                            type: 'warning'
+                        });
+                    }
+                }).catch(err => {
+                    // handle error
+                    console.log(err.response)
+                });
+            },
+
+            //跳转到用户页
             turnToUserHomePage(){
                 location.href = "http://localhost:8080/ShoppingWebsite/userHomePage.html"
 
             },
+
+            //跳转到用户页
             showUser() {
                 //判断是否登录
                 if (!this.isLogin()) {
@@ -347,9 +387,11 @@
                 }
 
                 //已经登录 打开展示信息的页面
-                this.userInformationWindow = true;
+                this.turnToUserHomePage();
 
             },
+
+            //跳转到用户页
             showShopCart() {
                 //判断是否登录
                 if (!this.isLogin()) {
@@ -367,8 +409,10 @@
                 }
 
                 //已经登录 查询用户信息
-                var userId = localStorage.getItem('userId');
+                this.turnToUserHomePage();
             },
+
+            //跳转到用户页
             showOrder() {
                 //判断是否登录
                 if (!this.isLogin()) {
@@ -386,47 +430,15 @@
                 }
 
                 //已经登录 查询用户信息
-                var userId = localStorage.getItem('userId');
+                this.turnToUserHomePage();
+            },
+
+            //跳转到登录页面
+            toLoginHtml(){
+                location.href = "http://localhost:8080/ShoppingWebsite/login.html"
             },
 
 
-            //查询用户information
-            queryUserInformation() {
-                //已经登录 查询用户信息
-                var userId = localStorage.getItem('userId');
-                var _this = this;
-                axios({
-                    method: "post",
-                    url: "http://localhost:8080/ShoppingWebsite/userServlet/showUserInformation",
-                    data: {
-                        userId: userId
-                    }
-
-                }).then(function (resp) {
-                    // console.log(resp.data);
-                    if (resp.data.code === 1) {
-                        console.log(resp.data.data);
-
-                        //保存数据到前端
-                        _this.userInformation = resp.data.data;
-
-                        // console.log(_this.userInformation);
-                        // span.innerHTML = _this.userInformation.;
-                        //添加成功 提示信息
-                        _this.$message({
-                            message: '登录成功!',
-                            type: 'success'
-                        });
-
-
-                    } else {
-                        console.log(resp.data);
-
-                    }
-
-
-                })
-            },
             //查看用户Message
             queryMessage() {
                 //判断是否登录
@@ -474,9 +486,8 @@
                     } else {
                         console.log(resp.data);
                         _this.$message({
-                            message: '添加失败',
+                            message: '您目前还没有消息哦~',
                             type: 'warning'
-                            // type: 'error'
                         });
                     }
 
@@ -549,7 +560,6 @@
             //回到主页 展示随机商品
             homePageShowRandomGoods() {
                 var _this = this;
-
 
                 axios({
                     method: "get",
@@ -837,16 +847,7 @@
 
             return {
 
-                userInformation: {
-                    userId: '',
-                    username: '',
-                    nickname: '',
-                    address: '',
-                    phoneNumber: '',
-                    realName: '',
-                    pictureId: '',
-                    roleId: ''
-                },
+
 
                 //用户的message
                 userMessage: {

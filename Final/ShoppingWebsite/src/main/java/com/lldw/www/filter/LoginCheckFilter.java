@@ -2,7 +2,7 @@ package com.lldw.www.filter;
 
 import com.alibaba.fastjson.JSON;
 import com.lldw.www.constants.ResultConstants;
-import com.lldw.www.vo.Result;
+import com.lldw.www.po.Result;
 import com.lldw.www.utils.JwtUtil;
 
 import javax.servlet.*;

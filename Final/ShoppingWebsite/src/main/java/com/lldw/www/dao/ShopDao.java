@@ -63,4 +63,11 @@ public interface ShopDao {
      * @return 打包好的shop对象
      */
     Shop getShopFromMap(Map<String,Object> map);
+
+    /**
+     * 通过店主Id查询商店
+     * @param user userId
+     * @return 如果查询到了 返回shop对象 查询不到 返回null
+     */
+    Shop getShopByShopkeeperId(User user);
 }

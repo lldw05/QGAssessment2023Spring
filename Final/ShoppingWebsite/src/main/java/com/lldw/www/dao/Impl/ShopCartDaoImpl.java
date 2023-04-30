@@ -18,7 +18,7 @@ public class ShopCartDaoImpl implements ShopCartDao {
 
     @Override
     public int insertShopCart(ShopCart shopCart) {
-        if (shopCart.getAmount()==null){
+        if (shopCart.getAmount() == null) {
             return 0;
         }
         return ju.insert("insert into shop_cart (goods_id,user_id,amount) values (?,?,?)",
@@ -48,14 +48,19 @@ public class ShopCartDaoImpl implements ShopCartDao {
 
     @Override
     public ArrayList<ShopCart> queryShopCartByUserId(User user) {
-        return null;
+        ArrayList<Map<String, Object>> maps =
+                ju.execQueryList("select * from shop_cart where user_id =?", new Object[]{user.getUserId()});
+        return getShopCartListFromMapList(maps);
     }
 
     @Override
     public ShopCart queryShopCartById(ShopCart shopCart) {
 
         System.out.println("---ShopCartDao.queryShopCartById");
-        ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from shop_cart where shop_cart_id =?", new Object[]{shopCart.getShopCartId()});
+
+        ArrayList<Map<String, Object>> maps =
+                ju.execQueryList("select * from shop_cart where shop_cart_id =?", new Object[]{shopCart.getShopCartId()});
+        //判断集合是否为空
         if (maps == null) {
             return null;
         }
@@ -68,7 +73,6 @@ public class ShopCartDaoImpl implements ShopCartDao {
 
     @Override
     public ShopCart getShopCartFromMap(Map<String, Object> map) {
-        System.out.println("---ShopCartDao.getShopCartFromMap---");
 
         //从map中获取值
         ShopCart shopCart = new ShopCart();
@@ -76,8 +80,26 @@ public class ShopCartDaoImpl implements ShopCartDao {
         shopCart.setGoodsId((Integer) map.get("goods_id"));
         shopCart.setAmount((Integer) map.get("amount"));
         shopCart.setUserId((Integer) map.get("user_id"));
-        System.out.println("---ShopCartDao.getShopCartFromMap END---");
 
         return shopCart;
     }
+
+    @Override
+    public ArrayList<ShopCart> getShopCartListFromMapList(ArrayList<Map<String, Object>> maps) {
+
+        //判断集合是否为空
+        if (maps == null) {
+            return null;
+        }
+        //遍历maps 取出shopCart
+        ArrayList<ShopCart> shopCartArrayList = new ArrayList<>();
+        for (Map<String, Object> map :
+                maps) {
+            shopCartArrayList.add(getShopCartFromMap(map));
+        }
+
+        return shopCartArrayList;
+    }
+
+
 }

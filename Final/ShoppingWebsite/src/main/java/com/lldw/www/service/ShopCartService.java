@@ -1,6 +1,11 @@
 package com.lldw.www.service;
 
 import com.lldw.www.po.ShopCart;
+import com.lldw.www.po.User;
+import com.lldw.www.vo.ShopCartVo;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * @author
@@ -20,4 +25,13 @@ public interface ShopCartService {
      * @return 完全删除成功则返回true 否则返回false(包括有删除但没完全删除的情况)
      */
     boolean deleteInBatches(int[] ids);
+
+    /**
+     * 查询用户的购物车
+     * @param user userId
+     * @return 查询到了返回ShopCartVo集合 否则返回null
+     */
+    ArrayList<ShopCartVo> queryShopCart(User user);
+
+
 }

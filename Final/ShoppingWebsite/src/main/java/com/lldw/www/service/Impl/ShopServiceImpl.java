@@ -48,7 +48,7 @@ public class ShopServiceImpl implements ShopService {
             user.setUserId(shop.getShopKeeperId());
             UserServiceImpl userService = new UserServiceImpl();
             user = userService.updateUser(user);
-            if(user!=null){
+            if (user != null) {
                 System.out.println("将店主的roleId设为2:设置成功");
             }
 
@@ -62,7 +62,7 @@ public class ShopServiceImpl implements ShopService {
 
             //调用messageService 添加申请店铺的审核信息
             MessageServiceImpl messageService = new MessageServiceImpl();
-            if( messageService.addShopRegistration(message)){
+            if (messageService.addShopRegistration(message)) {
                 System.out.println("添加一条申请店铺待审核信息:添加成功");
             }
 
@@ -79,7 +79,6 @@ public class ShopServiceImpl implements ShopService {
     }
 
 
-
     @Override
     public Shop getShopByShopId(Shop shop) {
         return shopDao.getShopByShopId(shop);
@@ -88,6 +87,11 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public Shop queryShopByShopName(Shop shop) {
         return shopDao.getShopByShopName(shop);
+    }
+
+    @Override
+    public Shop queryShopByUserId(User user) {
+        return shopDao.getShopByShopkeeperId(user);
     }
 
 

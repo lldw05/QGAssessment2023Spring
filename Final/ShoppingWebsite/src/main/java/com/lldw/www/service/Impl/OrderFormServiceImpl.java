@@ -5,6 +5,7 @@ import com.lldw.www.po.OrderForm;
 import com.lldw.www.po.User;
 import com.lldw.www.service.OrderFormService;
 import com.lldw.www.service.UserService;
+import com.lldw.www.vo.OrderFormVo;
 
 import java.util.ArrayList;
 
@@ -40,7 +41,7 @@ public class OrderFormServiceImpl implements OrderFormService {
         //核对支付密码
         boolean flag = userService.checkPayPassword(user);
         if (flag) {
-            //密码正确
+            //密码正确 生成订单
             int i = orderFormDao.insertOrderForm(orderForm);
             return i > 0;
         }
@@ -51,8 +52,20 @@ public class OrderFormServiceImpl implements OrderFormService {
 
 
     @Override
-    public ArrayList<OrderForm> queryOrderFormByUserId(User user) {
-        return orderFormDao.getOrderFormByUserId(user);
+    public ArrayList<OrderFormVo> queryOrderFormByUserId(User user) {
+        ArrayList<OrderForm> ofList = orderFormDao.getOrderFormByUserId(user);
+
+        //判断查询结果是否为空
+        if(ofList==null){
+            return null;
+        }
+        ArrayList<OrderFormVo> voList = new ArrayList<>();
+
+        for (OrderForm of :
+                ofList) {
+            voList.add(new OrderFormVo(of));
+        }
+        return voList;
     }
 
     @Override

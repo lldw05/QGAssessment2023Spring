@@ -215,5 +215,10 @@ public class MessageServiceImpl implements MessageService {
         return messageDao.getReminderMessageListOfUser(user);
     }
 
+    @Override
+    public ArrayList<Message> queryAllComment() {
+        return messageDao.queryAllComment();
+    }
+
 
 }

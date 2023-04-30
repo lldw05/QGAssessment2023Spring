@@ -52,4 +52,11 @@ public interface ShopCartDao {
      * @return shopCart对象
      */
     ShopCart getShopCartFromMap(Map<String, Object> map);
+
+    /**
+     *从mapList集合中获取shopCart 并放到list集合中返回
+     * @param maps maps
+     * @return 返回list集合
+     */
+    ArrayList<ShopCart> getShopCartListFromMapList(ArrayList<Map<String, Object>> maps);
 }

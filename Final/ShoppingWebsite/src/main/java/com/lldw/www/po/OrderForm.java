@@ -5,11 +5,30 @@ package com.lldw.www.po;
  * @date
  */
 public class OrderForm {
+    /**
+     * 主键id
+     */
     private Integer id;
+    /**
+     * 用户id
+     */
     private Integer userId;
+    /**
+     * 商品id
+     */
     private Integer goodsId;
+
+    /**
+     * 商店id
+     */
     private Integer shopId;
+    /**
+     * 购买数量
+     */
     private Integer amount;
+    /**
+     * 订单状态
+     */
     private String status;
 
     @Override

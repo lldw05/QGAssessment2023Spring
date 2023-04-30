@@ -1,4 +1,4 @@
-package com.lldw.www.vo;
+package com.lldw.www.po;
 
 import com.lldw.www.constants.ResultConstants;
 

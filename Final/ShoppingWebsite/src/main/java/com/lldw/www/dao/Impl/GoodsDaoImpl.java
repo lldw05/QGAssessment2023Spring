@@ -125,6 +125,7 @@ public class GoodsDaoImpl implements GoodsDao {
 
     @Override
     public ArrayList<Goods> getGoodsListFromMapList(ArrayList<Map<String, Object>> mapList) {
+        //判断集合是否为空
         if(mapList==null){
             return null;
         }

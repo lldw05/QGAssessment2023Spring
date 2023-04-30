@@ -4,8 +4,9 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.lldw.www.po.User;
 
 /**
- * @author
- * @date
+ * 比user类少了 password和支付密码
+ * @author lldw
+ * @date 2023-04-30 15:24:26
  */
 public class UserVo extends User {
 

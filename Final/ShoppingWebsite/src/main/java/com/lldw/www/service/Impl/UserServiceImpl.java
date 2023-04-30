@@ -122,6 +122,7 @@ public class UserServiceImpl implements UserService {
 
             // 则判断是否满足正则表达式
             if (!checkPhoneNumber(user.getPhoneNumber())) {
+                System.out.println("手机号码不满足正则表达式");
                 //不满足正则表达式 返回null
                 return null;
             }

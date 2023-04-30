@@ -228,16 +228,16 @@ public class MessageDaoImpl implements MessageDao {
 
     @Override
     public ArrayList<Message> queryShopRegistration() {
-        ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from message where type = ?"
-                , new Object[]{MessageConstants.MESSAGE_TYPE_STORE_REGISTRATION});
+        ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from message where type = ? and is_processed = ?"
+                , new Object[]{MessageConstants.MESSAGE_TYPE_STORE_REGISTRATION,MessageConstants.MESSAGE_NO_PROCESSED});
 
         return getMessageListFromMapList(maps);
     }
 
     @Override
     public ArrayList<Message> queryGoodsLaunch() {
-        ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from message where type = ?"
-                , new Object[]{MessageConstants.MESSAGE_TYPE_NEW_PRODUCT_LAUNCH});
+        ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from message where type = ? and is_processed = ?"
+                , new Object[]{MessageConstants.MESSAGE_TYPE_NEW_PRODUCT_LAUNCH,MessageConstants.MESSAGE_NO_PROCESSED});
         return getMessageListFromMapList(maps);
     }
 
@@ -246,5 +246,16 @@ public class MessageDaoImpl implements MessageDao {
         ArrayList<Map<String, Object>> maps = ju.execQueryList("select * from message where type = ?"
                 , new Object[]{MessageConstants.MESSAGE_TYPE_GOODS_COMPLAINT});
         return getMessageListFromMapList(maps);
+    }
+
+    @Override
+    public ArrayList<Message> queryAllComment() {
+
+        System.out.println("---MessageDao.getCommentByGoodsId---");
+
+        ArrayList<Map<String, Object>> mapList = ju.execQueryList("select * from message where type = ? and is_processed = ?"
+                , new Object[]{MessageConstants.MESSAGE_TYPE_COMMENT,MessageConstants.MESSAGE_IS_PROCESSED});
+
+        return getMessageListFromMapList(mapList);
     }
 }

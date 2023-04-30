@@ -2,6 +2,7 @@ package com.lldw.www.service;
 
 import com.lldw.www.po.Goods;
 import com.lldw.www.po.Shop;
+import com.lldw.www.po.User;
 
 import java.util.ArrayList;
 
@@ -50,4 +51,6 @@ public interface GoodsService {
      * @return  商品集合
      */
     ArrayList<Goods> getRandomGoods();
+
+    ArrayList<Goods> queryGoodsByUserId(User user);
 }
