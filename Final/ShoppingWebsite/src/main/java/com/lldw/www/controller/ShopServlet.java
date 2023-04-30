@@ -1,17 +1,13 @@
 package com.lldw.www.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.lldw.www.constants.MessageConstants;
-import com.lldw.www.po.Goods;
-import com.lldw.www.po.Message;
-import com.lldw.www.po.Result;
+import com.lldw.www.vo.Result;
 import com.lldw.www.po.Shop;
 import com.lldw.www.service.Impl.ShopServiceImpl;
 
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * @author LLDW

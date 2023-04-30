@@ -1,11 +1,11 @@
 package com.lldw.www.filter;
 
 import com.alibaba.fastjson.JSON;
-import com.lldw.www.po.Result;
+import com.lldw.www.constants.ResultConstants;
+import com.lldw.www.vo.Result;
 import com.lldw.www.utils.JwtUtil;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -36,10 +36,10 @@ public class LoginCheckFilter implements Filter {
 
 
         //3.获取请求头中的令牌 (token)。
-        String jwt = req.getHeader("Authorization");
+        String jwt = req.getHeader(ResultConstants.AUTHORIZATION);
 
 
-        //4.判断令牌是否存在，如果不存在，返回错误结《未登录)
+        //4.判断令牌是否存在，如果不存在，返回错误结(未登录)
         if (jwt.length() == 0) {
             resp.getWriter().write(JSON.toJSONString(Result.error("NOT_LOGIN")));
 

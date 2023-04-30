@@ -2,7 +2,8 @@ package com.lldw.www.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.lldw.www.po.Result;
+import com.lldw.www.constants.ResultConstants;
+import com.lldw.www.vo.Result;
 import com.lldw.www.po.Token;
 import com.lldw.www.po.User;
 import com.lldw.www.service.Impl.UserServiceImpl;
@@ -58,7 +59,7 @@ public class UserServlet extends BaseServlet {
 
         if (!verifyCodeGen.equalsIgnoreCase(verifyCode)) {
             //验证码错误 无法注册
-            response.getWriter().write(JSON.toJSONString(Result.error("验证码错误")));
+            response.getWriter().write(JSON.toJSONString(Result.error(ResultConstants.VERIFY_CODE_ERROR)));
             return;
         }
 
@@ -89,7 +90,7 @@ public class UserServlet extends BaseServlet {
         } else {
             //结果为空 即用户名or密码错误
             System.out.println("结果为空 即用户名or密码错误");
-            writer.write(JSON.toJSONString(Result.error("用户名或密码错误")));
+            writer.write(JSON.toJSONString(Result.error(ResultConstants.LOGIN_ERROR)));
 
         }
 
@@ -100,6 +101,7 @@ public class UserServlet extends BaseServlet {
      *
      * @param request  req
      * @param response resp
+     * @param jsonStr  username和password
      * @throws IOException      呃呃呃
      * @throws ServletException 呃呃呃
      */
@@ -119,7 +121,7 @@ public class UserServlet extends BaseServlet {
 
         if (!verifyCodeGen.equalsIgnoreCase(verifyCode)) {
             //验证码错误 无法注册
-            response.getWriter().write(JSON.toJSONString(Result.error("验证码错误")));
+            response.getWriter().write(JSON.toJSONString(Result.error(ResultConstants.VERIFY_CODE_ERROR)));
             return;
         }
 
@@ -138,7 +140,7 @@ public class UserServlet extends BaseServlet {
             response.getWriter().write(JSON.toJSONString(Result.success()));
         } else {
             System.out.println("注册失败,用户名存在");
-            response.getWriter().write(JSON.toJSONString(Result.error("用户名已存在(或用户名或密码为空)")));
+            response.getWriter().write(JSON.toJSONString(Result.error(ResultConstants.REGISTER_ERROR)));
 
         }
 
@@ -195,7 +197,7 @@ public class UserServlet extends BaseServlet {
 
         if (!verifyCodeGen.equalsIgnoreCase(verifyCode)) {
             //验证码错误 无法登录
-            response.getWriter().write(JSON.toJSONString(Result.error("验证码错误")));
+            response.getWriter().write(JSON.toJSONString(Result.error(ResultConstants.VERIFY_CODE_ERROR)));
             return;
         }
 
@@ -223,7 +225,7 @@ public class UserServlet extends BaseServlet {
         } else {
             //结果为空 即用户名or密码错误
             System.out.println("结果为空 即用户名或手机号码错误");
-            writer.write(JSON.toJSONString(Result.error("用户名或手机号码错误")));
+            writer.write(JSON.toJSONString(Result.error(null)));
 
         }
 
@@ -253,15 +255,15 @@ public class UserServlet extends BaseServlet {
                 response.setContentType("text/json;charset=utf-8");
 
                 //将resultShop对象转换为JSON数据 序列化 将shop传给前端
-                response.getWriter().write(JSON.toJSONString(resultUser));
+                response.getWriter().write(JSON.toJSONString(Result.success()));
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("修改信息失败~");
+            System.out.println(ResultConstants.UPDATE_USER_INFORMATION_ERROR);
             try {
-                response.getWriter().write("修改信息失败~");
+                response.getWriter().write(JSON.toJSONString(Result.error(ResultConstants.UPDATE_USER_INFORMATION_ERROR)));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -281,6 +283,8 @@ public class UserServlet extends BaseServlet {
         //将JSON字符申转为Java对象 前端传入userId
         User user = JSON.parseObject(jsonStr, User.class);
         System.out.println("user:" + user);
+
+        //调用service查询user
         User resultUser = userService.queryUserByUserId(user);
         System.out.println("resultUser:" + resultUser);
 
@@ -290,9 +294,11 @@ public class UserServlet extends BaseServlet {
             try {
                 response.setContentType("text/json;charset=utf-8");
 
+                //获取vo
                 ArrayList<UserVo> users = new ArrayList<>();
                 users.add(new UserVo(resultUser));
-                //将resultShop对象转换为JSON数据 序列化 将shop传给前端
+
+                //将userVo传给前端
                 response.getWriter().write(JSON.toJSONString(Result.success(users)));
 
             } catch (IOException e) {
@@ -308,5 +314,50 @@ public class UserServlet extends BaseServlet {
         }
     }
 
+    /**
+     * 校对支付密码是否正确
+     *
+     * @param request  req
+     * @param response resp
+     * @param jsonStr  payPassword
+     */
+    public void checkPayPassword(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
+        System.out.println("---UserServlet.showUserInformation---");
 
+
+        //获取userId
+        User user = JSON.parseObject(jsonStr, User.class);
+        System.out.println("user:" + user);
+
+        //获取原密码
+        String payPassword = JSONObject.parseObject(jsonStr).getString("payPassword");
+
+
+        //调用service查询user
+        boolean rs = userService.checkPayPassword(user);
+
+
+        if (rs) {
+            //密码正确
+            System.out.println("校对支付密码正确");
+            try {
+                response.setContentType("text/json;charset=utf-8");
+
+
+                //传给前端:成功
+                response.getWriter().write(JSON.toJSONString(Result.success()));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                System.out.println("校对支付密码错误");
+
+                response.getWriter().write(JSON.toJSONString(Result.error(ResultConstants.USER_PAY_PASSWORD_ERROR)));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

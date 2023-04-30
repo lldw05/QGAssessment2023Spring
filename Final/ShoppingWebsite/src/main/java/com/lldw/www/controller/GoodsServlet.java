@@ -1,11 +1,11 @@
 package com.lldw.www.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.lldw.www.constants.MessageConstants;
 import com.lldw.www.po.*;
 import com.lldw.www.service.Impl.GoodsServiceImpl;
 import com.lldw.www.service.Impl.ShopServiceImpl;
 import com.lldw.www.service.ShopService;
+import com.lldw.www.vo.Result;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,9 +22,8 @@ public class GoodsServlet extends BaseServlet {
 
     GoodsServiceImpl goodsService = new GoodsServiceImpl();
 
-    public  void searchGoods(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+    public void searchGoods(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
         System.out.println("---MessageServlet.searchGoods---");
-
 
 
         //将JSON字符申转为Java对象
@@ -33,7 +32,6 @@ public class GoodsServlet extends BaseServlet {
 
 //        System.out.println("搜索关键词:" + searchKeyword.getKeyword());
         System.out.println("搜索关键词:" + searchKeyword);
-
 
 
         //调用service
@@ -61,7 +59,7 @@ public class GoodsServlet extends BaseServlet {
         }
     }
 
-    public void addGoods(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+    public void addGoods(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
         System.out.println("---GoodsServlet.addGoods---");
 
         //将JSON字符申转为String对象
@@ -70,7 +68,7 @@ public class GoodsServlet extends BaseServlet {
 
         //调用service
         Goods resultGoods = goodsService.addGoods(goods);
-        if (resultGoods!=null){
+        if (resultGoods != null) {
             try {
                 response.setContentType("text/json;charset=utf-8");
 
@@ -80,7 +78,7 @@ public class GoodsServlet extends BaseServlet {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else {
+        } else {
             System.out.println("添加商品失败~");
             try {
                 response.getWriter().write("添加商品失败~");
@@ -92,11 +90,12 @@ public class GoodsServlet extends BaseServlet {
 
     /**
      * 更新商品
-     * @param request req
+     *
+     * @param request  req
      * @param response resp
-     * @param jsonStr goodsId isActive = false
+     * @param jsonStr  goodsId isActive = false
      */
-    public void updateGoods(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+    public void updateGoods(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
         System.out.println("---GoodsServlet.updateGoods---");
 
         //将JSON字符申转为String对象
@@ -105,7 +104,7 @@ public class GoodsServlet extends BaseServlet {
 
         //调用service
         Boolean result = goodsService.updateGoods(goods);
-        if (result){
+        if (result) {
             //修改成功
             try {
                 response.setContentType("text/json;charset=utf-8");
@@ -116,7 +115,7 @@ public class GoodsServlet extends BaseServlet {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else {
+        } else {
             try {
                 response.getWriter().write("failed");
             } catch (IOException e) {
@@ -127,20 +126,23 @@ public class GoodsServlet extends BaseServlet {
 
 
     /**
-     *  前端传入shopName或者shopId 查询店铺并返回shop对象
-     * @param request req
+     * 前端传入shopName或者shopId 查询店铺并返回shop对象
+     *
+     * @param request  req
      * @param response resp
-     * @param jsonStr shop
+     * @param jsonStr  shop
      */
-    public void showShopGoods(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+    public void showShopGoods(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
         System.out.println("---GoodsServlet.showShopGoods---");
 
         //将JSON字符申转为Shop对象
         Shop shop = JSON.parseObject(jsonStr, Shop.class);
         System.out.println("shop:" + shop);
 
-        //调用service
+        //调用service 得到集合
         ArrayList<Goods> resultGoodsList = goodsService.queryGoodsOfShop(shop);
+
+        //查询商店名称
         ShopService shopService = new ShopServiceImpl();
         shop = shopService.getShopByShopId(shop);
 
@@ -150,8 +152,8 @@ public class GoodsServlet extends BaseServlet {
             try {
                 response.setContentType("text/json;charset=utf-8");
 
-                //将resultGoodsList转换为JSON数据 序列化 将goods集合传给前端
-                response.getWriter().write(JSON.toJSONString(Result.success(shop.getShopName(),resultGoodsList)));
+                //将shopName和goods集合传给前端
+                response.getWriter().write(JSON.toJSONString(Result.success(shop.getShopName(), resultGoodsList)));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -159,17 +161,18 @@ public class GoodsServlet extends BaseServlet {
         } else {
             System.out.println("商品查询失败，肿么回事？？~");
             try {
+
                 response.getWriter().write(JSON.toJSONString(Result.error("商品查询失败，肿么回事？？~")));
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public void randomGoods(HttpServletRequest request, HttpServletResponse response, String jsonStr){
+    public void randomGoods(HttpServletRequest request, HttpServletResponse response, String jsonStr) {
         //调用service
         ArrayList<Goods> resultGoodsList = goodsService.getRandomGoods();
-//        ArrayList<Goods> resultGoodsList = null;
 
         if (resultGoodsList != null) {
             try {
@@ -177,7 +180,6 @@ public class GoodsServlet extends BaseServlet {
 
                 //将resultGoodsList转换为JSON数据 序列化 将goods集合传给前端
 
-//                response.getWriter().write(JSON.toJSONString(Result.success(resultGoodsList).toString()));
                 response.getWriter().write(JSON.toJSONString(Result.success(resultGoodsList)));
 
             } catch (IOException e) {

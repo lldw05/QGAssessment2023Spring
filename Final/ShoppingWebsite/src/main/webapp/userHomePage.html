@@ -88,6 +88,7 @@
 
             <el-main>
 
+                <!--个人信息表格-->
                 <template>
                     <el-table
                             :data="userInformation"
@@ -131,6 +132,17 @@
                     </el-table>
                 </template>
 
+                <!--修改密码按钮-->
+                <template><!--打开修改密码小窗口-->
+                    <el-button type="text" @click="updatePasswordWindow=true" size="big">修改密码
+                    </el-button>
+                </template>
+
+                <!--修改支付密码按钮-->
+                <template><!--打开支付修改密码小窗口-->
+                    <el-button type="text" @click="updatePayPasswordWindow=true" size="big">修改支付密码
+                    </el-button>
+                </template>
 
             </el-main>
         </el-container>
@@ -149,7 +161,8 @@
             <el-form-item label="昵称">
                 <el-input
                         v-model="updateInformation.nickname">
-                </el-input>            </el-form-item>
+                </el-input>
+            </el-form-item>
 
             <el-form-item label="收货地址">
                 <el-input
@@ -168,15 +181,7 @@
                 </el-input>
             </el-form-item>
 
-<!--            <el-form-item label="支付密码">-->
-<!--                <el-input-->
-<!--                        type="password"-->
-<!--                        v-model="updateInformation.payPassword"-->
-<!--                        onkeyup="this.value=this.value.replace(/\D/g,'')"-->
-<!--                        onafterpaste="this.value=this.value.replace(/\D/g,'')"-->
-<!--                >-->
-<!--                </el-input>-->
-<!--            </el-form-item>-->
+
             <el-form-item>
                 <el-button type="primary" @click="updateUserInformation">立即修改</el-button>
                 <el-button @click="updateInformationWindow = false">取消</el-button>
@@ -186,51 +191,74 @@
         <!--  </span>-->
     </el-dialog>
 
+    <!--修改密码窗口-->
+    <el-dialog
+            title="修改密码"
+            :visible.sync="updatePasswordWindow"
+            width="30%"
+    >
+        <!--表单数据-->
+        <el-form ref="form" :model="updatePasswordForm" label-width="80px">
 
-    <!--用户信息-->
-    <!--    <template>-->
-    <!--        <el-table-->
-    <!--                :data="userInformation"-->
-    <!--                style="width: 100%">-->
 
-    <!--            <el-table-column-->
-    <!--                    prop="username"-->
-    <!--                    label="用户名">-->
+            <el-form-item label="新密码">
+                <el-input
+                        v-model="updatePasswordForm.newPassword" show-password>
+                </el-input>
+            </el-form-item>
 
-    <!--            </el-table-column>-->
-    <!--            <el-table-column-->
-    <!--                    prop="nickname"-->
-    <!--                    label="昵称"-->
-    <!--                    width="120">-->
-    <!--            </el-table-column>-->
-    <!--            <el-table-column-->
-    <!--                    prop="address"-->
-    <!--                    label="收货地址"-->
-    <!--                    width="120">-->
-    <!--            </el-table-column>-->
-    <!--            <el-table-column-->
-    <!--                    prop="phoneNumber"-->
-    <!--                    label="手机号码"-->
-    <!--                    width="120">-->
-    <!--            </el-table-column>-->
-    <!--            <el-table-column-->
-    <!--                    prop="realName"-->
-    <!--                    label="收货名称"-->
-    <!--                    width="300">-->
-    <!--            </el-table-column>-->
-    <!--                <el-table-column-->
-    <!--                        fixed="right"-->
-    <!--                        label="操作"-->
-    <!--                        width="100">-->
+            <el-form-item label="确认密码">
+                <el-input
+                        v-model="updatePasswordForm.checkNewPassword" show-password>
+                </el-input>
+            </el-form-item>
 
-    <!--                    <template>-->
-    <!--                        <el-button type="text" @click="updateUserInformation" size="small">修改</el-button>-->
-    <!--                    </template>-->
 
-    <!--                </el-table-column>-->
+            <el-form-item>
+                <el-button type="primary" @click="updatePasswordNow">立即修改</el-button>
+                <el-button @click="updatePasswordWindow = false">取消</el-button>
+            </el-form-item>
+        </el-form>
 
-    <!--        </el-table>-->
-    <!--    </template>-->
+        <!--  </span>-->
+    </el-dialog>
+
+    <!--修改支付密码窗口-->
+    <el-dialog
+            title="修改支付密码"
+            :visible.sync="updatePayPasswordWindow"
+            width="30%"
+    >
+        <!--表单数据-->
+        <el-form ref="form" :model="updatePayPasswordForm" label-width="80px">
+
+            <el-form-item label="原密码">
+                <el-input
+                        v-model="updatePayPasswordForm.payPassword" show-password>
+                </el-input>
+            </el-form-item>
+
+            <el-form-item label="新密码">
+                <el-input
+                        v-model="updatePayPasswordForm.newPayPassword" show-password>
+                </el-input>
+            </el-form-item>
+
+            <el-form-item label="确认密码">
+                <el-input
+                        v-model="updatePayPasswordForm.checkNewPayPassword" show-password>
+                </el-input>
+            </el-form-item>
+
+
+            <el-form-item>
+                <el-button type="primary" @click="updatePayPasswordNow">立即修改</el-button>
+                <el-button @click="updatePayPasswordWindow = false">取消</el-button>
+            </el-form-item>
+        </el-form>
+
+    </el-dialog>
+
 
 </div>
 
@@ -250,6 +278,8 @@
         },
         data() {
             return {
+
+                //展示用户信息表格的 data
                 userInformation: {
                     userId: '',
                     username: '',
@@ -260,6 +290,8 @@
                     pictureId: '',
                     roleId: ''
                 },
+
+                //修改信息小窗口 的data
                 updateInformation: {
                     userId: '',
                     username: '',
@@ -269,12 +301,204 @@
                     realName: '',
                     pictureId: '',
                 },
-                // userInformationWindow: false,
+
+                //修改用户密码的表单
+                updatePasswordForm: {
+                    newPassword: '',
+                    checkNewPassword: '',
+                },
+
+                //修改支付用户密码的表单
+                updatePayPasswordForm: {
+                    payPassword: '',
+                    newPayPassword: '',
+                    checkNewPayPassword: '',
+                },
+
+                //更新用户信息小窗口
                 updateInformationWindow: false,
+
+                //修改密码小窗口
+                updatePasswordWindow: false,
+
+                //修改支付密码小窗口
+                updatePayPasswordWindow: false,
 
             }
         },
         methods: {
+
+            //修改密码 连接后台
+            updatePasswordNow() {
+
+                //判断输入的密码是否为空
+                if (this.updatePasswordForm.newPassword === '') {
+                    this.$message({
+                        message: '密码不能为空哦',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+                //判断两个密码是否一致
+                if (this.updatePasswordForm.newPassword !== this.updatePasswordForm.checkNewPassword) {
+                    //不一致 提示消息
+
+                    this.$message({
+                        message: '请确认两次输入的密码一致!',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+                //提交到后台
+                var userId = localStorage.getItem('userId');
+                var _this = this;
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/ShoppingWebsite/userServlet/updateUserData",
+                    data: {
+                        userId: userId,
+                        password: _this.updatePasswordForm.newPassword
+                    }
+
+                }).then(function (resp) {
+                    // console.log(resp.data);
+                    if (resp.data.code === 1) {
+
+                        //修改成功 提示信息
+                        _this.$message({
+                            message: '修改成功!',
+                            type: 'success'
+                        });
+
+                        //关闭窗口
+                        _this.updatePasswordWindow = false;
+
+
+                    } else {
+                        console.log(resp.data);
+
+                    }
+
+
+                })
+
+
+            },
+
+            //修改支付密码 连接后台
+            updatePayPasswordNow() {
+
+                //判断输入的原密码是否为空
+                if (this.updatePayPasswordForm.payPassword === '') {
+                    this.$message({
+                        message: '请输入原密码',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+
+                //判断输入的新支付密码是否为空
+                if (this.updatePayPasswordForm.newPayPassword === '') {
+                    this.$message({
+                        message: '新密码不能为空哦',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+                //判断两个支付密码是否一致
+                if (this.updatePayPasswordForm.newPayPassword !== this.updatePayPasswordForm.checkNewPayPassword) {
+                    //不一致 提示消息
+
+                    this.$message({
+                        message: '请确认两次输入的密码一致!',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+                //校对原支付密码
+                var userId = localStorage.getItem('userId');
+                var _this = this;
+
+                //记录原密码是否正确的
+                var ok = 1;
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/ShoppingWebsite/userServlet/checkPayPassword",
+                    data: {
+                        userId: userId,
+                        //传入原支付密码
+                        payPassword: _this.updatePayPasswordForm.payPassword
+                    }
+
+                }).then(function (resp) {
+                    // console.log(resp.data);
+                    if (resp.data.code === 1) {
+                        //输入原密码正确
+                    } else {
+
+                        //输入的原支付密码错误
+                        console.log(resp.data);
+
+                        _this.$message({
+                            message: '原' + resp.data.msg,
+                            type: 'warning'
+                        });
+
+                        //标记为核对密码错误
+                        cheakpp = 0;
+                    }
+
+
+                })
+
+                //核实原密码是否正确
+                if (cheakpp === 0) {
+                    return;
+                }
+
+                //将新密码提交到后台
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/ShoppingWebsite/userServlet/updateUserData",
+                    data: {
+                        userId: userId,
+                        payPassword: _this.updatePayPasswordForm.newPayPassword
+                    }
+
+                }).then(function (resp) {
+                    // console.log(resp.data);
+                    if (resp.data.code === 1) {
+
+                        //修改成功 提示信息
+                        _this.$message({
+                            message: '修改成功!',
+                            type: 'success'
+                        });
+
+                        //关闭窗口
+                        _this.updatePasswordWindow = false;
+
+
+                    } else {
+                        console.log(resp.data);
+
+                        _this.$message({
+                            message: '修改失败,可能是原支付密码输入错误',
+                            type: 'warning'
+                        });
+                    }
+
+
+                })
+
+
+            },
+
             //查询用户information
             queryUserInformation() {
                 //已经登录 查询用户信息
@@ -316,14 +540,14 @@
             updateUserInformation() {
 
                 //给update表的数据设置userId
-                this.updateInformation.userId=localStorage.getItem('userId');
+                this.updateInformation.userId = localStorage.getItem('userId');
 
                 console.log(this.updateInformation)
                 var _this = this;
                 axios({
                     method: "post",
                     url: "http://localhost:8080/ShoppingWebsite/userServlet/updateUserData",
-                    data:_this.updateInformation
+                    data: _this.updateInformation
 
                 }).then(function (resp) {
                     // console.log(resp.data);
@@ -337,7 +561,7 @@
                         });
 
                         //关闭窗口
-                        updateInformationWindow=true;
+                        _this.updateInformationWindow = false;
 
                         //重新查询一次信息
                         _this.queryUserInformation();
@@ -353,6 +577,7 @@
 
                 })
             },
+            //展示购物车
             showShopCart() {
                 //判断是否登录
                 if (!this.isLogin()) {
@@ -363,13 +588,12 @@
                     });
 
                     setTimeout(function () {
-                        // location.href="https://www.bilibili.com/video/BV1ct4y1n7t9?t=1.1";
                         location.href = "http://localhost:8080/ShoppingWebsite/login.html"
                     }, 1000)
                     return;
                 }
 
-                //已经登录 查询用户信息
+                //已经登录 查询购物车
                 var userId = localStorage.getItem('userId');
             },
             showOrder() {
@@ -382,7 +606,6 @@
                     });
 
                     setTimeout(function () {
-                        // location.href="https://www.bilibili.com/video/BV1ct4y1n7t9?t=1.1";
                         location.href = "http://localhost:8080/ShoppingWebsite/login.html"
                     }, 1000)
                     return;

@@ -1,4 +1,4 @@
-package com.lldw.www.po;
+package com.lldw.www.vo;
 
 import com.lldw.www.constants.ResultConstants;
 
@@ -54,18 +54,18 @@ public class Result {
     }
 
     public static Result success(Object data){
-        return new Result(1,ResultConstants.SUCCESS,data);
+        return new Result(ResultConstants.SUCCESS_CODE,ResultConstants.SUCCESS,data);
     }
     public static Result success(String msg,Object data){
-        return new Result(1,msg,data);
+        return new Result(ResultConstants.SUCCESS_CODE,msg,data);
     }
 
     public static Result success(){
-        return new Result(1, ResultConstants.SUCCESS,null);
+        return new Result(ResultConstants.SUCCESS_CODE, ResultConstants.SUCCESS,null);
     }
 
     public static Result error(String msg){
-        return new Result(0,msg,null);
+        return new Result(ResultConstants.ERROR_CODE,msg,null);
     }
 
     @Override

@@ -66,8 +66,6 @@
                 <el-submenu index="1">
                     <template slot="title"><i class="el-icon-message"></i>首页</template>
                     <el-menu-item-group>
-                        <!--                        <template slot="title">分组一</template>-->
-                        <!--                        <el-menu-item index="1-1">选项1</el-menu-item>-->
                         <el-menu-item index="1-2">首页</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
@@ -83,17 +81,10 @@
                 <el-submenu index="3">
                     <template slot="title"><i class="el-icon-setting"></i>我的</template>
                     <el-menu-item-group>
-                        <!--                        <template slot="title">分组一</template>-->
-                        <el-menu-item index="3-1" @click="showUser">个人信息</el-menu-item>
-                        <el-menu-item index="3-2" @click="showShopCart">购物车</el-menu-item>
+                        <el-menu-item index="3-1" @click="turnToUserHomePage">个人信息</el-menu-item>
+                        <el-menu-item index="3-2" @click="turnToUserHomePage">购物车</el-menu-item>
                     </el-menu-item-group>
-                    <!--                    <el-menu-item-group title="分组2">-->
-                    <el-menu-item index="3-3" @click="showOrder">订单</el-menu-item>
-                    <!--                    </el-menu-item-group>-->
-                    <!--                    <el-submenu index="3-4">-->
-                    <!--                        <template slot="title">选项4</template>-->
-                    <!--                        <el-menu-item index="3-4-1">选项4-1</el-menu-item>-->
-                    <!--                    </el-submenu>-->
+                    <el-menu-item index="3-3" @click="turnToUserHomePage">订单</el-menu-item>
                 </el-submenu>
             </el-menu>
         </el-aside>
@@ -214,7 +205,7 @@
             </el-form-item>
         </el-form>
 
-        <!--  </span>-->
+
     </el-dialog>
 
     <!--添加到购物车对话框表单-->
@@ -337,6 +328,10 @@
         ,
         methods: {
 
+            turnToUserHomePage(){
+                location.href = "http://localhost:8080/ShoppingWebsite/userHomePage.html"
+
+            },
             showUser() {
                 //判断是否登录
                 if (!this.isLogin()) {

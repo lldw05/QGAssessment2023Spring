@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     public User loginByPhoneNumber(User user) {
 
         //校对手机号码
-        if (!this.checkPhoneNumber(user.getPhoneNumber())){
+        if (!this.checkPhoneNumber(user.getPhoneNumber())) {
             //不正确 返回null
             return null;
         }
@@ -114,18 +114,36 @@ public class UserServiceImpl implements UserService {
     }
 
     public User updateUser(User user) {
+
+        //判断手机号码是否符合规则
+        if (user.getPhoneNumber() != null && !"".equals(user.getPhoneNumber())) {
+
+            //手机号码不为空 且不为空字符串 说明需要修改
+
+            // 则判断是否满足正则表达式
+            if (!checkPhoneNumber(user.getPhoneNumber())) {
+                //不满足正则表达式 返回null
+                return null;
+            }
+
+            //满足正则表达式 继续后续操作
+        }
+
         //判断密码和支付密码是否需要修改
 
-        if (user.getPassword() != null) {
+        //判断password不为空 且不为空字符串
+        if (user.getPassword() != null && !"".equals(user.getPassword())) {
             //密码需要修改 加密一下下先
             user = this.encryptUser(user);
         }
 
-        if (user.getPayPassword() != null) {
+        //判断payPassword不为空 且不为空字符串
+        if (user.getPayPassword() != null && !"".equals(user.getPayPassword())) {
             //支付密码需要修改 加密一下下先
             user.setPayPassword(EncryptUtil.encrypt(user.getPayPassword()));
             user.setPayPassword(EncryptUtil.encrypt(user.getPayPassword()));
         }
+
         //进行更新 返回修改的行数
         //修改行数大于0 返回修改完的user对象 否则返回null
         return userDao.updateUser(user) > 0 ? userDao.getUserById(user) : null;
@@ -137,6 +155,12 @@ public class UserServiceImpl implements UserService {
 
         //根据id查询user
         User user1 = userDao.getUserById(user);
+
+        //判断是否初次设置原密码
+        if(user1.getPayPassword()==null){
+            //说明没设置过支付密码
+            return true;
+        }
 
 
         //支付密码 加密一下下先
@@ -152,7 +176,7 @@ public class UserServiceImpl implements UserService {
         //根据id查询user
         User user1 = userDao.getUserById(user);
 
-        return user1.getPayPassword()==null;
+        return user1.getPayPassword() == null;
     }
 
     @Override

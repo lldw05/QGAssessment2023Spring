@@ -2,7 +2,7 @@ package com.lldw.www.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.lldw.www.po.OrderForm;
-import com.lldw.www.po.Result;
+import com.lldw.www.vo.Result;
 import com.lldw.www.po.User;
 import com.lldw.www.service.Impl.OrderFormServiceImpl;
 
