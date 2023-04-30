@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+
+  <style>
+
+    .el-table .warning-row {
+      background: oldlace;
+    }
+
+    .el-table .success-row {
+      background: #f0f9eb;
+    }
+
+    .el-header, .el-footer {
+      background-color: #B3C0D1;
+      color: #333;
+      text-align: center;
+      line-height: 60px;
+    }
+
+    .el-aside {
+      background-color: #D3DCE6;
+      color: #333;
+      text-align: center;
+      line-height: 150px;
+    }
+
+    .el-main {
+      background-color: #E9EEF3;
+      color: #333;
+      text-align: center;
+      line-height: 160px;
+    }
+
+    body > .el-container {
+      margin-bottom: 40px;
+    }
+
+    .el-container:nth-child(5) .el-aside,
+    .el-container:nth-child(6) .el-aside {
+      line-height: 260px;
+    }
+
+    .el-container:nth-child(7) .el-aside {
+      line-height: 320px;
+    }
+  </style>
+
+</head>
+<body>
+
+<div id="app">
+
+  <el-container style="height: 655px ">
+    <el-header>Welcome to admin</el-header>
+    <el-container>
+      <!--侧边栏-->
+      <el-aside width="200px" style="background-color: rgba(238, 241, 246,0)">
+
+        <el-button  @click="queryShopRegisterMessage" size="small" >查看商店注册审核信息
+        </el-button>
+        <el-button  @click="queryGoodsLaunchMessage" size="small">查看商店上架商品信息
+        </el-button>
+        <el-button  @click="queryAllComment" size="small">查看所有评论信息
+        </el-button>
+        <el-button  @click="queryComplaint" size="small">查看投诉信息
+        </el-button>
+
+      </el-aside>
+
+      <!--中间-->
+      <el-main>
+
+        <!--个人信息表格-->
+        <template>
+          <el-table
+                  :data="messageData"
+                  style="width: 100%"
+                  :row-class-name="tableRowClassName">
+            <el-table-column
+                    prop="messageId"
+                    label="id"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="type"
+                    label="类型"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="messageContent"
+                    label="信息内容"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="createTime"
+                    label="时间"
+                    width="180">
+            </el-table-column>
+
+            <el-table-column
+                    label="操作,通过商店和商品申请点坐标按钮,删除评论信息点右边按钮"
+                    width="300">
+
+              <template slot-scope="scope">
+
+                <el-button type="primary" round
+                           @click="updateMessage(scope.row.messageId)" size="small">通过
+                </el-button>
+
+
+                <el-button type="primary" round
+                           @click="updateMessage2(scope.row.messageId)" size="small">删除
+                </el-button>
+              </template>
+
+<!--              <template slot-scope="scope2">-->
+<!--                <el-button type="primary" round-->
+<!--                           @click="updateMessage2(scope2.row.id)" size="small">删除-->
+<!--                </el-button>-->
+<!--              </template>-->
+
+            </el-table-column>
+          </el-table>
+        </template>
+
+
+      </el-main>
+
+    </el-container>
+  </el-container>
+
+</div>
+
+<script src="js/axios.js"></script>
+<script src="js/vue.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+
+
+<script>
+  new Vue({
+    el: "#app",
+    mounted() {
+      var userId = localStorage.getItem('userId');
+    },
+    data() {
+      return {
+
+
+        //展示用户信息表格的 data
+        messageData: {
+          messageId: '',
+          type:'',
+          messageContent:'',
+          createTime:''
+        },
+
+        //更新商店注册 商品上新信息
+        updateData:{
+          messageId:0,
+          isProcessed:'true',
+        },
+
+        //删除评论
+        updateData2:{
+          messageId:0,
+          //将评论设为禁用
+          isProcessed:'false',
+        }
+
+      }
+    },
+    methods: {
+
+      //更新更新商店注册 商品上新信息
+      updateMessage(messageId){
+        this.updateData.messageId=messageId;
+        var _this = this;
+
+        axios({
+          method: "post",
+          url: "http://localhost:8080/ShoppingWebsite/messageServlet/updateShopRegistration",
+          data:_this.updateData
+
+        }).then(function (resp) {
+          console.log(resp.data);
+          if (resp.data.code === 1) {
+
+            //通过审核成功 提示信息
+            _this.$message({
+              message: '通过审核成功!',
+              type: 'success'
+            });
+
+
+          } else {
+
+            //无未处理的注册店铺申请
+            console.log(resp.data);
+            _this.$message({
+              message: resp.data.msg,
+              type: 'success'
+            });
+
+
+          }
+
+        })
+      },
+
+      //删除评论信息
+      updateMessage2(messageId){
+        console.log(this.updateData2);
+        this.updateData2.messageId=messageId;
+        var _this = this;
+        console.log(this.updateData2);
+        axios({
+          method: "post",
+          url: "http://localhost:8080/ShoppingWebsite/messageServlet/handleComplaint",
+          data:_this.updateData2
+
+        }).then(function (resp) {
+          // console.log(resp.data);
+          if (resp.data.code === 1) {
+
+
+            //删除成功 提示信息
+            _this.$message({
+              message: '删除成功!',
+              type: 'success'
+            });
+
+            _this.queryAllComment();
+
+          } else {
+
+            //删除失败
+            console.log(resp.data);
+            _this.$message({
+              message: resp.data.msg,
+              type: 'warning'
+            });
+
+
+          }
+
+        })
+      },
+
+      //查询商店注册申请
+      queryShopRegisterMessage(){
+        var _this = this;
+
+        axios({
+          method: "get",
+          url: "http://localhost:8080/ShoppingWebsite/messageServlet/queryShopRegistration",
+
+        }).then(function (resp) {
+          // console.log(resp.data);
+          if (resp.data.code === 1) {
+
+            //设置信息
+            _this.messageData = resp.data.data;
+
+            //查找成功 提示信息
+            _this.$message({
+              message: '查找成功!',
+              type: 'success'
+            });
+
+          } else {
+
+            //无未处理的注册店铺申请
+            console.log(resp.data);
+            _this.$message({
+              message: resp.data.msg,
+              type: 'success'
+            });
+
+
+          }
+
+        })
+      },
+
+      //查询新品上市申请
+      queryGoodsLaunchMessage(){
+        var _this = this;
+
+        axios({
+          method: "get",
+          url: "http://localhost:8080/ShoppingWebsite/messageServlet/queryGoodsLaunch",
+
+        }).then(function (resp) {
+          // console.log(resp.data);
+          if (resp.data.code === 1) {
+
+            //设置信息
+            _this.messageData = resp.data.data;
+
+            //查找成功 提示信息
+            _this.$message({
+              message: '查找成功!',
+              type: 'success'
+            });
+
+          } else {
+
+            //无未处理的注册店铺申请
+            console.log(resp.data);
+            _this.$message({
+              message: resp.data.msg,
+              type: 'success'
+            });
+
+
+          }
+
+        })
+      },
+
+      //查询所有评论
+      queryAllComment(){
+        var _this = this;
+
+        axios({
+          method: "get",
+          url: "http://localhost:8080/ShoppingWebsite/messageServlet/queryAllComment",
+
+        }).then(function (resp) {
+          // console.log(resp.data);
+          if (resp.data.code === 1) {
+
+            //设置信息
+            _this.messageData = resp.data.data;
+
+            //查找成功 提示信息
+            _this.$message({
+              message: '查找成功!',
+              type: 'success'
+            });
+
+          } else {
+
+            //无未处理的注册店铺申请
+            console.log(resp.data);
+            _this.$message({
+              message: resp.data.msg,
+              type: 'success'
+            });
+
+
+          }
+
+        })
+      },
+
+      //查询所有投诉信息
+      queryComplaint(){
+        var _this = this;
+
+        axios({
+          method: "get",
+          url: "http://localhost:8080/ShoppingWebsite/messageServlet/queryComplaint",
+
+        }).then(function (resp) {
+          // console.log(resp.data);
+          if (resp.data.code === 1) {
+
+            //设置信息
+            _this.messageData = resp.data.data;
+
+            //查找成功 提示信息
+            _this.$message({
+              message: '查找成功!',
+              type: 'success'
+            });
+
+          } else {
+
+            //无未处理的注册店铺申请
+            console.log(resp.data);
+            _this.$message({
+              message: resp.data.msg,
+              type: 'success'
+            });
+
+
+          }
+
+        })
+      },
+
+      //跳转页面到商品主页
+      toHomePage() {
+        location.href = "http://localhost:8080/ShoppingWebsite/homePage.html"
+      }
+    }
+  })
+
+
+</script>
+
+</body>
+</html>

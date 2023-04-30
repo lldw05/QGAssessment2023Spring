@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!--上传头像-->
+    <style>
+        .allApp {
+            /*background: no-repeat left/100% url("img/background.jpg");*/
+
+        }
+
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 178px;
+            height: 178px;
+            line-height: 178px;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 178px;
+            height: 178px;
+            display: block;
+        }
+    </style>
+
+
+    <style>
+        .el-header {
+            background-color: #B3C0D1;
+            color: #333;
+            line-height: 60px;
+        }
+
+        .el-aside {
+            color: #333;
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="app" class="allApp">
+
+
+    <!--布局-->
+    <el-container style="height: 655px; border: 1px solid #eee">
+        <!--侧边栏-->
+        <el-aside width="200px" style="background-color: rgba(238, 241, 246,0)">
+            <el-menu :default-openeds="['1', '3']">
+                <el-submenu index="1">
+                    <template slot="title"><i class="el-icon-message"></i>首页</template>
+                    <el-menu-item-group>
+                        <el-menu-item index="1-2" @click="homePageShowRandomGoods">首页</el-menu-item>
+                        <el-menu-item index="1-3" @click="queryMyShopGoods">我的商店</el-menu-item>
+                    </el-menu-item-group>
+                </el-submenu>
+                </el-submenu>
+                <el-submenu index="2">
+                    <template slot="title"><i class="el-icon-menu"></i>消息</template>
+                    <el-menu-item-group>
+                        <!--                        <template slot="title">分组一</template>-->
+                        <el-menu-item index="2-1" @click="queryMessage">查看消息</el-menu-item>
+                        <!--                        <el-menu-item index="2-2">选项2</el-menu-item>-->
+                    </el-menu-item-group>
+                </el-submenu>
+                <el-submenu index="3">
+                    <template slot="title"><i class="el-icon-setting"></i>我的</template>
+                    <el-menu-item-group>
+                        <el-menu-item index="3-1" @click="turnToUserHomePage">个人信息</el-menu-item>
+                        <el-menu-item index="3-2" @click="turnToUserHomePage">购物车</el-menu-item>
+                    </el-menu-item-group>
+                    <el-menu-item index="3-3" @click="turnToUserHomePage">订单</el-menu-item>
+                </el-submenu>
+            </el-menu>
+        </el-aside>
+
+        <!--头顶+中间-->
+        <el-container>
+            <el-header style="text-align: left; font-size: 12px;">
+
+
+                <!--搜索表单-->
+                <el-form :inline="true" :model="search" class="demo-form-inline">
+
+
+                    <el-form-item label="搜索商品">
+                        <el-input v-model="search.searchKeyword" placeholder="商品名称" style="width:500px "></el-input>
+                    </el-form-item>
+
+                    <el-form-item>
+                        <el-button type="primary" @click="searchOnSubmit">搜索</el-button>
+                    </el-form-item>
+
+                    <!--回到首页按钮-->
+                    <el-button @click="homePageShowRandomGoods">点击返回首页</el-button>
+
+                    <!--退出账号按钮-->
+                    <el-button @click="logOut">退出账号</el-button>
+
+                    <!--账号按钮-->
+                    <el-button @click="toLoginHtml">登录账号</el-button>
+
+                    Hello,<span id="username_span"></span>
+                </el-form>
+
+
+                <el-dropdown>
+                    <i class="el-icon-setting" style="margin-right: 15px"></i>
+                </el-dropdown>
+                <!--                <p id = "name"></p>-->
+            </el-header>
+
+            <!--            表格数据-->
+            <el-main>
+                <el-table :data="tableData" style="line-height: 20px;">
+                    <el-table-column prop="price" label="图片" width="250">
+                    </el-table-column>
+                    <el-table-column prop="goodsIntroduction" label="商品介绍" width="250">
+                    </el-table-column>
+                    <el-table-column prop="price" label="价格" width="100">
+                    </el-table-column>
+                    <el-table-column prop="monthlySales" label="月销量" width="100">
+                    </el-table-column>
+                    <el-table-column label="查看评论">
+                        <template slot-scope="scope">
+                            <el-button
+                                    size="mini"
+                                    type="success"
+                                    round
+                                    @click="queryComment(scope.row.goodsId)">点击查看商品评论
+                            </el-button>
+                            <el-button
+                                    size="mini"
+                                    type="warning"
+                                    round
+                                    @click="showShopGoods(scope.row.shopId)">查看商店
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+
+                            <!--                            <el-button type="primary" round @click="dialogVisibleOfPurchaseNow = true">立即购买-->
+                            <el-button type="primary" round @click="openPurchaseNowForm(scope.row.goodsId)">立即购买
+                            </el-button>
+                            <!--                            <el-button type="danger" round @click="dialogVisibleOfAddIntoShopCart = true">加入购物车-->
+                            <el-button type="danger" round @click="openAddIntoShopCartForm(scope.row.goodsId)">加入购物车
+                            </el-button>
+
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-main>
+        </el-container>
+    </el-container>
+
+    <!--立即购买对话框表单-->
+    <el-dialog
+            title="立即下单"
+            :visible.sync="dialogVisibleOfPurchaseNow"
+            width="30%"
+    >
+        <!--表单数据-->
+        <el-form ref="form" :model="purchaseNowForm" label-width="80px">
+
+
+            <el-form-item label="购买数量(max=10)">
+                <el-input-number label="购买数量" v-model="purchaseNowForm.amount" :min="1" :max="10"></el-input-number>
+            </el-form-item>
+
+            <el-form-item label="配送地址">
+                <el-input
+                        v-model="purchaseNowForm.address">
+                </el-input>
+            </el-form-item>
+
+            <el-form-item label="支付密码">
+                <el-input
+                        type="password"
+                        v-model="purchaseNowForm.payPassword"
+                        onkeyup="this.value=this.value.replace(/\D/g,'')"
+                        onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                >
+                </el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="purchaseNow">立即购买</el-button>
+                <el-button @click="dialogVisibleOfPurchaseNow = false">取消</el-button>
+            </el-form-item>
+        </el-form>
+
+
+    </el-dialog>
+
+    <!--添加到购物车对话框表单-->
+    <el-dialog
+            title="添加到购物车"
+            :visible.sync="dialogVisibleOfAddIntoShopCart"
+            width="30%"
+    >
+        <!--表单数据-->
+        <el-form ref="form" :model="addIntoShopCartForm" label-width="80px">
+
+            <!--            <el-form-item label="加入数量">-->
+            <!--                <el-input-->
+
+            <!--                        v-model.number="addIntoShopCartForm.amount"-->
+            <!--                        oninput="value=value.replace(/[^0-9.]/g,'')">-->
+
+            <!--                </el-input>-->
+            <!--            </el-form-item>-->
+
+
+            <el-form-item label="加入数量(max=10)">
+                <el-input-number label="加入数量" v-model="addIntoShopCartForm.amount" :min="1"
+                                 :max="10"></el-input-number>
+            </el-form-item>
+
+            <el-form-item>
+                <el-button type="primary" @click="addIntoShopCart">立即添加</el-button>
+                <el-button @click="dialogVisibleOfAddIntoShopCart = false">取消</el-button>
+            </el-form-item>
+        </el-form>
+
+        <!--  </span>-->
+    </el-dialog>
+
+    <!--商品评论提示框-->
+    <el-dialog title="评论信息" :visible.sync="commentWindow">
+        <template>
+            <el-table
+                    :data="commentMessage"
+                    style="width: 100%">
+
+                <el-table-column
+                        type="index"
+                        width="50">
+                </el-table-column>
+
+                <el-table-column
+                        prop="createTime"
+                        label="时间"> <!--width="180"-->
+
+                </el-table-column>
+                <el-table-column
+                        prop="messageContent"
+                        label="评论信息">
+                    <!--width="180"-->
+                </el-table-column>
+
+            </el-table>
+        </template>
+    </el-dialog>
+
+
+
+
+
+
+    <!--上传头像
+        <el-upload
+                class="avatar-uploader"
+                action="http://localhost:8080/ShoppingWebsite/pictureServlet/uploadPicture"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>-->
+
+</div>
+
+<script src="js/axios.js"></script>
+<script src="js/vue.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+
+
+<script>
+    /*设置关闭浏览器的同时清除token和userId*/
+    // window.onbeforeunload = function () {
+    //     localStorage.removeItem("token");
+    //     localStorage.removeItem("userId");
+    // };
+
+    // 请求拦截器
+    axios.interceptors.request.use(function (config) {
+        console.log('请求拦截器 成功-2')
+        //设置响应头
+        config.headers.Authorization = localStorage.getItem('token');
+        //throw "参数异常"
+
+        return config;
+    }, function (error) {
+        console.log("请求拦截器 失败-2")
+        return Promise.reject(error);
+    });
+
+
+    new Vue({
+        el: "#app",
+        //加载主页数据
+        mounted() {
+
+            this.homePageShowRandomGoods();
+        }
+
+
+        ,
+        methods: {
+
+            //查看我的商店
+            queryMyShopGoods(){
+                var _this = this;
+
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/ShoppingWebsite/goodsServlet/queryGoodsByUserId",
+                    data:{
+                        userId:localStorage.getItem('userId'),
+                    }
+                }).then(function (resp) {
+                    console.log(resp.data);
+
+                    if(resp.data.code===1){
+                        //查找成功
+
+                        //打乱数组顺序
+                        resp.data.data = _this.shuffle(resp.data.data);
+
+                        _this.tableData = resp.data.data;
+
+                        //查找成功 提示信息
+                        _this.$message({
+                            message: 'Welcome to shop: ' + resp.data.msg + '!',
+                            type: 'success'
+                        });
+                    }
+                    else{
+                        //查找成功 提示信息
+                        _this.$message({
+                            message: resp.data.msg,
+                            type: 'warning'
+                        });
+                    }
+                }).catch(err => {
+                    // handle error
+                    console.log(err.response)
+                });
+            },
+
+            //跳转到用户页
+            turnToUserHomePage(){
+                location.href = "http://localhost:8080/ShoppingWebsite/userHomePage.html"
+
+            },
+
+            //跳转到用户页
+            showUser() {
+                //判断是否登录
+                if (!this.isLogin()) {
+                    this.$message({
+                        message: '您还未登录哦 请您先登录,1秒钟之后跳转...',
+                        type: 'warning'
+                    });
+
+                    setTimeout(function () {
+                        location.href = "http://localhost:8080/ShoppingWebsite/login.html"
+                    }, 1000)
+                    return;
+                }
+
+                //已经登录 打开展示信息的页面
+                this.turnToUserHomePage();
+
+            },
+
+            //跳转到用户页
+            showShopCart() {
+                //判断是否登录
+                if (!this.isLogin()) {
+                    this.$message({
+                        message: '您还未登录哦 请您先登录,1秒钟之后跳转...',
+                        type: 'warning'
+                        // type: 'error'
+                    });
+
+                    setTimeout(function () {
+                        // location.href="https://www.bilibili.com/video/BV1ct4y1n7t9?t=1.1";
+                        location.href = "http://localhost:8080/ShoppingWebsite/login.html"
+                    }, 1000)
+                    return;
+                }
+
+                //已经登录 查询用户信息
+                this.turnToUserHomePage();
+            },
+
+            //跳转到用户页
+            showOrder() {
+                //判断是否登录
+                if (!this.isLogin()) {
+                    this.$message({
+                        message: '您还未登录哦 请您先登录,1秒钟之后跳转...',
+                        type: 'warning'
+                        // type: 'error'
+                    });
+
+                    setTimeout(function () {
+                        // location.href="https://www.bilibili.com/video/BV1ct4y1n7t9?t=1.1";
+                        location.href = "http://localhost:8080/ShoppingWebsite/login.html"
+                    }, 1000)
+                    return;
+                }
+
+                //已经登录 查询用户信息
+                this.turnToUserHomePage();
+            },
+
+            //跳转到登录页面
+            toLoginHtml(){
+                location.href = "http://localhost:8080/ShoppingWebsite/login.html"
+            },
+
+
+            //查看用户Message
+            queryMessage() {
+                //判断是否登录
+                if (!this.isLogin()) {
+                    this.$message({
+                        message: '您还未登录哦 请您先登录,1秒钟之后跳转...',
+                        type: 'warning'
+                        // type: 'error'
+                    });
+
+                    setTimeout(function () {
+                        location.href = "http://localhost:8080/ShoppingWebsite/login.html"
+                    }, 1000)
+                    return;
+                }
+
+                //已经登录 查询用户信息
+                var userId = localStorage.getItem('userId');
+                var _this = this;
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/ShoppingWebsite/messageServlet/queryMessageOfUser",
+                    data: {
+                        userId: userId
+                    }
+
+                }).then(function (resp) {
+                    // console.log(resp.data);
+                    if (resp.data.code === 1) {
+
+                        //保存数据到前端
+                        _this.userMessage = resp.data.data;
+                        console.log(resp.data.data);
+
+                        //打开信息窗口
+                        _this.userMessageWindow = true;
+
+                        //添加成功 提示信息
+                        _this.$message({
+                            message: '查询成功!',
+                            type: 'success'
+                        });
+
+
+                    } else {
+                        console.log(resp.data);
+                        _this.$message({
+                            message: '您目前还没有消息哦~',
+                            type: 'warning'
+                        });
+                    }
+
+
+                })
+            },
+
+            //退出账号功能
+            logOut() {
+                window.localStorage.removeItem("userId");
+                window.localStorage.removeItem("token");
+
+                //重新进入网页 刷新其他表单中的原用户数据
+                location.href = "http://localhost:8080/ShoppingWebsite/homePage.html"
+
+                //退出成功 提示信息
+                this.$message({
+                    message: '退出成功!',
+                    type: 'success'
+                });
+
+            },
+
+            //打乱后台传来的商品数组的顺序
+            shuffle(arr) {
+                var len = arr.length;
+                for (var i = 0; i < len - 1; i++) {
+                    var index = parseInt(Math.random() * (len - i));
+                    var temp = arr[index];
+                    arr[index] = arr[len - i - 1];
+                    arr[len - i - 1] = temp;
+                }
+                return arr;
+            },
+
+            //搜索商品方法
+            searchOnSubmit() {
+                console.log(this.search);
+                var _this = this;
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/ShoppingWebsite/goodsServlet/searchGoods",
+                    data: /*_this.search*/
+                        {
+                            keyword: _this.search.searchKeyword
+                        }
+                }).then(function (resp) {
+                    // console.log(resp.data);
+                    if (resp.data.code === 1) {
+                        //查找成功 提示信息
+                        _this.$message({
+                            message: '查找成功!',
+                            type: 'success'
+                        });
+                        //显示查找的商品
+                        _this.tableData = resp.data.data;
+                    } else {
+                        console.log(resp.data);
+                        _this.$message({
+                            message: '没有找到你想要的商品哦',
+                            type: 'warning'
+                            // type: 'error'
+                        });
+                    }
+
+
+                })
+            },
+
+            //回到主页 展示随机商品
+            homePageShowRandomGoods() {
+                var _this = this;
+
+                axios({
+                    method: "get",
+                    url: "http://localhost:8080/ShoppingWebsite/goodsServlet/randomGoods",
+                }).then(function (resp) {
+                    console.log(resp.data);
+
+                    // console.log(resp.data.data);
+
+                    //打乱数组顺序
+                    resp.data.data = _this.shuffle(resp.data.data);
+
+                    _this.tableData = resp.data.data;
+
+                    //欢迎来到首页 提示信息
+                    _this.$message({
+                        message: 'Welcome QG Shopping Website!',
+                        type: 'success'
+                    });
+
+                    // _this.tableData = resp.data.data;
+                }).catch(err => {
+                    // handle error
+                    console.log(err.response)
+                });
+            },
+
+            //查看商品评论
+            queryComment(goodsId) {
+                console.log(goodsId);
+                var _this = this;
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/ShoppingWebsite/messageServlet/queryCommentOfGoods",
+                    data: {
+                        goodsId: goodsId
+                    }
+
+                }).then(function (resp) {
+                    // console.log(resp.data);
+                    if (resp.data.code === 1) {
+                        console.log(resp.data)
+                        _this.commentMessage = resp.data.data;
+
+                        //查找成功 提示信息
+                        _this.$message({
+                            message: '查找成功!',
+                            type: 'success'
+                        });
+
+                        _this.commentWindow = true;
+                    } else {
+                        console.log(resp.data);
+                        _this.$message({
+                            message: resp.data.msg,
+                            type: 'warning'
+                        });
+                    }
+
+
+                })
+            },
+
+            //查看商店 先查看商店的商品
+            showShopGoods(shopId) {
+                console.log(shopId);
+
+                var _this = this;
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/ShoppingWebsite/goodsServlet/showShopGoods",
+                    data: {
+                        shopId: shopId
+                    }
+
+                }).then(function (resp) {
+                    // console.log(resp.data);
+                    if (resp.data.code === 1) {
+                        console.log(resp.data)
+
+                        //打乱数组顺序
+                        resp.data.data = _this.shuffle(resp.data.data);
+
+                        //将表格的数据转换成查询到的商店商品的数据
+                        _this.tableData = resp.data.data;
+
+                        //查找成功 提示信息
+                        _this.$message({
+                            message: 'Welcome to shop: ' + resp.data.msg + '!',
+                            type: 'success'
+                        });
+
+                    } else {
+                        console.log(resp.data);
+                        _this.$message({
+                            message: resp.data.msg,
+                            type: 'warning'
+                        });
+                    }
+
+
+                })
+            }
+            ,
+            /*打开立即购买表单*/
+            openPurchaseNowForm(goodsId) {
+
+                //判断是否登录
+                if (!this.isLogin()) {
+                    this.$message({
+                        message: '您还未登录哦 请您先登录,1秒钟之后跳转...',
+                        type: 'warning'
+                        // type: 'error'
+                    });
+
+                    setTimeout(function () {
+                        // location.href="https://www.bilibili.com/video/BV1ct4y1n7t9?t=1.1";
+                        location.href = "http://localhost:8080/ShoppingWebsite/login.html"
+                    }, 1000)
+                    return;
+                }
+
+                this.purchaseNowForm.userId = localStorage.getItem('userId');
+                this.purchaseNowForm.goodsId = goodsId;
+                this.dialogVisibleOfPurchaseNow = true;
+            },
+            //打开加入购物车表单
+            openAddIntoShopCartForm(goodsId) {
+
+                //判断是否登录
+                if (!this.isLogin()) {
+                    this.$message({
+                        message: '您还未登录哦 请您先登录,1秒钟之后跳转...',
+                        type: 'warning'
+                        // type: 'error'
+                    });
+
+                    setTimeout(function () {
+                        // location.href="https://www.bilibili.com/video/BV1ct4y1n7t9?t=1.1";
+                        location.href = "http://localhost:8080/ShoppingWebsite/login.html"
+                    }, 1000)
+                    return;
+                }
+                this.addIntoShopCartForm.userId = localStorage.getItem('userId');
+                this.addIntoShopCartForm.goodsId = goodsId;
+                this.dialogVisibleOfAddIntoShopCart = true;
+            },
+
+            //判断是否登录函数
+            isLogin() {
+                return localStorage.getItem('userId') != null;
+            },
+
+            //添加到购物车 连接后台
+            addIntoShopCart() {
+                console.log(this.addIntoShopCartForm);
+
+                //判断是否输入 数量
+                if (this.addIntoShopCartForm.amount === '') {
+                    this.$message({
+                        message: '请输入购买数量',
+                        type: 'warning'
+                        // type: 'error'
+                    });
+                    return;
+                }
+
+                var _this = this;
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/ShoppingWebsite/shopCartServlet/addIntoShopCart",
+                    data: _this.addIntoShopCartForm
+
+                }).then(function (resp) {
+                    // console.log(resp.data);
+                    if (resp.data.code === 1) {
+
+                        //添加成功 提示信息
+                        _this.$message({
+                            message: '添加成功!',
+                            type: 'success'
+                        });
+
+                        //关闭窗口
+                        _this.dialogVisibleOfAddIntoShopCart = false;
+
+
+                    } else {
+                        console.log(resp.data);
+                        _this.$message({
+                            message: '添加失败',
+                            type: 'warning'
+                            // type: 'error'
+                        });
+                    }
+
+
+                })
+            },
+
+            //立即购买 连接后台
+            purchaseNow() {
+                console.log(this.purchaseNowForm);
+
+
+                //判断是否输入支付密码 地址 数量
+                if (this.purchaseNowForm.amount === '') {
+                    this.$message({
+                        message: '请输入购买数量',
+                        type: 'warning'
+                        // type: 'error'
+                    });
+                    return;
+                }
+                if (this.purchaseNowForm.address === '') {
+                    this.$message({
+                        message: '请输入地址',
+                        type: 'warning'
+                        // type: 'error'
+                    });
+                    return;
+                }
+                if (this.purchaseNowForm.payPassword === '') {
+                    this.$message({
+                        message: '请输入支付密码',
+                        type: 'warning'
+                        // type: 'error'
+                    });
+                    return;
+                }
+
+                var _this = this;
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/ShoppingWebsite/orderFormServlet/purchaseNow",
+                    data: _this.purchaseNowForm
+
+                }).then(function (resp) {
+                    // console.log(resp.data);
+                    if (resp.data.code === 1) {
+
+                        //添加成功 提示信息
+                        _this.$message({
+                            message: '购买成功!',
+                            type: 'success'
+                        });
+
+                        //关闭窗口
+                        _this.dialogVisibleOfPurchaseNow = false;
+
+
+                    } else {
+                        console.log(resp.data);
+                        _this.$message({
+                            message: resp.data.msg,
+                            type: 'warning'
+                            // type: 'error'
+                        });
+                    }
+
+
+                })
+            },
+
+            //上传图片
+            // handleAvatarSuccess(res, file) {
+            //     this.imageUrl = URL.createObjectURL(file.raw);
+            // },
+            // beforeAvatarUpload(file) {
+            //     const isJPG = file.type === 'image/jpeg';
+            //     const isLt2M = file.size / 1024 / 1024 < 2;
+            //
+            //     if (!isJPG) {
+            //         this.$message.error('上传头像图片只能是 JPG 格式!');
+            //     }
+            //     if (!isLt2M) {
+            //         this.$message.error('上传头像图片大小不能超过 2MB!');
+            //     }
+            //     return isJPG && isLt2M;
+            // }
+        }
+        ,
+        data() {
+
+
+            return {
+
+
+
+                //用户的message
+                userMessage: {
+                    messageId: '',
+                    type: '',
+                    senderType: '',
+                    userId: '',
+                    goodsId: '',
+                    shopId: '',
+                    messageContent: '',
+                    createTime: '',
+                    isProcessed: '',
+                },
+
+                //
+                username: '',
+                //图片上传
+                imageUrl: '',
+
+                //查看评论窗口
+                commentWindow: false,
+
+                //用户信息窗口
+                userInformationWindow: false,
+
+                //用户消息窗口
+                userMessageWindow: false,
+
+                //立即购买对话框是否展示的标记
+                dialogVisibleOfPurchaseNow: false,
+                dialogVisibleOfAddIntoShopCart: false,
+                //表格数据
+                tableData: {
+                    goodsId: '',
+                    pictureId: '',
+                    shopId: '',
+                    goodsIntroduction: '',
+                    price: '',
+                    monthlySales: '',
+
+                },
+                //搜索表单数据
+                searchKeyword: '',
+                search: {
+                    searchKeyword: '',
+                },
+
+                //立即购买表单
+                purchaseNowForm: {
+                    userId: '',
+                    goodsId: '',
+                    amount: '',
+                    payPassword: '',
+
+                    //无用
+                    address: '',
+                },
+
+
+                //加入购物车表单
+                addIntoShopCartForm: {
+                    userId: '',
+                    goodsId: '',
+                    amount: '',
+                },
+
+                commentMessage: {
+                    createTime: '',
+                    messageContent: '',
+                }
+            }
+        }
+
+    })
+
+
+</script>
+
+
+</body>
+</html>

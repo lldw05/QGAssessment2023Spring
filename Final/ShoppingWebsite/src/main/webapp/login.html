@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+    <style>
+        .loginDiv {
+            /*background: no-repeat center/80% url("img/background.jpg");*/
+            background: no-repeat left/100% url("img/background.jpg");
+
+            display: flex;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .el-header, .el-footer {
+            /*background-color: #409EFF;*/
+            background-color: transparent;
+            font-size: 2.5em; /* 40px/16=2.5em */
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+            width: 350px;
+            margin: 0 auto;
+            /*vertical-align:middle;*/
+        }
+
+
+        .el-main {
+            /*background-color: #E9EEF3;*/
+            background-color: transparent;
+            /*background-image: url("img/background.jpg");*/
+            color: #333;
+            text-align: center;
+            line-height: 160px;
+            /*height: 500px;*/
+            /*height: 100%;*/
+
+            width: 350px;
+            margin: 0 auto;
+            /*height : 60px;*/
+            /*vertical-align:middle;!*设置表格属性，此时垂直居中了*!*/
+        }
+
+        body > .el-container {
+            /*background-image: url("img/background.jpg");*/
+            /*margin: 0 auto;*/
+
+            margin-bottom: 40px;
+        }
+
+        .el-container:nth-child(5) .el-aside,
+        .el-container:nth-child(6) .el-aside {
+            /*margin: 0 auto;*/
+            line-height: 260px;
+        }
+
+        .el-container:nth-child(7) .el-aside {
+            line-height: 320px;
+        }
+    </style>
+
+</head>
+<body>
+
+
+<!--<div id ="loginDiv">-->
+<!--    <form action="/QGDemo/userServlet" method="get" id = "form">-->
+<!--        <h1 id = "loginMsg">LOGIN IN</h1>-->
+<!--        <p>Username:<input id ="username" name = "username" type="text"></p>-->
+
+<!--        <p>Password:<input  id="password" name = "password" type="password"></p>-->
+
+<!--        <p>Remember:<input  id="remember" name = "remember" value="1" type="checkbox"></p>-->
+
+<!--        <input type="hidden" id = "method" name = "method" value="login">-->
+<!--        <div id ="subDiv">-->
+<!--            <input type="submit" class="button" value="login up">-->
+<!--            <input type="reset" class="button" value="reset">-->
+<!--            <a href="register.html">没有账号？点击注册</a>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</div>-->
+
+<div id="loginDiv" class="loginDiv">
+
+    <el-container>
+        <el-header>
+            Hello Login~
+        </el-header>
+
+        <el-main>
+            <!--表单-->
+            <el-form ref="form" :model="tableData" label-width="80px" size="mini">
+                <el-form-item label="username">
+                    <el-input v-model="tableData.username"></el-input>
+                </el-form-item>
+
+                <el-form-item id="passwordInput" label="password" style="display:block">
+                    <el-input v-model="tableData.password" show-password ></el-input>
+                </el-form-item>
+                <el-form-item id="phoneNumberInput" label="电话号码" style="display:none">
+                    <el-input v-model="tableData.phoneNumber"></el-input>
+                </el-form-item>
+
+                <el-form-item label="验证码">
+                    <el-input v-model="tableData.verifyCode"></el-input>
+                    <img id="verifyCodeImg" src="/ShoppingWebsite/verifyCodeServlet">
+                </el-form-item>
+
+                <el-form-item>
+                    <el-button type="primary" @click="login">立即登录</el-button>
+                    <br>
+                    <el-button id="forgetPasswordButton" @click="this.forgetPassword" style="display:block">忘记密码
+                    </el-button>
+                    <el-button id="rememberPasswordButton" @click="this.rememberPassword" style="display:none">
+                        用密码登录
+                    </el-button>
+                    <br>
+                    <el-link href="register.html" target="_blank" type="primary">没有账号？立即注册</el-link>
+                </el-form-item>
+            </el-form>
+        </el-main>
+
+    </el-container>
+
+
+</div>
+
+<script src="js/axios.js"></script>
+<script src="js/vue.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+
+
+<script>
+    new Vue({
+        el: "#loginDiv",
+        data() {
+            return {
+                // loginData: {
+                //     verifyCode: '',
+                //     user: {
+                //         username: '',
+                //         phoneNumber: '',
+                //         password: ''
+                //     }
+                // },
+                /*
+                user: {
+
+
+                }*/
+
+                //选择用手机号登录还是密码登录
+                dialogVisibleOfPassword: true,
+                dialogVisibleOfPhoneNumber: false,
+
+                tableData: {
+                    verifyCode: '',
+                    username: '',
+                    phoneNumber: '',
+                    password: ''
+                }
+
+            }
+        },
+        methods: {
+            login() {
+
+
+                //判断是否输入username
+                if (this.tableData.username === '') {
+                    this.$message({
+                        message: '请输入用户名',
+                        type: 'warning'
+                        // type: 'error'
+                    });
+                    return;
+                }
+
+
+                //发送ajax 添加数据
+                var _this = this;
+                var url;
+                if (document.getElementById("passwordInput").style.display === "block") {
+                    //使用密码登录
+                    url = "http://localhost:8080/ShoppingWebsite/userServlet/login";
+
+                    //判断是否输入password
+                    if (this.tableData.password === '') {
+                        this.$message({
+                            message: '请输入密码',
+                            type: 'warning'
+                            // type: 'error'
+                        });
+                        return;
+                    }
+                } else {
+                    //忘记密码 通过手机号码登录
+                    url = "http://localhost:8080/ShoppingWebsite/userServlet/loginByPhoneNumber";
+
+                    //判断是否输入phoneNumber
+                    if (this.tableData.phoneNumber === '') {
+                        this.$message({
+                            message: '请输入手机号码',
+                            type: 'warning'
+                            // type: 'error'
+                        });
+                        return;
+                    }
+
+                    //使用正则表达式校对手机号码
+                    let ok = this.checkPhone(this.tableData.phoneNumber);
+                    if(!ok){
+                        this.$message({
+                            message: '请输入正确的手机号码!',
+                            type: 'warning'
+
+                        });
+                        return;
+                    }
+
+                }
+                console.log(url);
+
+                //判断是否输入验证码
+                if (this.tableData.verifyCode === '') {
+                    this.$message({
+                        message: '请输入验证码',
+                        type: 'warning'
+                        // type: 'error'
+                    });
+                    return;
+                }
+
+                axios({
+                    method: "post",
+                    url: url,
+                    data: /*_this.loginData*/_this.tableData
+                }).then(function (resp) {
+                    console.log(resp.data);
+
+                    if (resp.data.code === 1) {
+                        //登录成功
+
+                        // console.log(resp.data.data.token);
+
+                        console.log(resp.data);
+
+                        //保存token 和userId
+                        window.localStorage.setItem("token", resp.data.data.token);
+                        window.localStorage.setItem('userId', resp.data.msg);
+                        //登录成功 提示信息
+                        _this.$message({
+                            message: '恭喜你，登录成功,1秒之后跳转...',
+                            type: 'success'
+                        });
+
+                        setTimeout(function () {
+                            // location.href="https://www.bilibili.com/video/BV1ct4y1n7t9?t=1.1";
+                            location.href = "http://localhost:8080/ShoppingWebsite/homePage.html";
+                        }, 1000)
+
+
+                    } else {
+                        // console.log(resp.data);
+                        _this.$message({
+                            message: resp.data.msg,
+                            type: 'error'
+                        });
+                    }
+                })
+            },
+            forgetPassword() {
+
+                //选择用手机号登录
+
+                document.getElementById("phoneNumberInput").style.display = "block";
+                document.getElementById("passwordInput").style.display = "none";
+
+                //登录成功 提示信息
+                this.$message({
+                    message: 'tips:已经绑定过手机号才可以使用手机号码登录哦~',
+                });
+
+                //将 忘记密码隐藏 显示用密码登录按钮按钮
+                document.getElementById("forgetPasswordButton").style.display = 'none';
+                document.getElementById("rememberPasswordButton").style.display = 'block';
+            },
+            rememberPassword() {
+                //选择用密码登录
+                document.getElementById("phoneNumberInput").style.display = "none";
+                document.getElementById("passwordInput").style.display = "block";
+
+                //将 用密码登录按钮隐藏 显示忘记密码按钮
+                document.getElementById("forgetPasswordButton").style.display = 'block';
+                document.getElementById("rememberPasswordButton").style.display = 'none';
+
+            },
+            checkPhone(phone) {
+                //验证电话号码手机号码，返回是否符合正则表达式
+                var phoneNumberRule = /^[1][3,4,5,7,8][0-9]{9}$/;
+                if (phoneNumberRule.test(phone) === false) {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+    })
+
+</script>
+
+</body>
+</html>

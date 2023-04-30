@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎注册！</title>
+
+    <style>
+
+        .registerDiv {
+            /*background: no-repeat center/80% url("img/background.jpg");*/
+            background:no-repeat left/100% url("img/background3.jpg");
+
+            display: flex;
+            align-items: center;
+            height: 100vh;
+        }
+        .el-header, .el-footer {
+            /*background-color: #409EFF;*/
+            background-color:transparent;
+            font-size: 2.5em; /* 40px/16=2.5em */
+
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+            width: 350px;
+            margin: 0 auto;
+
+        }
+
+
+
+        .el-main {
+            /*background-color: #E9EEF3;*/
+            background-color:transparent;
+
+            color: #333;
+            text-align: center;
+            line-height: 160px;
+            width: 350px;
+            margin: 0 auto;
+
+            /*height : 60px;*/
+        }
+
+        body > .el-container {
+            margin-bottom: 40px;
+        }
+
+        .el-container:nth-child(5) .el-aside,
+        .el-container:nth-child(6) .el-aside {
+            line-height: 260px;
+        }
+
+        .el-container:nth-child(7) .el-aside {
+            line-height: 320px;
+        }
+    </style>
+
+</head>
+<body>
+
+
+<div id="registerDiv" class="registerDiv">
+
+    <el-container>
+        <el-header>注册</el-header>
+
+        <el-main>
+            <!--表单-->
+            <el-form ref="form" :model="tableData" label-width="80px" size = "mini">
+                <el-form-item label="username">
+                    <el-input v-model="tableData.username" ></el-input>
+                </el-form-item>
+
+                <el-form-item label="password">
+                    <el-input v-model="tableData.password" ></el-input>
+                </el-form-item>
+
+                <el-form-item label="验证码">
+                    <el-input v-model="tableData.verifyCode" ></el-input>
+                    <img id="verifyCodeImg" src="/ShoppingWebsite/verifyCodeServlet">
+                </el-form-item>
+
+                <el-form-item>
+                    <el-button type="primary" @click="register">注册</el-button>
+                    <el-link href="login.html" target="_blank">突然想起密码？去登录!</el-link><br>
+
+
+                        </td>
+                    </tr>-->
+                </el-form-item>
+
+            </el-form>
+        </el-main>
+
+    </el-container>
+
+</div>
+
+
+<!--引入js文件-->
+<script src="js/axios.js"></script>
+<script src="js/vue.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+
+
+<script>
+    // function on() {
+    //     document.getElementById("username_err").style.display = "block"
+    // }
+    //
+    // document.getElementById("changeImg").onclick = function () {
+    //
+    //     document.getElementById("verifyCodeImg").src = "/QGDemo/verifyCodeServlet?" + new Date().getMilliseconds();
+    // }
+    //
+    //
+    // //1.给用户名输入框绑定 失去焦点事件 判断用户名是否重复
+    // document.getElementById("username").onblur = function () {
+    //     //获取用户名
+    //     let name = this.value;
+    //
+    //     axios.post( "http://localhost:8080/QGDemo/userServlet","method=selectUser&username="+name).then(function (resp) {
+    //             //判断 true还是false
+    //             if (resp.data === true) {
+    //                 //用户名存在 显示信息
+    //                 document.getElementById("username_err").style.display="";
+    //             } else {
+    //                 //用户名不存在 清楚信息
+    //                 document.getElementById("username_err").style.display="";
+    //             }
+    //         }
+    //     )
+    // }
+
+    new Vue({
+        el: "#registerDiv",
+        data() {
+            return {
+
+                // registerData:{
+                //     verifyCode:{
+                //         code:'',
+                //         time:''
+                //     },
+                //     user: {
+                //         username: '',
+                //         phoneNumber:'',
+                //         password:''
+                //     }
+                // }
+
+                tableData:{
+                    username: '',
+                    phoneNumber:'',
+                    password:'',
+                    verifyCode:''
+                }
+
+            }
+        },
+        methods: {
+            register() {
+                //发送ajax 添加数据
+                var _this = this;
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/ShoppingWebsite/userServlet/register",
+                    data: _this.tableData
+                }).then(function (resp) {
+
+                    if (resp.data.code === 1) {
+                        //登录成功
+
+                        console.log(resp.data.data.token);
+
+                        //登录成功 提示信息
+                        _this.$message({
+                            message: '注册成功,1秒之后跳转...',
+                            type: 'success'
+                        });
+
+                        setTimeout(function (){
+                            // location.href="https://www.bilibili.com/video/BV1ct4y1n7t9?t=1.1";
+                            location.href="http://localhost:8080/ShoppingWebsite/login.html"
+                        },1000)
+
+
+
+
+                    }else{
+                        console.log(resp.data);
+                        _this.$message({
+                            message:resp.data.msg,
+                            type: 'error'
+                        });
+                    }
+                })
+            },
+
+        }
+
+    })
+</script>
+
+</body>
+</html>
