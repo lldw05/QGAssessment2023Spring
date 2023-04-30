@@ -1,0 +1,124 @@
+create database if not exists qgfinalexamine;
+use qgfinalexamine;
+
+-- 商店表
+create table if not exists shop(
+shop_id int primary key auto_increment,
+shopkeeper_id int,
+shop_name varchar(50),
+shop_introduction varchar(50),
+fans_num int,
+average_monthly_sales int,
+status tinyint(1)
+);
+alter table shop add constraint shopkeeper_id_fk foreign key (shopkeeper_id) references user (user_id);
+alter table shop modify fans_num int default 0;
+alter table shop modify status tinyint(1) default 0;
+alter table shop add constraint unique_shop_name unique (shop_name);
+
+-- 商品表
+create table if not exists goods(
+	goods_id int primary key auto_increment,
+	goods_introduction varchar(50),
+	price double,
+	picture_id int,
+	shop_id int,
+	monthly_sales int,
+	amount int,
+	is_active tinyint(1)
+	);
+	
+	alter table goods add constraint shop_id_fk foreign key (shop_id) references shop (shop_id);
+	alter table goods add constraint picture_id_fk foreign key (picture_id) references picture (picture_id);
+	alter table goods modify is_active tinyint(1) default 0;
+	alter table goods modify monthly_sales int default 0;
+	
+-- 购物车表
+create table if not exists shop_cart(
+	shop_cart_id int primary key auto_increment,
+	goods_id int,
+	user_id int,
+	amount int
+	);
+		alter table shop_cart add constraint goods_id_fk foreign key (goods_id) references goods (goods_id);
+		alter table shop_cart add constraint user_id_fk foreign key (user_id) references user (user_id);
+		
+		
+-- 用户表
+create table if not exists user(
+	user_id int primary key auto_increment,
+	username varchar(50) unique,
+	nickname varchar(50),
+	password varchar(50),
+	address varchar(50),
+	phone_number varchar(20),
+	real_name varchar(20),
+	pay_password varchar(50),
+	picture_id int,
+	shop_id int,
+	is_active tinyint(1),
+	role_id int
+);
+	alter table user add constraint picture_id_fk_of_user_table foreign key (picture_id) references picture (picture_id);
+	alter table user add constraint shop_id_fk_of_user_table foreign key (shop_id) references shop (shop_id);
+	alter table user modify is_active tinyint(1) default 1;
+alter table user add constraint unique_phone_number unique (phone_number);
+	alter table user modify role_id int default 1;
+
+	
+-- 用户关注表
+create table if not exists user_follow_user(
+	id int primary key auto_increment,
+	user_id int,
+	be_followed_user_id int
+);
+	alter table user_follow_user add constraint user_id_fk1_of_ufu_table foreign key (user_id) references user (user_id);
+		alter table user_follow_user add constraint user_id_fk2_of_ufu_table foreign key (be_followed_user_id) references user (user_id);
+-- 用户关注店铺表
+create table if not exists user_follow_shop(
+	id int primary key auto_increment,
+	user_id int,
+	shop_id int
+);
+alter table user_follow_shop add constraint user_id_fk_of_ufs_table foreign key (user_id) references user (user_id);	
+alter table user_follow_shop add constraint shop_id_fk_of_ufs_table foreign key (shop_id) references shop (shop_id);	
+
+
+-- 订单表
+create table if not exists order_form(
+	id int primary key auto_increment,
+	user_id int,
+	goods_id int,
+	shop_id int,
+	amount int,
+	status varchar(20)
+);
+	alter table order_form add constraint user_id_fk_of_of_table foreign key (user_id) references user (user_id);
+			alter table order_form add constraint goods_id_fk_of_of_table foreign key (goods_id) references goods (goods_id);
+					alter table order_form add constraint shop_id_fk_of_of_table foreign key (shop_id) references shop (shop_id);
+
+	
+-- 图片表
+create table if not exists picture(
+	picture_id int primary key auto_increment,
+	picture_name varchar(50)
+);
+	
+	
+-- 信息表
+create table if not exists message(
+	message_id int primary key auto_increment,
+	type tinyint,
+	sender_type varchar(20),-- user or shop or null 
+	user_id int,
+	goods_id int,
+	shop_id int,
+	message_content varchar(50),
+	create_time datetime,
+	is_processed tinyint(1)
+);
+
+alter table message add constraint user_id_fk_of_message_table foreign key (user_id) references user (user_id);
+alter table message add constraint goods_id_fk_of_message_table foreign key (goods_id) references goods (goods_id);
+alter table message add constraint shop_id_fk_of_message_table foreign key (shop_id) references shop (shop_id);
+alter table message modify is_processed tinyint(1) default 0;
